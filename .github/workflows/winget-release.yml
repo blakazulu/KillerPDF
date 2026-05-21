@@ -1,0 +1,22 @@
+name: WinGet Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  submit:
+    runs-on: windows-latest
+    steps:
+      - name: Install Komac
+        run: winget install --id RussellBanks.Komac --silent --accept-package-agreements --accept-source-agreements
+        shell: pwsh
+
+      - name: Submit to WinGet
+        run: |
+          $version = "${{ github.event.release.tag_name }}".TrimStart('v')
+          $url = "https://github.com/SteveTheKiller/KillerPDF/releases/download/${{ github.event.release.tag_name }}/KillerPDF.exe"
+          komac update SteveTheKiller.KillerPDF --version $version --urls $url --submit
+        env:
+          GITHUB_TOKEN: ${{ secrets.WINGET_TOKEN }}
+        shell: pwsh
