@@ -4,7 +4,7 @@ All notable changes to KillerPDF are documented here.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] — 1.4.1
+## [1.4.1] - 2026-05-21
 
 ### Added
 - Page number jump box in toolbar. Type a page number and press Enter to navigate directly to that page.
@@ -125,7 +125,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this
 
 _Historical entries to be backfilled._
 
-[Unreleased]: https://github.com/SteveTheKiller/KillerPDF/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/SteveTheKiller/KillerPDF/compare/v1.4.1...HEAD
+[1.4.1]: https://github.com/SteveTheKiller/KillerPDF/compare/v1.4.0...v1.4.1
 [1.4.0]: https://github.com/SteveTheKiller/KillerPDF/compare/v1.3.2...v1.4.0
 [1.3.2]: https://github.com/SteveTheKiller/KillerPDF/compare/v1.3.1...v1.3.2
 [1.3.1]: https://github.com/SteveTheKiller/KillerPDF/compare/v1.3.0...v1.3.1
