@@ -14,7 +14,7 @@ jobs:
           $ver = $tag.TrimStart('v')
           $url = "https://github.com/russellbanks/Komac/releases/download/$tag/komac-$ver-x86_64-pc-windows-msvc.exe"
           Invoke-WebRequest -Uri $url -OutFile "$env:RUNNER_TEMP\komac.exe"
-          "$env:RUNNER_TEMP" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          Add-Content $env:GITHUB_PATH $env:RUNNER_TEMP
         shell: pwsh
 
       - name: Submit to WinGet
