@@ -24,3 +24,5 @@ Thumbs.db
 *.exe
 bin/
 obj/
+
+*.tmp
