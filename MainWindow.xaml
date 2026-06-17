@@ -1065,12 +1065,17 @@
                                  GroupName="LangGroup"
                                  Style="{StaticResource ThemeRadio}"
                                  Checked="LangEsRadio_Checked"/>
-                    <RadioButton x:Name="LangZhTWRadio"
-                                 Content="{DynamicResource Str_Lang_Chinese}"
-                                 GroupName="LangGroup"
-                                 Style="{StaticResource ThemeRadio}"
-                                 Checked="LangZhTWRadio_Checked"/>
-                    <TextBlock Text="{DynamicResource Str_ViewMode}" Foreground="{DynamicResource Accent}"
+                     <RadioButton x:Name="LangZhTWRadio"
+                                  Content="{DynamicResource Str_Lang_Traditional_Chinese}"
+                                  GroupName="LangGroup"
+                                  Style="{StaticResource ThemeRadio}"
+                                  Checked="LangZhTWRadio_Checked"/>
+                     <RadioButton x:Name="LangZhCNRadio"
+                                  Content="{DynamicResource Str_Lang_Simple_Chinese}"
+                                  GroupName="LangGroup"
+                                  Style="{StaticResource ThemeRadio}"
+                                  Checked="LangZhCNRadio_Checked"/>
+                     <TextBlock Text="{DynamicResource Str_ViewMode}" Foreground="{DynamicResource Accent}"
                                FontFamily="Segoe UI" FontSize="11" FontWeight="SemiBold"
                                Margin="0,12,0,8"/>
                     <RadioButton x:Name="ViewContinuousRadio"

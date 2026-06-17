@@ -279,6 +279,7 @@ namespace KillerPDF
             LangEnRadio.IsChecked   = curLoc == KillerPDF.Services.Locale.EnUS;
             LangEsRadio.IsChecked   = curLoc == KillerPDF.Services.Locale.Es;
             LangZhTWRadio.IsChecked = curLoc == KillerPDF.Services.Locale.ZhTW;
+            LangZhCNRadio.IsChecked = curLoc == KillerPDF.Services.Locale.ZhCN;
             // Sync view mode radios
             ViewSingleRadio.IsChecked     = _viewMode == ViewMode.Single;
             ViewContinuousRadio.IsChecked = _viewMode == ViewMode.Continuous;
@@ -335,6 +336,9 @@ namespace KillerPDF
 
         private void LangZhTWRadio_Checked(object sender, RoutedEventArgs e)
             => KillerPDF.Services.LocaleManager.Apply(KillerPDF.Services.Locale.ZhTW);
+
+        private void LangZhCNRadio_Checked(object sender, RoutedEventArgs e)
+            => KillerPDF.Services.LocaleManager.Apply(KillerPDF.Services.Locale.ZhCN);
 
         private void ViewSingleRadio_Checked(object sender, RoutedEventArgs e)     { SetViewMode(ViewMode.Single);     SettingsOverlay.Visibility = Visibility.Collapsed; }
         private void ViewContinuousRadio_Checked(object sender, RoutedEventArgs e) { SetViewMode(ViewMode.Continuous); SettingsOverlay.Visibility = Visibility.Collapsed; }
