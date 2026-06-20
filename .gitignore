@@ -32,3 +32,6 @@ bin/
 obj/
 
 *.tmp
+
+# Brainstorming visual companion
+.superpowers/
