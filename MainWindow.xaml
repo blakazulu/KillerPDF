@@ -11,6 +11,7 @@
         AllowsTransparency="True"
         ResizeMode="CanResizeWithGrip"
         Background="{DynamicResource BgDark}"
+        FontFamily="{DynamicResource FontUI}"
         TextOptions.TextFormattingMode="Display"
         TextOptions.TextRenderingMode="ClearType">
 
@@ -24,7 +25,7 @@
             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="10,6"/>
-            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+            <Setter Property="FontFamily" Value="{DynamicResource FontIcon}"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Width" Value="36"/>
@@ -64,7 +65,7 @@
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="BorderBrush" Value="Transparent"/>
             <Setter Property="Padding" Value="10,6"/>
-            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+            <Setter Property="FontFamily" Value="{DynamicResource FontIcon}"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Width" Value="36"/>
@@ -715,7 +716,7 @@
                                         </Border>
                                         <TextBlock Text="{Binding Label}"
                                                    Foreground="{DynamicResource TextSecondary}"
-                                                   FontFamily="Segoe UI"
+                                                   FontFamily="{DynamicResource FontUI}"
                                                    FontSize="10"
                                                    HorizontalAlignment="Center"
                                                    Margin="0,2,0,0"/>
@@ -824,9 +825,9 @@
                                 HorizontalAlignment="Center" VerticalAlignment="Center"
                                 Background="Transparent" Style="{x:Null}">
                             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <TextBlock Text="Drop PDF here" FontFamily="Segoe UI" FontSize="20"
+                                <TextBlock Text="Drop PDF here" FontFamily="{DynamicResource FontUI}" FontSize="20"
                                            Foreground="{DynamicResource TextSecondary}" HorizontalAlignment="Center"/>
-                                <TextBlock Text="or click to browse" FontFamily="Segoe UI" FontSize="13"
+                                <TextBlock Text="or click to browse" FontFamily="{DynamicResource FontUI}" FontSize="13"
                                            Foreground="{DynamicResource TextSecondary}" HorizontalAlignment="Center" Margin="0,8,0,0"/>
                             </StackPanel>
                         </Border>

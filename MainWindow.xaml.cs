@@ -4316,7 +4316,7 @@ namespace KillerPDF
             {
                 Text = "Signatures",
                 Foreground = (SolidColorBrush)FindResource("TextPrimary"),
-                FontFamily = new FontFamily("Segoe UI"),
+                FontFamily = (FontFamily)FindResource("FontUI"),
                 FontWeight = FontWeights.SemiBold,
                 FontSize = 13,
                 Margin = new Thickness(4, 2, 4, 6)
@@ -4400,7 +4400,8 @@ namespace KillerPDF
 
                     var delBtn = new Button
                     {
-                        Content = "\ue711",
+                        Content = (string)FindResource("Ico_WinClose"),
+                        FontFamily = (FontFamily)FindResource("FontIcon"),
                         FontSize = 10,
                         Width = 18, Height = 18,
                         HorizontalAlignment = HorizontalAlignment.Right,
@@ -4431,7 +4432,7 @@ namespace KillerPDF
                 {
                     Text = "No saved signatures",
                     Foreground = (SolidColorBrush)FindResource("TextSecondary"),
-                    FontFamily = new FontFamily("Segoe UI"),
+                    FontFamily = (FontFamily)FindResource("FontUI"),
                     FontSize = 11,
                     FontStyle = FontStyles.Italic,
                     Margin = new Thickness(4, 4, 4, 8),
@@ -5868,11 +5869,12 @@ namespace KillerPDF
                     Height = 28,
                     FontFamily = (FontFamily)FindResource("FontUI"),
                     FontSize = 13,
-                    BorderBrush = (SolidColorBrush)FindResource("Accent"), SelectionBrush = AccentBrush(),
+                    SelectionBrush = AccentBrush(),
                     BorderThickness = new Thickness(1),
                     Padding = new Thickness(6, 2, 6, 2),
                     VerticalContentAlignment = VerticalAlignment.Center
                 };
+                _searchBox.SetResourceReference(TextBox.BorderBrushProperty, "Accent");
                 _searchBox.SetResourceReference(TextBox.BackgroundProperty, "BgControl");
                 _searchBox.SetResourceReference(TextBox.ForegroundProperty, "TextPrimary");
                 _searchBox.KeyDown += SearchBox_KeyDown;
@@ -5880,12 +5882,12 @@ namespace KillerPDF
 
                 _searchStatus = new TextBlock
                 {
-                    Foreground = (SolidColorBrush)FindResource("TextSecondary"),
                     FontFamily = (FontFamily)FindResource("FontUI"),
                     FontSize = 11,
                     VerticalAlignment = VerticalAlignment.Center,
                     Margin = new Thickness(8, 0, 0, 0)
                 };
+                _searchStatus.SetResourceReference(TextBlock.ForegroundProperty, "TextSecondary");
 
                 var closeBtn = new Button
                 {
@@ -5902,11 +5904,11 @@ namespace KillerPDF
                     Text = (string)FindResource("Ico_Search"),
                     FontFamily = (FontFamily)FindResource("FontIcon"),
                     FontSize = 12,
-                    Foreground = (SolidColorBrush)FindResource("TextSecondary"),
                     VerticalAlignment = VerticalAlignment.Center,
                     Margin = new Thickness(0, 0, 6, 0),
                     IsHitTestVisible = false
                 };
+                searchIcon.SetResourceReference(TextBlock.ForegroundProperty, "TextSecondary");
 
                 var panel = new StackPanel
                 {
@@ -6211,7 +6213,7 @@ namespace KillerPDF
                         Foreground = new SolidColorBrush(pcol),
                         BorderBrush = (SolidColorBrush)FindResource("Accent"), SelectionBrush = AccentBrush(),
                         BorderThickness = new Thickness(1),
-                        FontFamily = new FontFamily("Segoe UI"),
+                        FontFamily = (FontFamily)FindResource("FontUI"),
                         FontSize = placed.FontSize,
                         MinWidth = 120,
                         MinHeight = 24,
@@ -6503,7 +6505,7 @@ namespace KillerPDF
                 Foreground = new SolidColorBrush(_textColor),
                 BorderBrush = (SolidColorBrush)FindResource("Accent"), SelectionBrush = AccentBrush(),
                 BorderThickness = new Thickness(1),
-                FontFamily = new FontFamily("Segoe UI"),
+                FontFamily = (FontFamily)FindResource("FontUI"),
                 FontSize = fontCanvas,
                 MinWidth = 120,
                 MinHeight = 24,
@@ -6788,7 +6790,7 @@ namespace KillerPDF
             {
                 Text = ta.Content,
                 Foreground = new SolidColorBrush(ta.GetColor()),
-                FontFamily = new FontFamily("Segoe UI"),
+                FontFamily = (FontFamily)FindResource("FontUI"),
                 FontSize = ta.FontSize,
                 Padding = new Thickness(2)
             };
