@@ -164,6 +164,7 @@ You can uninstall via Add/Remove Programs at any time.</sys:String>
     <!-- ── Toolbar button labels ─────────────────────────────────────── -->
     <sys:String x:Key="Str_Lbl_Open">Open</sys:String>
     <sys:String x:Key="Str_Lbl_Save">Save</sys:String>
+    <sys:String x:Key="Str_Lbl_SaveAs">Save As…</sys:String>
     <sys:String x:Key="Str_Lbl_Print">Print</sys:String>
     <sys:String x:Key="Str_Lbl_New">New</sys:String>
     <sys:String x:Key="Str_Lbl_CloseFile">Close File</sys:String>

@@ -526,7 +526,7 @@ namespace Scalpel
 
         private void Install_Click(object sender, RoutedEventArgs e)
         {
-            var res = KillerDialog.Show(this,
+            var res = ScalpelDialog.Show(this,
                 Loc("Str_Dlg_InstallMsg"),
                 Loc("Str_Dlg_InstallTitle"), MessageBoxButton.OKCancel);
             if (res != MessageBoxResult.OK) return;
@@ -549,7 +549,7 @@ namespace Scalpel
         {
             if (_isDirty)
             {
-                var res = KillerDialog.Show(this,
+                var res = ScalpelDialog.Show(this,
                     Loc("Str_Dlg_UnsavedExit"),
                     Loc("Str_Dlg_AppTitle"), MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 if (res != MessageBoxResult.Yes)
@@ -724,7 +724,7 @@ namespace Scalpel
             }
             catch (Exception ex)
             {
-                KillerDialog.Show(this, string.Format(Loc("Str_RotateFailed"), ex.Message), Loc("Str_Dlg_AppTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
+                ScalpelDialog.Show(this, string.Format(Loc("Str_RotateFailed"), ex.Message), Loc("Str_Dlg_AppTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -798,7 +798,7 @@ namespace Scalpel
                 }
                 catch (Exception ex2)
                 {
-                    KillerDialog.Show(this, string.Format(Loc("Str_Dlg_FailedOpen"), ex2.Message), Loc("Str_Dlg_AppTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
+                    ScalpelDialog.Show(this, string.Format(Loc("Str_Dlg_FailedOpen"), ex2.Message), Loc("Str_Dlg_AppTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             catch (Exception ex) when (IsPasswordException(ex))
@@ -819,7 +819,7 @@ namespace Scalpel
                 }
                 catch (Exception ex2)
                 {
-                    KillerDialog.Show(this, string.Format(Loc("Str_Dlg_FailedOpen"), ex2.Message), Loc("Str_Dlg_AppTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
+                    ScalpelDialog.Show(this, string.Format(Loc("Str_Dlg_FailedOpen"), ex2.Message), Loc("Str_Dlg_AppTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             catch (Exception ex) when (IsXRefException(ex))
@@ -833,14 +833,14 @@ namespace Scalpel
                     _currentFile = srcPath;
                     FinishOpenFile(path, srcPath);
                     SetStatus(string.Format(Loc("Str_OpenedReadOnlyXRef"), System.IO.Path.GetFileName(path), _doc.PageCount));
-                    KillerDialog.Show(this,
+                    ScalpelDialog.Show(this,
                         $"\"{System.IO.Path.GetFileName(path)}\" has a non-standard structure and was opened read-only.\n\nEditing, saving, and some other features may not work correctly.",
                         "Scalpel", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
                 catch
                 {
                     // ReadOnly also failed — offer to repair.
-                    var result = KillerDialog.Show(this,
+                    var result = ScalpelDialog.Show(this,
                         $"This PDF has a damaged structure and couldn't be opened.\n\nWould you like Scalpel to attempt a repair? A repaired copy will be created — the original file will not be changed.\n\nNote: repaired files may be missing bookmarks, forms, and other interactive features.",
                         "Scalpel", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                     if (result == MessageBoxResult.Yes)
@@ -871,12 +871,12 @@ namespace Scalpel
                 }
                 catch (Exception ex2)
                 {
-                    KillerDialog.Show(this, string.Format(Loc("Str_Dlg_FailedOpen"), ex2.Message), Loc("Str_Dlg_AppTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
+                    ScalpelDialog.Show(this, string.Format(Loc("Str_Dlg_FailedOpen"), ex2.Message), Loc("Str_Dlg_AppTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
             catch (Exception ex)
             {
-                KillerDialog.Show(this, string.Format(Loc("Str_Dlg_FailedOpen"), ex.Message), Loc("Str_Dlg_AppTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
+                ScalpelDialog.Show(this, string.Format(Loc("Str_Dlg_FailedOpen"), ex.Message), Loc("Str_Dlg_AppTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -1162,7 +1162,7 @@ namespace Scalpel
                 FinishOpenFile(path, repairedPath);
                 MarkDirty(true); // repaired copy lives in temp — user must Save As
                 SetStatus(string.Format(Loc("Str_OpenedRepaired"), System.IO.Path.GetFileName(path), _doc.PageCount));
-                KillerDialog.Show(this,
+                ScalpelDialog.Show(this,
                     $"\"{System.IO.Path.GetFileName(path)}\" was repaired successfully.\n\nBookmarks, forms, and other interactive features may have been lost. Use Save As to write the repaired file to a new location.",
                     "Scalpel", MessageBoxButton.OK, MessageBoxImage.None);
                 return;
@@ -1180,7 +1180,7 @@ namespace Scalpel
             }
             catch { }
 
-            KillerDialog.Show(this,
+            ScalpelDialog.Show(this,
                 "Repair failed — the file is too severely damaged to recover.\n\nTry opening the original in a different application (Adobe Acrobat, browsers) which may have additional recovery options.",
                 "Scalpel", MessageBoxButton.OK, MessageBoxImage.Error);
         }
@@ -1250,7 +1250,7 @@ namespace Scalpel
             FinishOpenFile(path, repairedPath);
             MarkDirty(true); // repaired copy lives in temp — user must Save As
             SetStatus(string.Format(Loc("Str_OpenedRasterRepair"), System.IO.Path.GetFileName(path), _doc.PageCount));
-            KillerDialog.Show(this,
+            ScalpelDialog.Show(this,
                 $"\"{System.IO.Path.GetFileName(path)}\" was repaired by rasterizing through PDFium.\n\nText is not selectable in the repaired copy. Use Save As to write it to a new location.",
                 "Scalpel", MessageBoxButton.OK, MessageBoxImage.None);
         }
@@ -1307,7 +1307,7 @@ namespace Scalpel
                         if (_viewMode == ViewMode.Grid)
                             SetZoom(GridZoomForN(Math.Min(_doc?.PageCount ?? 1, 3)));
                         else
-                            FitToPage();   // Single, Two-Page, and Continuous open fit-to-page
+                            FitToWidth();  // Single, Two-Page, and Continuous open fit-to-width
                     }));
             }
             SetStatus(string.Format(Loc("Str_Opened"), System.IO.Path.GetFileName(displayPath), _doc.PageCount));
@@ -1989,7 +1989,7 @@ namespace Scalpel
             }
             catch (Exception ex)
             {
-                KillerDialog.Show(this, $"Remove link failed:\n{ex.Message}", "Scalpel",
+                ScalpelDialog.Show(this, $"Remove link failed:\n{ex.Message}", "Scalpel",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -4729,7 +4729,7 @@ namespace Scalpel
             {
                 if (strokes.Count == 0)
                 {
-                    KillerDialog.Show(this, "Draw a signature first.", "Scalpel", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    ScalpelDialog.Show(this, "Draw a signature first.", "Scalpel", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
@@ -4806,7 +4806,7 @@ namespace Scalpel
             }
             catch (Exception ex)
             {
-                KillerDialog.Show(this, $"Failed to import image:\n{ex.Message}", "Scalpel",
+                ScalpelDialog.Show(this, $"Failed to import image:\n{ex.Message}", "Scalpel",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -4898,7 +4898,7 @@ namespace Scalpel
             }
             catch (Exception ex)
             {
-                KillerDialog.Show(this, $"Could not load image:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                ScalpelDialog.Show(this, $"Could not load image:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -7053,7 +7053,7 @@ namespace Scalpel
             if (_doc is null) return;
             if (_isDirty)
             {
-                var res = KillerDialog.Show(this,
+                var res = ScalpelDialog.Show(this,
                     Loc("Str_Dlg_UnsavedClose"),
                     "Scalpel", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 if (res != MessageBoxResult.Yes) return;
@@ -7119,7 +7119,7 @@ namespace Scalpel
         {
             if (_isDirty)
             {
-                var res = KillerDialog.Show(this,
+                var res = ScalpelDialog.Show(this,
                     "You have unsaved changes. Discard them and create a new document?",
                     "Scalpel", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 if (res != MessageBoxResult.Yes) return;
@@ -7141,7 +7141,7 @@ namespace Scalpel
             }
             catch (Exception ex)
             {
-                KillerDialog.Show(this, $"Could not create new document:\n{ex.Message}",
+                ScalpelDialog.Show(this, $"Could not create new document:\n{ex.Message}",
                     "Scalpel", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -7154,7 +7154,7 @@ namespace Scalpel
 
         private void Merge_Click(object sender, RoutedEventArgs e)
         {
-            if (_doc is null) { KillerDialog.Show(this, "Open a PDF first."); return; }
+            if (_doc is null) { ScalpelDialog.Show(this, "Open a PDF first."); return; }
             var doc = _doc;
             var dlg = new OpenFileDialog { Filter = "PDF files|*.pdf", Title = "Select PDF to merge", Multiselect = true };
             if (dlg.ShowDialog(this) != true) return;
@@ -7182,7 +7182,7 @@ namespace Scalpel
             }
             catch (Exception ex)
             {
-                KillerDialog.Show(this, $"Merge failed:\n{ex.Message}", "Scalpel", MessageBoxButton.OK, MessageBoxImage.Error);
+                ScalpelDialog.Show(this, $"Merge failed:\n{ex.Message}", "Scalpel", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -7363,10 +7363,10 @@ namespace Scalpel
 
         private void Split_Click(object sender, RoutedEventArgs e)
         {
-            if (_doc is null || _currentFile is null) { KillerDialog.Show(this, "Open a PDF first."); return; }
+            if (_doc is null || _currentFile is null) { ScalpelDialog.Show(this, "Open a PDF first."); return; }
             var currentFile = _currentFile;
             var selected = PageList.SelectedItems;
-            if (selected.Count == 0) { KillerDialog.Show(this, "Select pages to extract."); return; }
+            if (selected.Count == 0) { ScalpelDialog.Show(this, "Select pages to extract."); return; }
             var dlg = new SaveFileDialog { Filter = "PDF files|*.pdf", Title = "Save extracted pages as",
                                            CheckFileExists = false, CheckPathExists = true };
             if (dlg.ShowDialog(this) != true) return;
@@ -7383,17 +7383,17 @@ namespace Scalpel
             }
             catch (Exception ex)
             {
-                KillerDialog.Show(this, $"Split failed:\n{ex.Message}", "Scalpel", MessageBoxButton.OK, MessageBoxImage.Error);
+                ScalpelDialog.Show(this, $"Split failed:\n{ex.Message}", "Scalpel", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
-            if (_doc is null) { KillerDialog.Show(this, "Open a PDF first."); return; }
+            if (_doc is null) { ScalpelDialog.Show(this, "Open a PDF first."); return; }
             var doc = _doc;
             var selected = PageList.SelectedItems;
-            if (selected.Count == 0) { KillerDialog.Show(this, "Select pages to delete."); return; }
-            var result = KillerDialog.Show(this, $"Delete {selected.Count} {(selected.Count == 1 ? "page" : "pages")}?", "Scalpel",
+            if (selected.Count == 0) { ScalpelDialog.Show(this, "Select pages to delete."); return; }
+            var result = ScalpelDialog.Show(this, $"Delete {selected.Count} {(selected.Count == 1 ? "page" : "pages")}?", "Scalpel",
                 MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (result != MessageBoxResult.Yes) return;
             try
@@ -7407,13 +7407,13 @@ namespace Scalpel
             }
             catch (Exception ex)
             {
-                KillerDialog.Show(this, $"Delete failed:\n{ex.Message}", "Scalpel", MessageBoxButton.OK, MessageBoxImage.Error);
+                ScalpelDialog.Show(this, $"Delete failed:\n{ex.Message}", "Scalpel", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void InsertBlankPage_Click(object sender, RoutedEventArgs e)
         {
-            if (_doc is null) { KillerDialog.Show(this, "Open a PDF first."); return; }
+            if (_doc is null) { ScalpelDialog.Show(this, "Open a PDF first."); return; }
             var doc = _doc;
             int insertAfter = PageList.SelectedIndex >= 0 ? PageList.SelectedIndex : doc.PageCount - 1;
             try
@@ -7426,7 +7426,7 @@ namespace Scalpel
             }
             catch (Exception ex)
             {
-                KillerDialog.Show(this, $"Insert failed:\n{ex.Message}", "Scalpel", MessageBoxButton.OK, MessageBoxImage.Error);
+                ScalpelDialog.Show(this, $"Insert failed:\n{ex.Message}", "Scalpel", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -7456,7 +7456,7 @@ namespace Scalpel
 
         private void SaveInPlace()
         {
-            if (_doc is null) { KillerDialog.Show(this, "Open a PDF first."); return; }
+            if (_doc is null) { ScalpelDialog.Show(this, "Open a PDF first."); return; }
             // Save back to the user's real file. After a page edit (crop/rotate) _currentFile is a
             // temp working copy, so the real path is kept in _originalFile. If there is no real path
             // (e.g. a repaired temp-backed open), fall back to Save As.
@@ -7494,26 +7494,26 @@ namespace Scalpel
             }
             catch (Exception ex)
             {
-                KillerDialog.Show(this, $"Save failed:\n{ex.Message}", "Scalpel", MessageBoxButton.OK, MessageBoxImage.Error);
+                ScalpelDialog.Show(this, $"Save failed:\n{ex.Message}", "Scalpel", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        private void Save_Click(object sender, RoutedEventArgs e)
+        // Toolbar Save (the main half of the split button): saves straight back to the
+        // original file. "Save As" lives in the chevron dropdown beside it. SaveInPlace
+        // handles the empty-doc and no-real-path (repaired temp-backed open -> Save As)
+        // cases, and this matches the Ctrl+S shortcut behaviour.
+        private void Save_Click(object sender, RoutedEventArgs e) => SaveInPlace();
+
+        // Chevron beside Save: drops the Save As menu (same pattern as FileMenu_Click).
+        private void SaveMenu_Click(object sender, RoutedEventArgs e)
         {
-            if (_doc is null) { KillerDialog.Show(this, "Open a PDF first."); return; }
-            // No real path yet (repaired temp-backed open) -> go straight to Save As.
-            if (string.IsNullOrEmpty(_originalFile)) { SaveAs_Click(sender, e); return; }
-            var name = System.IO.Path.GetFileName(_originalFile);
-            var choice = KillerDialog.Show(this, $"Overwrite {name}?", "Save",
-                                           MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
-            if (choice == MessageBoxResult.Yes)      SaveInPlace();
-            else if (choice == MessageBoxResult.No)  SaveAs_Click(sender, e);
-            // Cancel or closed: do nothing.
+            if (sender is Button b && b.ContextMenu is not null)
+            { b.ContextMenu.PlacementTarget = b; b.ContextMenu.IsOpen = true; }
         }
 
         private void SaveAs_Click(object sender, RoutedEventArgs e)
         {
-            if (_doc is null || _currentFile is null) { KillerDialog.Show(this, "Open a PDF first."); return; }
+            if (_doc is null || _currentFile is null) { ScalpelDialog.Show(this, "Open a PDF first."); return; }
             CommitActiveTextBox();
             var dlg = new SaveFileDialog { Filter = "PDF files|*.pdf", Title = "Save PDF as",
                                            CheckFileExists = false, CheckPathExists = true };
@@ -7558,13 +7558,13 @@ namespace Scalpel
             }
             catch (Exception ex)
             {
-                KillerDialog.Show(this, $"Save failed:\n{ex.Message}", "Scalpel", MessageBoxButton.OK, MessageBoxImage.Error);
+                ScalpelDialog.Show(this, $"Save failed:\n{ex.Message}", "Scalpel", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private async void SaveFlattened_Click(object sender, RoutedEventArgs e)
         {
-            if (_doc is null || _currentFile is null) { KillerDialog.Show(this, "Open a PDF first."); return; }
+            if (_doc is null || _currentFile is null) { ScalpelDialog.Show(this, "Open a PDF first."); return; }
             CommitActiveTextBox();
             var dlg = new SaveFileDialog { Filter = "PDF files|*.pdf", Title = "Save Flattened PDF",
                                            CheckFileExists = false, CheckPathExists = true };
@@ -7670,7 +7670,7 @@ namespace Scalpel
             }
             catch (Exception ex)
             {
-                try { KillerDialog.Show(this, $"Flatten failed:\n{ex.GetType().Name}: {ex.Message}", "Scalpel", MessageBoxButton.OK, MessageBoxImage.Error); }
+                try { ScalpelDialog.Show(this, $"Flatten failed:\n{ex.GetType().Name}: {ex.Message}", "Scalpel", MessageBoxButton.OK, MessageBoxImage.Error); }
                 catch { /* dialog failed; overlay still removed in finally */ }
             }
             finally
@@ -7751,7 +7751,7 @@ namespace Scalpel
 
         private async void Print_Click(object sender, RoutedEventArgs e)
         {
-            if (_doc is null || _currentFile is null) { KillerDialog.Show(this, "Open a PDF first."); return; }
+            if (_doc is null || _currentFile is null) { ScalpelDialog.Show(this, "Open a PDF first."); return; }
             CommitActiveTextBox();
 
             // Burn pending annotations into a temp copy on the UI thread before going off-thread
@@ -7827,7 +7827,7 @@ namespace Scalpel
             }
             catch (Exception ex)
             {
-                try { KillerDialog.Show(this, $"Print failed:\n{ex.GetType().Name}: {ex.Message}", "Scalpel", MessageBoxButton.OK, MessageBoxImage.Error); }
+                try { ScalpelDialog.Show(this, $"Print failed:\n{ex.GetType().Name}: {ex.Message}", "Scalpel", MessageBoxButton.OK, MessageBoxImage.Error); }
                 catch { }
             }
             finally
@@ -8810,19 +8810,7 @@ namespace Scalpel
 
             // Tagline block
             AboutTaglineBlock.Inlines.Clear();
-            AboutTaglineBlock.Inlines.Add(new System.Windows.Documents.Run("A fast, free PDF toolkit for Windows. Part of ")
-            {
-                Foreground = (System.Windows.Media.Brush)FindResource("TextDim")
-            });
-            var ktHl = new System.Windows.Documents.Hyperlink(new System.Windows.Documents.Run("Killer Tools"))
-            {
-                Foreground      = (System.Windows.Media.Brush)FindResource("Accent"),
-                TextDecorations = null
-            };
-            ktHl.Click += (_, _) =>
-                Process.Start(new ProcessStartInfo("https://scalpel.example.com") { UseShellExecute = true });
-            AboutTaglineBlock.Inlines.Add(ktHl);
-            AboutTaglineBlock.Inlines.Add(new System.Windows.Documents.Run(".")
+            AboutTaglineBlock.Inlines.Add(new System.Windows.Documents.Run("A fast, free PDF toolkit for Windows.")
             {
                 Foreground = (System.Windows.Media.Brush)FindResource("TextDim")
             });
@@ -9156,7 +9144,7 @@ namespace Scalpel
     // ============================================================
     // Themed dialog — replaces MessageBox for dark-UI consistency
     // ============================================================
-    internal static class KillerDialog
+    internal static class ScalpelDialog
     {
         // Pulls the current theme brush at call time so dialogs respect light/dark/HC themes.
         private static SolidColorBrush R(string key)
@@ -9239,7 +9227,7 @@ namespace Scalpel
             root.Children.Add(msgBorder);
 
             // Buttons — use Studio styles. Primary/confirm = StudioPrimaryButton,
-            // secondary/cancel = StudioToolButton. KillerDialog cannot distinguish
+            // secondary/cancel = StudioToolButton. ScalpelDialog cannot distinguish
             // destructive from non-destructive callers, so destructive confirm
             // buttons remain StudioPrimaryButton (noted in Task 10 report).
             var btnPanel = new StackPanel

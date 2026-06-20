@@ -157,6 +157,7 @@
     <!-- ── Toolbar button labels ─────────────────────────────────────── -->
     <sys:String x:Key="Str_Lbl_Open">খুলুন</sys:String>
     <sys:String x:Key="Str_Lbl_Save">সংরক্ষণ</sys:String>
+    <sys:String x:Key="Str_Lbl_SaveAs">এভাবে সংরক্ষণ করুন…</sys:String>
     <sys:String x:Key="Str_Lbl_Print">মুদ্রণ</sys:String>
     <sys:String x:Key="Str_Lbl_New">নতুন</sys:String>
     <sys:String x:Key="Str_Lbl_CloseFile">ফাইল বন্ধ</sys:String>

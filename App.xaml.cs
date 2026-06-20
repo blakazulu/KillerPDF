@@ -506,7 +506,7 @@ namespace Scalpel
 
             if (!IsDefaultPdfHandler())
             {
-                var res = KillerDialog.Show(null,
+                var res = ScalpelDialog.Show(null,
                     "Would you like to set Scalpel as your default PDF viewer?\n\n" +
                     "Opens Windows Settings → Default Apps.",
                     "Scalpel", MessageBoxButton.YesNo);
@@ -1107,17 +1107,9 @@ namespace Scalpel
             logoHl.Click += (_, _) => OpenUrl("https://scalpel.example.com");
             logo.Inlines.Add(logoHl);
 
-            // Tagline with Killer Tools link
+            // Tagline
             var tagline = new TextBlock { FontSize = 11, Margin = new Thickness(0, 0, 0, 16) };
-            tagline.Inlines.Add(new Run("A fast, free PDF toolkit for Windows. Part of ") { Foreground = fgDim });
-            var ktHl = new Hyperlink(new Run("Killer Tools"))
-            {
-                Foreground = accent,
-                TextDecorations = null
-            };
-            ktHl.Click += (_, _) => OpenUrl("https://scalpel.example.com");
-            tagline.Inlines.Add(ktHl);
-            tagline.Inlines.Add(new Run(".") { Foreground = fgDim });
+            tagline.Inlines.Add(new Run("A fast, free PDF toolkit for Windows.") { Foreground = fgDim });
 
             var body = new StackPanel { Margin = new Thickness(16, 16, 16, 20) };
             body.Children.Add(logo);

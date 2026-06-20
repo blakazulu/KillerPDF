@@ -421,7 +421,7 @@ namespace Scalpel
         {
             if (_queue == null)
             {
-                KillerDialog.Show(this, "No printer is available.", "Scalpel",
+                ScalpelDialog.Show(this, "No printer is available.", "Scalpel",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -429,7 +429,7 @@ namespace Scalpel
             var indices = ParseRange(_pagesBox.Text, _pages.Length);
             if (indices.Count == 0)
             {
-                KillerDialog.Show(this, "No valid pages in that range.", "Scalpel",
+                ScalpelDialog.Show(this, "No valid pages in that range.", "Scalpel",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -478,7 +478,7 @@ namespace Scalpel
             }
             catch (Exception ex)
             {
-                KillerDialog.Show(this, $"Print failed:\n{ex.GetType().Name}: {ex.Message}",
+                ScalpelDialog.Show(this, $"Print failed:\n{ex.GetType().Name}: {ex.Message}",
                     "Scalpel", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

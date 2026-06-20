@@ -447,7 +447,7 @@
                 MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
             <Grid>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0,0,0">
-                    <TextBlock Text="Killer" FontFamily="{DynamicResource FontUI}" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource TextPrimary}"/>
+                    <TextBlock Text="Scalpel" FontFamily="{DynamicResource FontUI}" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource TextPrimary}"/>
                     <TextBlock Text="PDF" FontFamily="{DynamicResource FontUI}" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource AccentLogo}"/>
                     <TextBlock Text="" x:Name="FileNameLabel" VerticalAlignment="Center" Margin="16,0,0,0"
                                Foreground="{DynamicResource TextSecondary}" FontFamily="{DynamicResource FontUI}" FontSize="{DynamicResource FsBody}"/>
@@ -484,8 +484,17 @@
               <Button Style="{StaticResource StudioToolButton}" Click="Open_Click" ToolTip="{DynamicResource Str_TT_Open}">
                 <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Open}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_Open}" VerticalAlignment="Center"/></StackPanel>
               </Button>
+              <!-- Save split button: primary Save + chevron dropdown (Save As) -->
               <Button x:Name="SaveAsBtn" Style="{StaticResource StudioPrimaryButton}" Click="Save_Click" ToolTip="{DynamicResource Str_TT_Save}" Margin="6,0,0,0">
                 <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Save}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_Save}" VerticalAlignment="Center"/></StackPanel>
+              </Button>
+              <Button x:Name="SaveMenuBtn" Style="{StaticResource StudioPrimaryButton}" Click="SaveMenu_Click" Padding="6,0" ToolTip="{DynamicResource Str_TT_SaveAs}" Margin="1,0,0,0">
+                <TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Chevron}"/>
+                <Button.ContextMenu>
+                  <ContextMenu>
+                    <MenuItem Header="{DynamicResource Str_Lbl_SaveAs}" Click="SaveAs_Click"/>
+                  </ContextMenu>
+                </Button.ContextMenu>
               </Button>
               <Button Style="{StaticResource StudioToolButton}" Click="Print_Click" ToolTip="{DynamicResource Str_TT_Print}" Margin="6,0,0,0">
                 <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Print}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_Print}" VerticalAlignment="Center"/></StackPanel>

@@ -159,6 +159,7 @@
     <!-- ── Toolbar button labels ─────────────────────────────────────── -->
     <sys:String x:Key="Str_Lbl_Open">開啟</sys:String>
     <sys:String x:Key="Str_Lbl_Save">儲存</sys:String>
+    <sys:String x:Key="Str_Lbl_SaveAs">另存新檔…</sys:String>
     <sys:String x:Key="Str_Lbl_Print">列印</sys:String>
     <sys:String x:Key="Str_Lbl_New">新增</sys:String>
     <sys:String x:Key="Str_Lbl_CloseFile">關閉檔案</sys:String>

@@ -157,6 +157,7 @@ Bu işlem uygulamayı %LocalAppData%\Scalpel konumuna kopyalar ve bir Başlat Me
     <!-- ── Toolbar button labels ─────────────────────────────────────── -->
     <sys:String x:Key="Str_Lbl_Open">Aç</sys:String>
     <sys:String x:Key="Str_Lbl_Save">Kaydet</sys:String>
+    <sys:String x:Key="Str_Lbl_SaveAs">Farklı Kaydet…</sys:String>
     <sys:String x:Key="Str_Lbl_Print">Yazdır</sys:String>
     <sys:String x:Key="Str_Lbl_New">Yeni</sys:String>
     <sys:String x:Key="Str_Lbl_CloseFile">Dosyayı Kapat</sys:String>
