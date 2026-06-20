@@ -1,0 +1,110 @@
+using System;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
+using Scalpel.Services;
+using Xunit;
+
+namespace Scalpel.Tests
+{
+    public class LoggerTests : IDisposable
+    {
+        private readonly string _dir;
+
+        public LoggerTests()
+        {
+            _dir = Path.Combine(Path.GetTempPath(), "scalpel_logtest_" + Guid.NewGuid().ToString("N"));
+        }
+
+        public void Dispose()
+        {
+            try { Logger.Shutdown(); } catch { }
+            try { if (Directory.Exists(_dir)) Directory.Delete(_dir, recursive: true); } catch { }
+        }
+
+        private string ReadLogLines() // returns the single session file's content
+        {
+            var file = Directory.GetFiles(_dir, "scalpel-*.jsonl").Single();
+            using var fs = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using var sr = new StreamReader(fs);
+            return sr.ReadToEnd();
+        }
+
+        [Fact]
+        public void Info_writes_one_valid_json_line_with_expected_fields()
+        {
+            Logger.Init(_dir);
+            Logger.Info("File", "open.success", "Opened invoice.pdf", new { pages = 12 });
+            Logger.Flush();
+
+            var lines = ReadLogLines().Split('\n').Where(l => l.Trim().Length > 0).ToArray();
+            Assert.Single(lines);
+
+            using var doc = JsonDocument.Parse(lines[0]);
+            var root = doc.RootElement;
+            Assert.Equal("INFO", root.GetProperty("level").GetString());
+            Assert.Equal("File", root.GetProperty("cat").GetString());
+            Assert.Equal("open.success", root.GetProperty("event").GetString());
+            Assert.Equal("Opened invoice.pdf", root.GetProperty("msg").GetString());
+            Assert.Equal(12, root.GetProperty("data").GetProperty("pages").GetInt32());
+            Assert.False(string.IsNullOrEmpty(root.GetProperty("ts").GetString()));
+        }
+
+        [Fact]
+        public void MinLevel_filters_out_lower_levels()
+        {
+            Logger.Init(_dir, minLevel: Logger.Level.Info);
+            Logger.Debug("UI", "click", "should be dropped");
+            Logger.Info("UI", "click", "should be kept");
+            Logger.Flush();
+
+            var lines = ReadLogLines().Split('\n').Where(l => l.Trim().Length > 0).ToArray();
+            Assert.Single(lines);
+            Assert.Contains("should be kept", lines[0]);
+        }
+
+        [Fact]
+        public void Disabled_creates_no_file_and_calls_are_noops()
+        {
+            Logger.Init(_dir, enabled: false);
+            Logger.Info("UI", "click", "nothing");
+            Logger.Flush();
+
+            Assert.Empty(Directory.GetFiles(_dir, "scalpel-*.jsonl"));
+        }
+
+        [Fact]
+        public void Init_deletes_logs_older_than_seven_days_keeps_recent()
+        {
+            Directory.CreateDirectory(_dir);
+            var old = Path.Combine(_dir, "scalpel-20000101-000000.jsonl");
+            var recent = Path.Combine(_dir, "scalpel-20990101-000000.jsonl");
+            File.WriteAllText(old, "{}\n");
+            File.WriteAllText(recent, "{}\n");
+            File.SetLastWriteTime(old, DateTime.Now.AddDays(-8));
+            File.SetLastWriteTime(recent, DateTime.Now.AddDays(-1));
+
+            Logger.Init(_dir);
+            Logger.Shutdown();
+
+            Assert.False(File.Exists(old));
+            Assert.True(File.Exists(recent));
+        }
+
+        [Fact]
+        public void ClearLogs_deletes_prior_files_but_keeps_current_session()
+        {
+            Directory.CreateDirectory(_dir);
+            var prior = Path.Combine(_dir, "scalpel-20990101-000000.jsonl");
+            File.WriteAllText(prior, "{}\n");
+            File.SetLastWriteTime(prior, DateTime.Now.AddDays(-1));
+
+            Logger.Init(_dir);
+            Logger.Info("App", "app.start", "x");
+            Logger.ClearLogs();
+
+            Assert.False(File.Exists(prior));
+            Assert.Single(Directory.GetFiles(_dir, "scalpel-*.jsonl")); // only the live session file remains
+        }
+    }
+}
