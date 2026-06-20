@@ -155,6 +155,36 @@ You can uninstall via Add/Remove Programs at any time.</sys:String>
     <sys:String x:Key="Str_Mode_Sign">Sign</sys:String>
     <sys:String x:Key="Str_TT_Search">Search (Ctrl+F)</sys:String>
 
+    <!-- ── Toolbar new tooltip keys ──────────────────────────────────── -->
+    <sys:String x:Key="Str_TT_Save">Save (Ctrl+S)</sys:String>
+    <sys:String x:Key="Str_TT_FileMenu">More file actions</sys:String>
+    <sys:String x:Key="Str_TT_InsertPage">Insert Blank Page After Selection</sys:String>
+    <sys:String x:Key="Str_TT_Rotate">Rotate Selected Pages Clockwise (90°)</sys:String>
+
+    <!-- ── Toolbar button labels ─────────────────────────────────────── -->
+    <sys:String x:Key="Str_Lbl_Open">Open</sys:String>
+    <sys:String x:Key="Str_Lbl_Save">Save</sys:String>
+    <sys:String x:Key="Str_Lbl_Print">Print</sys:String>
+    <sys:String x:Key="Str_Lbl_New">New</sys:String>
+    <sys:String x:Key="Str_Lbl_CloseFile">Close File</sys:String>
+    <sys:String x:Key="Str_Lbl_SaveFlattened">Save Flattened</sys:String>
+    <sys:String x:Key="Str_Lbl_Select">Select</sys:String>
+    <sys:String x:Key="Str_Lbl_Text">Text</sys:String>
+    <sys:String x:Key="Str_Lbl_Highlight">Highlight</sys:String>
+    <sys:String x:Key="Str_Lbl_Draw">Draw</sys:String>
+    <sys:String x:Key="Str_Lbl_Image">Image</sys:String>
+    <sys:String x:Key="Str_Lbl_Crop">Crop</sys:String>
+    <sys:String x:Key="Str_Lbl_Undo">Undo</sys:String>
+    <sys:String x:Key="Str_Lbl_Clear">Clear</sys:String>
+    <sys:String x:Key="Str_Lbl_Merge">Merge</sys:String>
+    <sys:String x:Key="Str_Lbl_Extract">Extract</sys:String>
+    <sys:String x:Key="Str_Lbl_InsertPage">Insert Page</sys:String>
+    <sys:String x:Key="Str_Lbl_Delete">Delete</sys:String>
+    <sys:String x:Key="Str_Lbl_MoveUp">Move Up</sys:String>
+    <sys:String x:Key="Str_Lbl_MoveDown">Move Down</sys:String>
+    <sys:String x:Key="Str_Lbl_Rotate">Rotate</sys:String>
+    <sys:String x:Key="Str_Lbl_Signature">Signature</sys:String>
+
     <!-- ── View mode ──────────────────────────────────────────────────── -->
     <sys:String x:Key="Str_ViewMode">VIEW MODE</sys:String>
     <sys:String x:Key="Str_View_Single">Single Page</sys:String>

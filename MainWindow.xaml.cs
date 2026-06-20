@@ -174,7 +174,7 @@ namespace KillerPDF
         private readonly Button _toolSignatureBtn = null!;
         private readonly Button _toolImageBtn = null!;
         private readonly Button _saveAsBtnRef = null!;
-        private readonly Button _closeFileBtnRef = null!;
+        private readonly MenuItem _closeFileBtnRef = null!;
         private readonly ComboBox _zoomBox = null!;
         private readonly StackPanel _portableBadge = null!;
         private readonly TextBox _pageJumpBox = null!;
@@ -208,7 +208,7 @@ namespace KillerPDF
             _sidebarCol = (ColumnDefinition)FindName("SidebarCol")!;
             _pageContentPanel = (WrapPanel)FindName("PageContentPanel")!;
             _saveAsBtnRef = (Button)FindName("SaveAsBtn")!;
-            _closeFileBtnRef = (Button)FindName("CloseFileBtn")!;
+            _closeFileBtnRef = (MenuItem)FindName("CloseFileMenuItem")!;
             _zoomBox = (ComboBox)FindName("ZoomBox")!;
             _portableBadge = (StackPanel)FindName("PortableBadge")!;
             _pageJumpBox = (TextBox)FindName("PageJumpBox")!;
@@ -2925,7 +2925,10 @@ namespace KillerPDF
             ModeSignTab.IsChecked  = mode == AppMode.Sign;
             _suppressModeEvents = false;
 
-            // Task 6 wires mode-panel visibility here.
+            ModePanelView.Visibility  = mode == AppMode.View  ? Visibility.Visible : Visibility.Collapsed;
+            ModePanelEdit.Visibility  = mode == AppMode.Edit  ? Visibility.Visible : Visibility.Collapsed;
+            ModePanelPages.Visibility = mode == AppMode.Pages ? Visibility.Visible : Visibility.Collapsed;
+            ModePanelSign.Visibility  = mode == AppMode.Sign  ? Visibility.Visible : Visibility.Collapsed;
         }
 
         // ============================================================
@@ -7022,6 +7025,16 @@ namespace KillerPDF
         // ============================================================
         // File toolbar handlers
         // ============================================================
+
+        // Opens the File ▾ overflow ContextMenu attached to FileMenuBtn.
+        private void FileMenu_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button b && b.ContextMenu is not null)
+            { b.ContextMenu.PlacementTarget = b; b.ContextMenu.IsOpen = true; }
+        }
+
+        // Toolbar wrapper — rotates CW (90°) for the Pages mode panel button.
+        private void RotatePagesToolbar_Click(object sender, RoutedEventArgs e) => RotatePages_Click(90);
 
         private void New_Click(object sender, RoutedEventArgs e) => NewDocument();
 

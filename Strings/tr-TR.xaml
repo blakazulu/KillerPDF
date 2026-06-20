@@ -148,6 +148,36 @@ Bu işlem uygulamayı %LocalAppData%\KillerPDF konumuna kopyalar ve bir Başlat 
     <sys:Double x:Key="Str_KS_FontSize">11</sys:Double>
 
 
+    <!-- ── Toolbar new tooltip keys ──────────────────────────────────── -->
+    <sys:String x:Key="Str_TT_Save">Kaydet (Ctrl+S)</sys:String>
+    <sys:String x:Key="Str_TT_FileMenu">Daha fazla dosya eylemi</sys:String>
+    <sys:String x:Key="Str_TT_InsertPage">Seçimden sonra boş sayfa ekle</sys:String>
+    <sys:String x:Key="Str_TT_Rotate">Seçili sayfaları saat yönünde döndür (90°)</sys:String>
+
+    <!-- ── Toolbar button labels ─────────────────────────────────────── -->
+    <sys:String x:Key="Str_Lbl_Open">Aç</sys:String>
+    <sys:String x:Key="Str_Lbl_Save">Kaydet</sys:String>
+    <sys:String x:Key="Str_Lbl_Print">Yazdır</sys:String>
+    <sys:String x:Key="Str_Lbl_New">Yeni</sys:String>
+    <sys:String x:Key="Str_Lbl_CloseFile">Dosyayı Kapat</sys:String>
+    <sys:String x:Key="Str_Lbl_SaveFlattened">Düzleştirilmiş Kaydet</sys:String>
+    <sys:String x:Key="Str_Lbl_Select">Seç</sys:String>
+    <sys:String x:Key="Str_Lbl_Text">Metin</sys:String>
+    <sys:String x:Key="Str_Lbl_Highlight">Vurgula</sys:String>
+    <sys:String x:Key="Str_Lbl_Draw">Çiz</sys:String>
+    <sys:String x:Key="Str_Lbl_Image">Görsel</sys:String>
+    <sys:String x:Key="Str_Lbl_Crop">Kırp</sys:String>
+    <sys:String x:Key="Str_Lbl_Undo">Geri Al</sys:String>
+    <sys:String x:Key="Str_Lbl_Clear">Temizle</sys:String>
+    <sys:String x:Key="Str_Lbl_Merge">Birleştir</sys:String>
+    <sys:String x:Key="Str_Lbl_Extract">Çıkart</sys:String>
+    <sys:String x:Key="Str_Lbl_InsertPage">Sayfa Ekle</sys:String>
+    <sys:String x:Key="Str_Lbl_Delete">Sil</sys:String>
+    <sys:String x:Key="Str_Lbl_MoveUp">Yukarı Taşı</sys:String>
+    <sys:String x:Key="Str_Lbl_MoveDown">Aşağı Taşı</sys:String>
+    <sys:String x:Key="Str_Lbl_Rotate">Döndür</sys:String>
+    <sys:String x:Key="Str_Lbl_Signature">İmza</sys:String>
+
     <!-- ── Görünüm modu ──────────────────────────────────────────────── -->
     <sys:String x:Key="Str_ViewMode">GÖRÜNÜM MODU</sys:String>
     <sys:String x:Key="Str_View_Single">Tek Sayfa</sys:String>

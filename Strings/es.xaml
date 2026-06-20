@@ -148,6 +148,36 @@ Puede desinstalarla en cualquier momento desde Agregar o quitar programas.</sys:
     <sys:Double x:Key="Str_KS_FontSize">11</sys:Double>
 
 
+    <!-- ── Toolbar new tooltip keys ──────────────────────────────────── -->
+    <sys:String x:Key="Str_TT_Save">Guardar (Ctrl+S)</sys:String>
+    <sys:String x:Key="Str_TT_FileMenu">Más acciones de archivo</sys:String>
+    <sys:String x:Key="Str_TT_InsertPage">Insertar página en blanco después de la selección</sys:String>
+    <sys:String x:Key="Str_TT_Rotate">Rotar páginas seleccionadas en sentido horario (90°)</sys:String>
+
+    <!-- ── Toolbar button labels ─────────────────────────────────────── -->
+    <sys:String x:Key="Str_Lbl_Open">Abrir</sys:String>
+    <sys:String x:Key="Str_Lbl_Save">Guardar</sys:String>
+    <sys:String x:Key="Str_Lbl_Print">Imprimir</sys:String>
+    <sys:String x:Key="Str_Lbl_New">Nuevo</sys:String>
+    <sys:String x:Key="Str_Lbl_CloseFile">Cerrar archivo</sys:String>
+    <sys:String x:Key="Str_Lbl_SaveFlattened">Guardar aplanado</sys:String>
+    <sys:String x:Key="Str_Lbl_Select">Seleccionar</sys:String>
+    <sys:String x:Key="Str_Lbl_Text">Texto</sys:String>
+    <sys:String x:Key="Str_Lbl_Highlight">Resaltar</sys:String>
+    <sys:String x:Key="Str_Lbl_Draw">Dibujar</sys:String>
+    <sys:String x:Key="Str_Lbl_Image">Imagen</sys:String>
+    <sys:String x:Key="Str_Lbl_Crop">Recortar</sys:String>
+    <sys:String x:Key="Str_Lbl_Undo">Deshacer</sys:String>
+    <sys:String x:Key="Str_Lbl_Clear">Limpiar</sys:String>
+    <sys:String x:Key="Str_Lbl_Merge">Combinar</sys:String>
+    <sys:String x:Key="Str_Lbl_Extract">Extraer</sys:String>
+    <sys:String x:Key="Str_Lbl_InsertPage">Insertar página</sys:String>
+    <sys:String x:Key="Str_Lbl_Delete">Eliminar</sys:String>
+    <sys:String x:Key="Str_Lbl_MoveUp">Subir</sys:String>
+    <sys:String x:Key="Str_Lbl_MoveDown">Bajar</sys:String>
+    <sys:String x:Key="Str_Lbl_Rotate">Rotar</sys:String>
+    <sys:String x:Key="Str_Lbl_Signature">Firma</sys:String>
+
     <!-- ── View mode ──────────────────────────────────────────────────── -->
     <sys:String x:Key="Str_ViewMode">MODO DE VISTA</sys:String>
     <sys:String x:Key="Str_View_Single">Página Individual</sys:String>

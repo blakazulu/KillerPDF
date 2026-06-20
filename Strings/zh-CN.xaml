@@ -148,6 +148,36 @@
     <sys:Double x:Key="Str_KS_FontSize">12.5</sys:Double>
 
 
+    <!-- ── Toolbar new tooltip keys ──────────────────────────────────── -->
+    <sys:String x:Key="Str_TT_Save">保存 (Ctrl+S)</sys:String>
+    <sys:String x:Key="Str_TT_FileMenu">更多文件操作</sys:String>
+    <sys:String x:Key="Str_TT_InsertPage">在选中后插入空白页</sys:String>
+    <sys:String x:Key="Str_TT_Rotate">顺时针旋转选中页面 (90°)</sys:String>
+
+    <!-- ── Toolbar button labels ─────────────────────────────────────── -->
+    <sys:String x:Key="Str_Lbl_Open">打开</sys:String>
+    <sys:String x:Key="Str_Lbl_Save">保存</sys:String>
+    <sys:String x:Key="Str_Lbl_Print">打印</sys:String>
+    <sys:String x:Key="Str_Lbl_New">新建</sys:String>
+    <sys:String x:Key="Str_Lbl_CloseFile">关闭文件</sys:String>
+    <sys:String x:Key="Str_Lbl_SaveFlattened">保存平面化</sys:String>
+    <sys:String x:Key="Str_Lbl_Select">选择</sys:String>
+    <sys:String x:Key="Str_Lbl_Text">文本</sys:String>
+    <sys:String x:Key="Str_Lbl_Highlight">高亮</sys:String>
+    <sys:String x:Key="Str_Lbl_Draw">绘图</sys:String>
+    <sys:String x:Key="Str_Lbl_Image">图片</sys:String>
+    <sys:String x:Key="Str_Lbl_Crop">裁剪</sys:String>
+    <sys:String x:Key="Str_Lbl_Undo">撤销</sys:String>
+    <sys:String x:Key="Str_Lbl_Clear">清除</sys:String>
+    <sys:String x:Key="Str_Lbl_Merge">合并</sys:String>
+    <sys:String x:Key="Str_Lbl_Extract">提取</sys:String>
+    <sys:String x:Key="Str_Lbl_InsertPage">插入页面</sys:String>
+    <sys:String x:Key="Str_Lbl_Delete">删除</sys:String>
+    <sys:String x:Key="Str_Lbl_MoveUp">向上移动</sys:String>
+    <sys:String x:Key="Str_Lbl_MoveDown">向下移动</sys:String>
+    <sys:String x:Key="Str_Lbl_Rotate">旋转</sys:String>
+    <sys:String x:Key="Str_Lbl_Signature">签名</sys:String>
+
     <!-- ── View mode ──────────────────────────────────────────────────── -->
     <sys:String x:Key="Str_ViewMode">视图模式</sys:String>
     <sys:String x:Key="Str_View_Single">单页</sys:String>

@@ -148,6 +148,36 @@
     <sys:Double x:Key="Str_KS_FontSize">11</sys:Double>
 
 
+    <!-- ── Toolbar new tooltip keys ──────────────────────────────────── -->
+    <sys:String x:Key="Str_TT_Save">সংরক্ষণ করুন (Ctrl+S)</sys:String>
+    <sys:String x:Key="Str_TT_FileMenu">আরও ফাইল ক্রিয়া</sys:String>
+    <sys:String x:Key="Str_TT_InsertPage">নির্বাচনের পরে ফাঁকা পৃষ্ঠা সন্নিবেশ করুন</sys:String>
+    <sys:String x:Key="Str_TT_Rotate">নির্বাচিত পৃষ্ঠাগুলো ঘড়ির কাঁটার দিকে ঘোরান (৯০°)</sys:String>
+
+    <!-- ── Toolbar button labels ─────────────────────────────────────── -->
+    <sys:String x:Key="Str_Lbl_Open">খুলুন</sys:String>
+    <sys:String x:Key="Str_Lbl_Save">সংরক্ষণ</sys:String>
+    <sys:String x:Key="Str_Lbl_Print">মুদ্রণ</sys:String>
+    <sys:String x:Key="Str_Lbl_New">নতুন</sys:String>
+    <sys:String x:Key="Str_Lbl_CloseFile">ফাইল বন্ধ</sys:String>
+    <sys:String x:Key="Str_Lbl_SaveFlattened">ফ্ল্যাটেন সেভ</sys:String>
+    <sys:String x:Key="Str_Lbl_Select">নির্বাচন</sys:String>
+    <sys:String x:Key="Str_Lbl_Text">টেক্সট</sys:String>
+    <sys:String x:Key="Str_Lbl_Highlight">হাইলাইট</sys:String>
+    <sys:String x:Key="Str_Lbl_Draw">আঁকুন</sys:String>
+    <sys:String x:Key="Str_Lbl_Image">ছবি</sys:String>
+    <sys:String x:Key="Str_Lbl_Crop">ক্রপ</sys:String>
+    <sys:String x:Key="Str_Lbl_Undo">পূর্বাবস্থা</sys:String>
+    <sys:String x:Key="Str_Lbl_Clear">মুছুন</sys:String>
+    <sys:String x:Key="Str_Lbl_Merge">একত্রিত</sys:String>
+    <sys:String x:Key="Str_Lbl_Extract">বের করুন</sys:String>
+    <sys:String x:Key="Str_Lbl_InsertPage">পৃষ্ঠা যোগ</sys:String>
+    <sys:String x:Key="Str_Lbl_Delete">মুছুন</sys:String>
+    <sys:String x:Key="Str_Lbl_MoveUp">উপরে</sys:String>
+    <sys:String x:Key="Str_Lbl_MoveDown">নিচে</sys:String>
+    <sys:String x:Key="Str_Lbl_Rotate">ঘোরান</sys:String>
+    <sys:String x:Key="Str_Lbl_Signature">স্বাক্ষর</sys:String>
+
     <!-- ── View mode ──────────────────────────────────────────────────── -->
     <sys:String x:Key="Str_ViewMode">ভিউ মোড</sys:String>
     <sys:String x:Key="Str_View_Single">একক পৃষ্ঠা</sys:String>
