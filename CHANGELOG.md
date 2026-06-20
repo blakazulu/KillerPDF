@@ -4,7 +4,9 @@ All notable changes to KillerPDF are documented here.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.5.1] - 2026-06-14
+## Unreleased
+
+## 1.5.1 - 2026-06-14
 
 ### Fixed
 - PDFs that opened fine in browsers and Acrobat/Foxit but failed in KillerPDF with "Unexpected EOF" now open. PdfSharpCore rejected them during parsing; KillerPDF now falls back to re-saving the file losslessly through PDFium (which reads them) and opening that copy (Issue #72).
@@ -17,7 +19,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this
 ### Changed
 - Save Flattened PDF now rasterizes across multiple CPU cores. PNG encoding runs in parallel; the PDFium render step is serialized because the library is not thread-safe. Large documents flatten faster and the UI stays responsive (Issue #68).
 
-## [1.5.0] - 2026-06-14
+## 1.5.0 - 2026-06-14
 
 ### Added
 - Localization support (Issue #53 / contributor leox243). Language selector in Settings panel. Ships with English (en-US), Spanish (es), and Traditional Chinese (zh-TW). Theme names, zoom dropdown, fit-mode status, and keyboard shortcut overlay all update with the selected language. Contributor guide at `Strings/TRANSLATING.md`.
@@ -58,9 +60,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this
 - Temp files cleaned up on close, crash, and startup.
 - Undo of a document change (crop, rotate, page operations) now re-renders the active view, so a page no longer keeps showing its pre-undo state while the sidebar shows the correct version.
 
----
-
-## [1.4.3] - 2026-06-08
+## 1.4.3 - 2026-06-08
 
 ### Fixed
 - Encrypted PDFs (owner-restricted RC4) no longer fail with "Unexpected token 'xref'" when rotating pages. PdfSharpCore can silently produce a broken cross-reference entry after saving encrypted files; KillerPDF now pipes the file through PDFium to repair the XRef and retries the open automatically.
@@ -69,9 +69,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this
 - Right-click a link annotation to remove it from the PDF entirely ("Remove Link from PDF"). Previously, clearing annotations only removed the KillerPDF overlay; the native PDF link remained active.
 - Right-click a mailto link to copy just the email address; right-click an http/https link to copy the URL.
 
----
-
-## [1.4.2] - 2026-06-06
+## 1.4.2 - 2026-06-06
 
 ### Added
 - PDF form filling. Interactive PDF forms now render their fields (text inputs, checkboxes, radio buttons) as live controls. Fill them in directly and save — field values are written back into the PDF.
@@ -82,9 +80,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this
 - Copied text words were out of order on PDFs where glyphs are stored in non-reading order (Issue #66). Text extraction now sorts words by position and uses a dynamic line-grouping threshold so both drag-select and Select All produce correctly ordered output.
 - PDFs with malformed or non-standard XRef tables now open in read-only mode instead of showing "Invalid entry in XRef table" and failing entirely.
 
----
-
-## [1.4.1] - 2026-05-21
+## 1.4.1 - 2026-05-21
 
 ### Added
 - Page number jump box in toolbar. Type a page number and press Enter to navigate directly to that page.
@@ -105,9 +101,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this
 - Navigating pages caused multi-second UI lag on documents with many pages.
 - Scroll wheel now navigates to the previous page when scrolled to the top of a page, and to the next page when scrolled to the bottom.
 
----
-
-## [1.4.0] - 2026-05-16
+## 1.4.0 - 2026-05-16
 
 ### Added
 - Rotate page (Issue #52). Right-click any page in the sidebar to rotate it 90° clockwise or counter-clockwise. Works on multi-page selections.
@@ -133,20 +127,20 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this
 - Theme updated to match killertools.net: accent green changed from `#4ade80` to `#1ea54c`, backgrounds shifted to `#333333`/`#3a3a3a`, sidebar darkened to `#222222`, toolbar and title bar at `#222222`. Film grain overlay added to the main content area. Footer text lightened for readability.
 - Sidebar scroll is now handled by an outer ScrollViewer wrapping the page list, allowing the list to size to its content rather than stretching to fill the panel height.
 
-## [1.3.2] - 2026-05-11
+## 1.3.2 - 2026-05-11
 
 ### Fixed
 - Windows Program Compatibility Assistant popup on first launch. Added an app manifest declaring Windows 10/11 compatibility, which suppresses PCA when the app writes to uninstall registry keys.
 - "Set as default PDF viewer" prompt now only appears if KillerPDF is not already the default handler. Previously showed on every install/update regardless.
 - "Set as default PDF viewer" prompt now uses the dark KillerDialog instead of a native Windows message box.
 
-## [1.3.1] - 2026-05-11
+## 1.3.1 - 2026-05-11
 
 ### Fixed
 - Print no longer fails with "No application is associated with the specified file for this action" on systems where Edge is the default PDF handler. Printing now uses WPF-native rendering and PrintDialog instead of the shell print verb.
 - Zoom dropdown selected value no longer shows in blue - selection highlight now uses the accent green.
 
-## [1.3.0] - 2026-05-08
+## 1.3.0 - 2026-05-08
 
 ### Added
 - Image signatures. Import a PNG, JPG, or BMP as a reusable signature instead of drawing one. Stored alongside drawn signatures and flattens into the PDF on save.
@@ -169,13 +163,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this
 - Button hover states and page thumbnail hover in the sidebar are now green instead of the default Windows blue.
 - Toolbar icons overhauled: Open Folder, Close File, Move Up, Move Down, Extract Pages, and Merge PDFs all use cleaner glyphs.
 
-## [1.2.1] - 2026-05-04
+## 1.2.1 - 2026-05-04
 
 ### Changed
 - Code signed with Certum certificate. Windows now shows a verified publisher instead of unknown.
 - Cleaned up footer.
 
-## [1.2.0] - 2026-04-24
+## 1.2.0 - 2026-04-24
 
 ### Added
 - Self-installing EXE. Running the downloaded binary now shows an Install / Run dialog. Install copies the EXE to `%LOCALAPPDATA%\Programs\KillerPDF\` (no UAC required), creates Start Menu and optional Desktop shortcuts, registers as a PDF file handler, and adds an uninstall entry to Add/Remove Programs. Uninstall self-deletes via a deferred batch file. Running a newer version from outside the install path shows an Update prompt instead.
@@ -183,13 +177,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this
 - Password-protected PDF support. Opening an encrypted PDF now prompts for the password instead of showing a generic error. The decrypted copy is held in a temp file for the session so all rendering and editing works normally.
 - Save Flattened PDF (photo icon in toolbar). Rasterizes every page at 150 DPI via PDFium and writes them as embedded images into a new PDF, producing a fully uneditable document. Pending annotations are burned in before rasterization.
 
-## [1.1.1] - 2026-04-18
+## 1.1.1 - 2026-04-18
 
 ### Fixed
 - Maximize no longer covers the Windows taskbar. Added a `WM_GETMINMAXINFO` hook so the frameless window clamps to the monitor's work area (multi-monitor aware).
 - Two `CS8602` nullability warnings in the font-name cleanup path.
 
-## [1.1.0] - 2026-04-16
+## 1.1.0 - 2026-04-16
 
 ### Changed
 - Retargeted from .NET 8 to .NET Framework 4.8 so end users no longer need to install a separate .NET runtime.

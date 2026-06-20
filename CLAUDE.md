@@ -15,9 +15,19 @@ dotnet test                       # run xUnit tests (KillerPDF.Tests)
 dotnet test --filter "FullyQualifiedName~SearchService"   # single test class
 ```
 
-- Targets **.NET Framework 4.8** (`net48`) but **requires the .NET 8 SDK or later to build**. Output is x64.
+- Targets **.NET Framework 4.8** (`net48`) but **requires the .NET 8 SDK or later to build**. Output is x64. `dotnet` may not be on PATH; a user-local SDK at `~/.dotnet/dotnet.exe` works.
+- Build gotcha: after a `dotnet publish` (which pins the `win-x64` RID), a later `dotnet build --no-restore` can fail `NETSDK1047` ("no target for net48/win7-x64"). Re-run **with** restore (drop `--no-restore`) to fix.
 - `dotnet publish` also runs `build/bundle-source.ps1` (the `BundleSource` MSBuild target) to produce a GPL3 `KillerPDF-<version>-src.zip` alongside the EXE.
 - `release.ps1` is the full release pipeline (build → Authenticode sign → `signtool verify /pa` gate → SHA256 → write `BuildInfo.cs` → summary). Don't run it for ordinary dev work; it expects signing certs/SimplySign.
+
+### MSIX / Microsoft Store package
+
+```powershell
+pwsh -File packaging\build-msix.ps1 -SelfSign   # local sideload test package (self-signed)
+pwsh -File packaging\build-msix.ps1 -NoSign -IdentityName ... -Publisher ... -PublisherDisplayName ...   # Store submission
+```
+
+`packaging/build-msix.ps1` publishes the EXE, stages a layout, runs `makepri`/`makeappx`, and signs. Needs the Windows 10/11 SDK (`makeappx`, `signtool`). See `docs/STORE-PUBLISHING.md`. The same `KillerPDF.exe` goes inside the package; only the manifest (`packaging/AppxManifest.xml`, `{token}`-substituted) and assets are added.
 
 ## Architecture
 
@@ -25,6 +35,7 @@ WPF desktop app. There is no MVVM framework in play for the main window — it i
 
 - **`MainWindow.xaml.cs` (~9200 lines, 440 KB) is the monolith.** Nearly all editing, rendering, navigation, search, form-filling, signing, cropping, and save logic lives in this one `partial class MainWindow`. When adding UI behavior, expect to work here. `MainWindow.xaml` is the matching ~90 KB layout.
 - **`App.xaml.cs`** is the entry point AND the installer. It handles crash dialogs (3 unhandled-exception sinks), `/uninstall`, per-user self-install to `%LOCALAPPDATA%\Programs\KillerPDF` with `.pdf` file-handler registration (no UAC), the pdfium integrity check, settings, and temp-file lifecycle.
+  - **Packaged-aware:** `App.IsPackaged()` (via `GetCurrentPackageFullName`) detects an MSIX/Store install. In packaged mode the self-installer is suppressed — portable badge hidden (`IsPortable()` returns false), `InstallAndRelaunch()` no-ops, `/uninstall` ignored — because the OS/package owns install, uninstall, and the `.pdf` association (declared in the manifest). Registry/AppData calls still work via MSIX virtualization. Keep new install-side behavior behind this gate.
 
 ### Three PDF libraries, three distinct roles
 
@@ -43,7 +54,7 @@ The open path in `MainWindow` has layered fallbacks (Modify → ReadOnly → Imp
 ### Themes and localization are hot-swappable ResourceDictionaries
 
 - `Services/ThemeManager.cs` — 6 themes (`Themes/*.xaml`). **Index 0** of `Application.Current.Resources.MergedDictionaries` is the theme dict; it is updated **in place per-key** (not by structural add/remove) to avoid `ResourceReferenceKeyNotFoundException` during live switches. Also sets the DWM dark title bar via P/Invoke.
-- `Services/LocaleManager.cs` — strings live in `Strings/*.xaml` (en-US, es, zh-TW, zh-CN, bn, tr-TR). **Index 1** of the merged dictionaries is the strings dict. Adding a language = add a `Strings/<locale>.xaml`, a `Locale` enum entry, and a `pack://` URI case. See `Strings/TRANSLATING.md`.
+- `Services/LocaleManager.cs` — strings live in `Strings/*.xaml` (en-US, es, zh-TW, zh-CN, bn, tr-TR). **Index 1** of the merged dictionaries is the strings dict (replaced wholesale on switch — so **every** key must exist in **every** locale file, or a `DynamicResource` lookup blanks out in that language). Adding a language = `Strings/<locale>.xaml` + a `Locale` enum entry + a `pack://` URI case in `LocaleManager` + a Settings radio button in `MainWindow.xaml` with a `Lang…Radio_Checked` handler and a sync line in `SettingsBtn_Click` + a `Str_Lang_<name>` key in all six locale files. See `Strings/TRANSLATING.md`.
 
 Both managers persist the user's choice and restore it at startup (`Initialize()` is called from `App.OnStartup` before `MainWindow`).
 
@@ -62,3 +73,9 @@ Both managers persist the user's choice and restore it at startup (`Initialize()
 - C# with `Nullable` enabled and `ImplicitUsings` enabled; `LangVersion=latest`. Collection expressions (`[]`), target-typed `new`, and `switch` expressions are used throughout — match that style.
 - I/O and parsing are wrapped in defensive `try { } catch { }` that swallow and fall back (PDFs are untrusted/malformed); follow this pattern rather than letting exceptions reach the user mid-edit.
 - Tests (`KillerPDF.Tests`) are xUnit and **link the source files directly** (`<Compile Include="..\Services\...">`) rather than referencing the WinExe project. If you move a tested file, update the `.csproj` link paths.
+
+## Further docs
+
+- `docs/OVERVIEW.md` — full architecture/what-it-does reference.
+- `docs/UI-REFERENCE.md` — every button/control, mapped to its handler.
+- `docs/STORE-PUBLISHING.md` — MSIX build + Store submission (incl. the GPLv3-on-Store licensing note).
