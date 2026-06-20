@@ -105,8 +105,8 @@
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Width" Value="46"/>
             <Setter Property="Height" Value="36"/>
-            <Setter Property="FontSize" Value="10"/>
-            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontFamily" Value="{DynamicResource FontIcon}"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -170,8 +170,8 @@
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
             <Setter Property="Padding" Value="8,5"/>
-            <Setter Property="FontFamily" Value="Consolas"/>
-            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontFamily" Value="{DynamicResource FontUI}"/>
+            <Setter Property="FontSize" Value="{DynamicResource FsStatus}"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -199,12 +199,12 @@
         <!-- The ComboBox itself -->
         <Style x:Key="DarkComboBox" TargetType="ComboBox">
             <Setter Property="OverridesDefaultStyle" Value="True"/>
-            <Setter Property="Background" Value="{DynamicResource BgPanel}"/>
+            <Setter Property="Background" Value="{DynamicResource BgControl}"/>
             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource BorderDim}"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="FontFamily" Value="Consolas"/>
-            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontFamily" Value="{DynamicResource FontUI}"/>
+            <Setter Property="FontSize" Value="{DynamicResource FsStatus}"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="ItemContainerStyle" Value="{StaticResource DarkComboItem}"/>
             <Setter Property="Template">
@@ -216,11 +216,11 @@
                                     Background="{TemplateBinding Background}"
                                     BorderBrush="{TemplateBinding BorderBrush}"
                                     BorderThickness="{TemplateBinding BorderThickness}"
-                                    CornerRadius="3">
+                                    CornerRadius="7">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="18"/>
+                                        <ColumnDefinition Width="20"/>
                                     </Grid.ColumnDefinitions>
                                     <!-- Selected item text (non-editable mode) -->
                                     <ContentPresenter x:Name="ContentSite"
@@ -238,8 +238,9 @@
                                              Background="Transparent"
                                              BorderThickness="0"
                                              Foreground="{DynamicResource TextPrimary}"
-                                             FontFamily="Consolas"
-                                             FontSize="11"
+                                             FontFamily="{DynamicResource FontUI}"
+                                             FontSize="{DynamicResource FsStatus}"
+                                             Typography.NumeralAlignment="Tabular"
                                              VerticalAlignment="Center"
                                              IsReadOnly="{TemplateBinding IsReadOnly}"
                                              Visibility="Hidden"
@@ -249,9 +250,9 @@
                                              CaretBrush="{DynamicResource Accent}"/>
                                     <!-- Chevron arrow -->
                                     <TextBlock Grid.Column="1"
-                                               Text="&#xE70D;"
-                                               FontFamily="Segoe MDL2 Assets"
-                                               FontSize="8"
+                                               Text="{StaticResource Ico_Chevron}"
+                                               FontFamily="{DynamicResource FontIcon}"
+                                               FontSize="14"
                                                Foreground="{DynamicResource TextSecondary}"
                                                VerticalAlignment="Center"
                                                HorizontalAlignment="Center"
@@ -271,9 +272,9 @@
                                    PopupAnimation="Fade"
                                    Placement="Bottom">
                                 <Border Background="{DynamicResource BgPanel}"
-                                        BorderBrush="{DynamicResource AccentDim}"
+                                        BorderBrush="{DynamicResource BorderDim}"
                                         BorderThickness="1"
-                                        CornerRadius="3"
+                                        CornerRadius="7"
                                         Padding="2"
                                         MinWidth="{Binding ActualWidth,
                                                    RelativeSource={RelativeSource TemplatedParent}}"
@@ -292,6 +293,7 @@
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource BgHover}"/>
                             </Trigger>
                             <Trigger Property="IsDropDownOpen" Value="True">
                                 <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource Accent}"/>
@@ -348,8 +350,8 @@
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Foreground" Value="{DynamicResource TextSecondary}"/>
-            <Setter Property="FontFamily" Value="Segoe UI"/>
-            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="FontFamily" Value="{DynamicResource FontUI}"/>
+            <Setter Property="FontSize" Value="{DynamicResource FsSidebarLabel}"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Padding" Value="2,2,8,2"/>
             <Setter Property="Cursor" Value="Hand"/>
@@ -375,13 +377,13 @@
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
-            <Setter Property="FontFamily" Value="Segoe UI"/>
-            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontFamily" Value="{DynamicResource FontUI}"/>
+            <Setter Property="FontSize" Value="{DynamicResource FsBody}"/>
         </Style>
         <Style x:Key="OutlineItemStyle" TargetType="TreeViewItem">
             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
-            <Setter Property="FontFamily" Value="Segoe UI"/>
-            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontFamily" Value="{DynamicResource FontUI}"/>
+            <Setter Property="FontSize" Value="{DynamicResource FsBody}"/>
             <Setter Property="IsExpanded" Value="True"/>
             <Setter Property="Padding" Value="2,3"/>
         </Style>
@@ -392,6 +394,8 @@
             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource BorderDim}"/>
             <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontFamily" Value="{DynamicResource FontUI}"/>
+            <Setter Property="FontSize" Value="{DynamicResource FsBody}"/>
             <Setter Property="Padding" Value="12,6"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
@@ -421,8 +425,8 @@
         <!-- Settings panel radio button -->
         <Style x:Key="ThemeRadio" TargetType="RadioButton">
             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
-            <Setter Property="FontFamily" Value="Segoe UI"/>
-            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontFamily" Value="{DynamicResource FontUI}"/>
+            <Setter Property="FontSize" Value="{DynamicResource FsBody}"/>
             <Setter Property="Margin" Value="0,0,0,8"/>
             <Setter Property="Cursor" Value="Hand"/>
         </Style>
@@ -442,15 +446,15 @@
                 MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
             <Grid>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0,0,0">
-                    <TextBlock Text="Killer" FontFamily="Segoe UI" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource TextPrimary}"/>
-                    <TextBlock Text="PDF" FontFamily="Segoe UI" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource AccentLogo}"/>
+                    <TextBlock Text="Killer" FontFamily="{DynamicResource FontUI}" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource TextPrimary}"/>
+                    <TextBlock Text="PDF" FontFamily="{DynamicResource FontUI}" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource AccentLogo}"/>
                     <TextBlock Text="" x:Name="FileNameLabel" VerticalAlignment="Center" Margin="16,0,0,0"
-                               Foreground="{DynamicResource TextSecondary}" FontFamily="Consolas" FontSize="11"/>
+                               Foreground="{DynamicResource TextSecondary}" FontFamily="{DynamicResource FontUI}" FontSize="13"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Content="&#xE921;" Click="MinimizeBtn_Click" Style="{StaticResource ChromeButton}"/>
-                    <Button Content="&#xE922;" Click="MaximizeBtn_Click" Style="{StaticResource ChromeButton}"/>
-                    <Button Content="&#xE8BB;" Click="CloseBtn_Click" Style="{StaticResource ChromeCloseButton}"/>
+                    <Button Content="{StaticResource Ico_Min}" Click="MinimizeBtn_Click" Style="{StaticResource ChromeButton}"/>
+                    <Button Content="{StaticResource Ico_Max}" Click="MaximizeBtn_Click" Style="{StaticResource ChromeButton}"/>
+                    <Button Content="{StaticResource Ico_WinClose}" Click="CloseBtn_Click" Style="{StaticResource ChromeCloseButton}"/>
                 </StackPanel>
             </Grid>
         </Border>
@@ -654,8 +658,9 @@
                             <TextBox x:Name="PageJumpBox" DockPanel.Dock="Left"
                                      Width="30" Height="20" VerticalAlignment="Center"
                                      TextAlignment="Center" VerticalContentAlignment="Center"
-                                     FontFamily="Consolas" FontSize="11"
-                                     Background="{DynamicResource BgPanel}"
+                                     FontFamily="{DynamicResource FontUI}" FontSize="{DynamicResource FsSidebarLabel}"
+                                     Typography.NumeralAlignment="Tabular"
+                                     Background="{DynamicResource BgControl}"
                                      Foreground="{DynamicResource TextPrimary}"
                                      BorderBrush="{DynamicResource BorderDim}" BorderThickness="1"
                                      CaretBrush="{DynamicResource Accent}"
@@ -679,7 +684,8 @@
                                 </TextBox>
                             <TextBlock x:Name="PageTotalLabel" DockPanel.Dock="Left"
                                        Text="/ –" VerticalAlignment="Center"
-                                       FontFamily="Consolas" FontSize="11"
+                                       FontFamily="{DynamicResource FontUI}" FontSize="{DynamicResource FsSidebarLabel}"
+                                       Typography.NumeralAlignment="Tabular"
                                        Foreground="{DynamicResource TextSecondary}"
                                        Margin="2,0,0,0"/>
                         </DockPanel><!-- /PageControlsRow -->
@@ -744,67 +750,24 @@
                     <Grid>
                         <!-- Collapse/expand arrow at top -->
                         <Button x:Name="SidebarToggleBtn"
-                                Content="&#xE76B;" ToolTip="{DynamicResource Str_TT_CollapseSidebar}"
-                                Style="{StaticResource ToolbarButton}"
-                                Width="24" Padding="0" FontSize="10"
+                                Content="{StaticResource Ico_ChevronLeft}" ToolTip="{DynamicResource Str_TT_CollapseSidebar}"
+                                Style="{StaticResource StudioIconButton}"
+                                Width="24" Height="24" Padding="0"
                                 VerticalAlignment="Top" Margin="0,6,0,0"
                                 Click="SidebarToggle_Click"/>
                         <!-- Settings and help icons pinned to bottom -->
                         <StackPanel VerticalAlignment="Bottom" Margin="0,0,0,6">
                             <Button Click="ShortcutHelp_Click"
-                                    Cursor="Hand" FocusVisualStyle="{x:Null}"
+                                    Style="{StaticResource StudioIconButton}"
+                                    Content="{StaticResource Ico_Shortcuts}"
                                     ToolTip="{DynamicResource Str_TT_KeyboardShortcuts}"
-                                    Width="24" Height="24" Padding="0" Margin="0,0,0,6">
-                                <Button.Template>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border Background="Transparent">
-                                            <TextBlock Text="?"
-                                                       Foreground="{DynamicResource TextPrimary}"
-                                                       FontFamily="Consolas" FontSize="18"
-                                                       HorizontalAlignment="Center"
-                                                       VerticalAlignment="Center">
-                                                <TextBlock.Style>
-                                                    <Style TargetType="TextBlock">
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Button}}" Value="True">
-                                                                <Setter Property="Foreground" Value="{DynamicResource Accent}"/>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </TextBlock.Style>
-                                            </TextBlock>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Button.Template>
-                            </Button>
+                                    Width="24" Height="24" Padding="0" Margin="0,0,0,6"/>
                             <Button x:Name="SettingsBtn"
                                     Click="SettingsBtn_Click"
-                                    Cursor="Hand" FocusVisualStyle="{x:Null}"
+                                    Style="{StaticResource StudioIconButton}"
+                                    Content="{StaticResource Ico_Settings}"
                                     ToolTip="{DynamicResource Str_TT_Settings}"
-                                    Width="24" Height="24" Padding="0">
-                                <Button.Template>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border Background="Transparent">
-                                            <TextBlock Text="&#xE713;"
-                                                       FontFamily="Segoe MDL2 Assets"
-                                                       Foreground="{DynamicResource TextPrimary}"
-                                                       FontSize="16"
-                                                       HorizontalAlignment="Center"
-                                                       VerticalAlignment="Center">
-                                                <TextBlock.Style>
-                                                    <Style TargetType="TextBlock">
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Button}}" Value="True">
-                                                                <Setter Property="Foreground" Value="{DynamicResource Accent}"/>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </TextBlock.Style>
-                                            </TextBlock>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Button.Template>
-                            </Button>
+                                    Width="24" Height="24" Padding="0"/>
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -915,17 +878,19 @@
             <Grid Margin="16,0">
                 <TextBlock x:Name="StatusText" Text="{DynamicResource Str_Ready}"
                            Foreground="{DynamicResource TextSecondary}"
-                           FontFamily="Segoe UI" FontSize="11" VerticalAlignment="Center"/>
+                           FontFamily="{DynamicResource FontUI}" FontSize="{DynamicResource FsStatus}"
+                           Typography.NumeralAlignment="Tabular"
+                           VerticalAlignment="Center"/>
                 <!-- Portable mode indicator (hidden when installed) -->
                 <StackPanel x:Name="PortableBadge" Orientation="Horizontal"
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Visibility="Collapsed">
                     <TextBlock Text="{DynamicResource Str_Portable}" Foreground="{DynamicResource TextSecondary}"
-                               FontFamily="Consolas" FontSize="9"
+                               FontFamily="{DynamicResource FontUI}" FontSize="{DynamicResource FsStatus}"
                                VerticalAlignment="Center" Margin="0,0,8,0"/>
                     <Button x:Name="InstallBtn" Content="{DynamicResource Str_InstallBtn}"
                             Click="Install_Click"
-                            FontFamily="Segoe UI" FontSize="10"
+                            FontFamily="{DynamicResource FontUI}" FontSize="{DynamicResource FsStatus}"
                             Foreground="{DynamicResource Accent}"
                             Background="Transparent"
                             BorderThickness="1" BorderBrush="{DynamicResource AccentDim}"
@@ -936,7 +901,7 @@
                                 <Border Background="{TemplateBinding Background}"
                                         BorderBrush="{TemplateBinding BorderBrush}"
                                         BorderThickness="{TemplateBinding BorderThickness}"
-                                        CornerRadius="2" Padding="{TemplateBinding Padding}">
+                                        CornerRadius="4" Padding="{TemplateBinding Padding}">
                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Border>
                                 <ControlTemplate.Triggers>
@@ -950,12 +915,13 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                     <TextBlock x:Name="VersionLabel" Text="v1.5.1"
-                               Foreground="{DynamicResource TextFooter}" FontFamily="Consolas"
-                               FontSize="10" VerticalAlignment="Center" Margin="0,0,12,0"
+                               Foreground="{DynamicResource TextFooter}" FontFamily="{DynamicResource FontUI}"
+                               FontSize="{DynamicResource FsStatus}" Typography.NumeralAlignment="Tabular"
+                               VerticalAlignment="Center" Margin="0,0,12,0"
                                Cursor="Hand" ToolTip="{DynamicResource Str_TT_About}"
                                MouseLeftButtonDown="VersionLabel_MouseLeftButtonDown"/>
-                    <TextBlock FontSize="10" VerticalAlignment="Center"
-                               FontFamily="Consolas">
+                    <TextBlock FontSize="{DynamicResource FsStatus}" VerticalAlignment="Center"
+                               FontFamily="{DynamicResource FontUI}">
                         <Run Text="&#x00A9; 2026 " Foreground="{DynamicResource TextFooter}"/>
                         <Hyperlink NavigateUri="https://thekiller.net"
                                    RequestNavigate="Hyperlink_RequestNavigate"

@@ -3033,7 +3033,7 @@ namespace KillerPDF
                 _sidebarBorder.Visibility = Visibility.Collapsed;
                 _sidebarCol.Width = new GridLength(24);
                 _sidebarCol.MinWidth = 24;
-                _sidebarToggleBtn.Content = "\uE76C"; // ChevronRight (Segoe MDL2)
+                _sidebarToggleBtn.Content = (string)FindResource("Ico_ChevronRight"); // expand right (Tabler)
                 _sidebarToggleBtn.ToolTip = Loc("Str_TT_ExpandSidebar");
             }
             else
@@ -3042,7 +3042,7 @@ namespace KillerPDF
                 double restore = _sidebarShowingOutlines ? _savedOutlinesWidth : _savedPagesWidth;
                 _sidebarCol.Width = new GridLength(restore);
                 _sidebarCol.MinWidth = 24;
-                _sidebarToggleBtn.Content = "\uE76B"; // ChevronLeft (Segoe MDL2)
+                _sidebarToggleBtn.Content = (string)FindResource("Ico_ChevronLeft"); // collapse left (Tabler)
                 _sidebarToggleBtn.ToolTip = Loc("Str_TT_CollapseSidebar");
             }
             if (PageList.SelectedIndex >= 0)
