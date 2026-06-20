@@ -450,7 +450,7 @@
                     <TextBlock Text="Killer" FontFamily="{DynamicResource FontUI}" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource TextPrimary}"/>
                     <TextBlock Text="PDF" FontFamily="{DynamicResource FontUI}" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource AccentLogo}"/>
                     <TextBlock Text="" x:Name="FileNameLabel" VerticalAlignment="Center" Margin="16,0,0,0"
-                               Foreground="{DynamicResource TextSecondary}" FontFamily="{DynamicResource FontUI}" FontSize="13"/>
+                               Foreground="{DynamicResource TextSecondary}" FontFamily="{DynamicResource FontUI}" FontSize="{DynamicResource FsBody}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Content="{StaticResource Ico_Min}" Click="MinimizeBtn_Click" Style="{StaticResource ChromeButton}"/>
