@@ -92,6 +92,27 @@ namespace Scalpel.Tests
         }
 
         [Fact]
+        public void Error_serializes_exception_into_error_object_on_json_line()
+        {
+            Logger.Init(_dir);
+
+            Exception captured;
+            try { throw new InvalidOperationException("boom"); } catch (Exception ex) { captured = ex; }
+            Logger.Error("Error", "op.fail", "operation failed", captured);
+            Logger.Flush();
+
+            var lines = ReadLogLines().Split('\n').Where(l => l.Trim().Length > 0).ToArray();
+            Assert.Single(lines);
+
+            using var doc = JsonDocument.Parse(lines[0]);
+            var root = doc.RootElement;
+            Assert.Equal("ERROR", root.GetProperty("level").GetString());
+            Assert.True(root.TryGetProperty("error", out var error), "error property must exist");
+            Assert.Equal("InvalidOperationException", error.GetProperty("type").GetString());
+            Assert.Equal("boom", error.GetProperty("message").GetString());
+        }
+
+        [Fact]
         public void ClearLogs_deletes_prior_files_but_keeps_current_session()
         {
             Directory.CreateDirectory(_dir);

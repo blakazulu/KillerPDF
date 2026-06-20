@@ -110,6 +110,7 @@ namespace Scalpel.Services
 
         private static void Write(Level level, string cat, string evt, string msg, Exception? ex, object? data)
         {
+            // Intentional unlocked fast-path read: a line dropped or emitted under a race is acceptable.
             if (!Enabled || level < _minLevel) return;
             try
             {
