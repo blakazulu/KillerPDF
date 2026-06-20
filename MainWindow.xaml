@@ -940,51 +940,27 @@
               Visibility="Collapsed"
               Background="Transparent"
               MouseLeftButtonDown="SettingsOverlay_MouseLeftButtonDown">
-            <Border Background="{DynamicResource BgModal}"
-                    BorderBrush="{DynamicResource AccentBorder}"
-                    BorderThickness="2"
-                    CornerRadius="6"
+            <Border Style="{StaticResource StudioOverlayCard}"
                     Padding="20,16,20,20"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Bottom"
                     Margin="8,0,0,36"
                     MinWidth="220"
                     MouseLeftButtonDown="SettingsOverlayCard_MouseLeftButtonDown">
-                <Border.Effect>
-                    <DropShadowEffect Color="Black" BlurRadius="16" ShadowDepth="2" Direction="270" Opacity="0.5"/>
-                </Border.Effect>
                 <StackPanel>
                     <Grid Margin="0,0,0,12">
                         <TextBlock Text="{DynamicResource Str_Settings}"
-                                   FontFamily="Segoe UI" FontSize="14" FontWeight="SemiBold"
+                                   FontFamily="{DynamicResource FontUI}" FontSize="{DynamicResource FsDialogTitle}" FontWeight="SemiBold"
                                    Foreground="{DynamicResource TextPrimary}"
                                    HorizontalAlignment="Left" VerticalAlignment="Center"/>
                         <Button Click="SettingsOverlayClose_Click"
+                                Style="{StaticResource StudioIconButton}"
                                 HorizontalAlignment="Right" VerticalAlignment="Center"
-                                Cursor="Hand" FocusVisualStyle="{x:Null}"
-                                Width="24" Height="24">
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <TextBlock Text="&#xE711;"
-                                               FontFamily="Segoe MDL2 Assets" FontSize="11"
-                                               Foreground="{DynamicResource TextSecondary}"
-                                               HorizontalAlignment="Center" VerticalAlignment="Center">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Button}}" Value="True">
-                                                        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
+                                FocusVisualStyle="{x:Null}"
+                                Content="{StaticResource Ico_WinClose}"/>
                     </Grid>
                     <TextBlock Text="{DynamicResource Str_Theme}" Foreground="{DynamicResource Accent}"
-                               FontFamily="Segoe UI" FontSize="11" FontWeight="SemiBold"
+                               FontFamily="{DynamicResource FontUI}" FontSize="11" FontWeight="SemiBold"
                                Margin="0,0,0,8"/>
                     <RadioButton x:Name="ThemeDarkRadio"
                                  Content="{DynamicResource Str_Theme_Dark}"
@@ -1017,7 +993,7 @@
                                  Style="{StaticResource ThemeRadio}"
                                  Checked="ThemeCyanoticRadio_Checked"/>
                     <TextBlock Text="{DynamicResource Str_Language}" Foreground="{DynamicResource Accent}"
-                               FontFamily="Segoe UI" FontSize="11" FontWeight="SemiBold"
+                               FontFamily="{DynamicResource FontUI}" FontSize="11" FontWeight="SemiBold"
                                Margin="0,12,0,8"/>
                     <RadioButton x:Name="LangEnRadio"
                                  Content="{DynamicResource Str_Lang_English}"
@@ -1060,10 +1036,7 @@
               Visibility="Collapsed"
               Background="#88000000"
               MouseLeftButtonDown="ShortcutOverlay_MouseLeftButtonDown">
-            <Border Background="{DynamicResource BgModal}"
-                    BorderBrush="{DynamicResource AccentBorder}"
-                    BorderThickness="2"
-                    CornerRadius="6"
+            <Border Style="{StaticResource StudioOverlayCard}"
                     Padding="28,16,28,22"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
@@ -1073,32 +1046,14 @@
                 <StackPanel>
                     <Grid Margin="0,0,0,12">
                         <TextBlock Text="{DynamicResource Str_KS_Title}"
-                                   FontFamily="Segoe UI" FontSize="15" FontWeight="SemiBold"
+                                   FontFamily="{DynamicResource FontUI}" FontSize="{DynamicResource FsDialogTitle}" FontWeight="SemiBold"
                                    Foreground="{DynamicResource TextPrimary}"
                                    HorizontalAlignment="Left" VerticalAlignment="Center"/>
                         <Button Click="ShortcutOverlayClose_Click"
+                                Style="{StaticResource StudioIconButton}"
                                 HorizontalAlignment="Right" VerticalAlignment="Center"
-                                Cursor="Hand" FocusVisualStyle="{x:Null}"
-                                Width="24" Height="24">
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <TextBlock Text="&#xE711;"
-                                               FontFamily="Segoe MDL2 Assets" FontSize="11"
-                                               Foreground="{DynamicResource TextSecondary}"
-                                               HorizontalAlignment="Center" VerticalAlignment="Center">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Button}}" Value="True">
-                                                        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
+                                FocusVisualStyle="{x:Null}"
+                                Content="{StaticResource Ico_WinClose}"/>
                     </Grid>
 
                     <!-- Column layout -->
@@ -1112,7 +1067,7 @@
                         <!-- Left column -->
                         <StackPanel Grid.Column="0">
                             <TextBlock Text="{DynamicResource Str_KS_File}" Foreground="{DynamicResource Accent}"
-                                       FontFamily="Segoe UI" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                       FontFamily="{DynamicResource FontUI}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,4"/>
                             <DockPanel Margin="0,0,0,4"><TextBlock Text="Ctrl+O" FontFamily="Consolas" FontSize="11" Foreground="{DynamicResource TextSecondary}" Width="120"/><TextBlock Text="{DynamicResource Str_KS_Open}" FontSize="{DynamicResource Str_KS_FontSize}" Foreground="{DynamicResource TextPrimary}"/></DockPanel>
                             <DockPanel Margin="0,0,0,4"><TextBlock Text="Ctrl+W" FontFamily="Consolas" FontSize="11" Foreground="{DynamicResource TextSecondary}" Width="120"/><TextBlock Text="{DynamicResource Str_KS_CloseFile}" FontSize="{DynamicResource Str_KS_FontSize}" Foreground="{DynamicResource TextPrimary}"/></DockPanel>
                             <DockPanel Margin="0,0,0,4"><TextBlock Text="Ctrl+N" FontFamily="Consolas" FontSize="11" Foreground="{DynamicResource TextSecondary}" Width="120"/><TextBlock Text="{DynamicResource Str_KS_NewBlank}" FontSize="{DynamicResource Str_KS_FontSize}" Foreground="{DynamicResource TextPrimary}"/></DockPanel>
@@ -1120,7 +1075,7 @@
                             <DockPanel Margin="0,0,0,0"><TextBlock Text="Ctrl+P" FontFamily="Consolas" FontSize="11" Foreground="{DynamicResource TextSecondary}" Width="120"/><TextBlock Text="{DynamicResource Str_KS_Print}" FontSize="{DynamicResource Str_KS_FontSize}" Foreground="{DynamicResource TextPrimary}"/></DockPanel>
 
                             <TextBlock Text="{DynamicResource Str_KS_Navigation}" Foreground="{DynamicResource Accent}"
-                                       FontFamily="Segoe UI" FontSize="11" FontWeight="SemiBold" Margin="0,12,0,4"/>
+                                       FontFamily="{DynamicResource FontUI}" FontSize="11" FontWeight="SemiBold" Margin="0,12,0,4"/>
                             <DockPanel Margin="0,0,0,4"><TextBlock Text="&#x2190; / &#x2192; or &#x2191; / &#x2193;" FontFamily="Consolas" FontSize="11" Foreground="{DynamicResource TextSecondary}" Width="120"/><TextBlock Text="{DynamicResource Str_KS_PrevNext}" FontSize="{DynamicResource Str_KS_FontSize}" Foreground="{DynamicResource TextPrimary}"/></DockPanel>
                             <DockPanel Margin="0,0,0,4"><TextBlock Text="Ctrl+Scroll" FontFamily="Consolas" FontSize="11" Foreground="{DynamicResource TextSecondary}" Width="120"/><TextBlock Text="{DynamicResource Str_KS_ZoomCursor}" FontSize="{DynamicResource Str_KS_FontSize}" Foreground="{DynamicResource TextPrimary}"/></DockPanel>
                             <DockPanel Margin="0,0,0,4"><TextBlock Text="Ctrl+= / Ctrl+-" FontFamily="Consolas" FontSize="11" Foreground="{DynamicResource TextSecondary}" Width="120"/><TextBlock Text="{DynamicResource Str_KS_ZoomInOut}" FontSize="{DynamicResource Str_KS_FontSize}" Foreground="{DynamicResource TextPrimary}"/></DockPanel>
@@ -1132,18 +1087,18 @@
                         <!-- Right column -->
                         <StackPanel Grid.Column="2">
                             <TextBlock Text="{DynamicResource Str_KS_Editing}" Foreground="{DynamicResource Accent}"
-                                       FontFamily="Segoe UI" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                                       FontFamily="{DynamicResource FontUI}" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,4"/>
                             <DockPanel Margin="0,0,0,4"><TextBlock Text="Ctrl+Z" FontFamily="Consolas" FontSize="11" Foreground="{DynamicResource TextSecondary}" Width="120"/><TextBlock Text="{DynamicResource Str_KS_Undo}" FontSize="{DynamicResource Str_KS_FontSize}" Foreground="{DynamicResource TextPrimary}"/></DockPanel>
                             <DockPanel Margin="0,0,0,4"><TextBlock Text="Delete" FontFamily="Consolas" FontSize="11" Foreground="{DynamicResource TextSecondary}" Width="120"/><TextBlock Text="{DynamicResource Str_KS_DeleteAnnot}" FontSize="{DynamicResource Str_KS_FontSize}" Foreground="{DynamicResource TextPrimary}"/></DockPanel>
                             <DockPanel Margin="0,0,0,4"><TextBlock Text="Enter / Escape" FontFamily="Consolas" FontSize="11" Foreground="{DynamicResource TextSecondary}" Width="120"/><TextBlock Text="{DynamicResource Str_KS_ConfirmCancel}" FontSize="{DynamicResource Str_KS_FontSize}" Foreground="{DynamicResource TextPrimary}"/></DockPanel>
                             <TextBlock Text="{DynamicResource Str_KS_SearchSelect}" Foreground="{DynamicResource Accent}"
-                                       FontFamily="Segoe UI" FontSize="11" FontWeight="SemiBold" Margin="0,12,0,4"/>
+                                       FontFamily="{DynamicResource FontUI}" FontSize="11" FontWeight="SemiBold" Margin="0,12,0,4"/>
                             <DockPanel Margin="0,0,0,4"><TextBlock Text="Ctrl+F" FontFamily="Consolas" FontSize="11" Foreground="{DynamicResource TextSecondary}" Width="120"/><TextBlock Text="{DynamicResource Str_KS_Find}" FontSize="{DynamicResource Str_KS_FontSize}" Foreground="{DynamicResource TextPrimary}"/></DockPanel>
                             <DockPanel Margin="0,0,0,4"><TextBlock Text="Enter / Shift+Enter" FontFamily="Consolas" FontSize="11" Foreground="{DynamicResource TextSecondary}" Width="120"/><TextBlock Text="{DynamicResource Str_KS_NextPrevResult}" FontSize="{DynamicResource Str_KS_FontSize}" Foreground="{DynamicResource TextPrimary}"/></DockPanel>
                             <DockPanel Margin="0,0,0,4"><TextBlock Text="Ctrl+A" FontFamily="Consolas" FontSize="11" Foreground="{DynamicResource TextSecondary}" Width="120"/><TextBlock Text="{DynamicResource Str_KS_SelectAll}" FontSize="{DynamicResource Str_KS_FontSize}" Foreground="{DynamicResource TextPrimary}"/></DockPanel>
                             <DockPanel Margin="0,0,0,0"><TextBlock Text="Ctrl+C" FontFamily="Consolas" FontSize="11" Foreground="{DynamicResource TextSecondary}" Width="120"/><TextBlock Text="{DynamicResource Str_KS_CopyText}" FontSize="{DynamicResource Str_KS_FontSize}" Foreground="{DynamicResource TextPrimary}"/></DockPanel>
                             <TextBlock Text="{DynamicResource Str_KS_Help}" Foreground="{DynamicResource Accent}"
-                                       FontFamily="Segoe UI" FontSize="11" FontWeight="SemiBold" Margin="0,12,0,4"/>
+                                       FontFamily="{DynamicResource FontUI}" FontSize="11" FontWeight="SemiBold" Margin="0,12,0,4"/>
                             <DockPanel Margin="0,0,0,0"><TextBlock Text="Ctrl+?" FontFamily="Consolas" FontSize="11" Foreground="{DynamicResource TextSecondary}" Width="120"/><TextBlock Text="{DynamicResource Str_KS_ThisList}" FontSize="{DynamicResource Str_KS_FontSize}" Foreground="{DynamicResource TextPrimary}"/></DockPanel>
                         </StackPanel>
                     </Grid>
@@ -1157,10 +1112,7 @@
               Visibility="Collapsed"
               Background="#88000000"
               MouseLeftButtonDown="AboutOverlay_MouseLeftButtonDown">
-            <Border Background="{DynamicResource BgModal}"
-                    BorderBrush="{DynamicResource AccentBorder}"
-                    BorderThickness="2"
-                    CornerRadius="6"
+            <Border Style="{StaticResource StudioOverlayCard}"
                     Padding="28,20,28,22"
                     VerticalAlignment="Center"
                     Width="560"
@@ -1181,22 +1133,22 @@
                         <StackPanel>
                             <StackPanel Margin="0,0,0,10">
                                 <TextBlock Text="{DynamicResource Str_About_Version}" Foreground="{DynamicResource TextDim}"
-                                           FontFamily="Segoe UI" FontSize="11" Margin="0,0,0,2"/>
+                                           FontFamily="{DynamicResource FontUI}" FontSize="11" Margin="0,0,0,2"/>
                                 <TextBlock x:Name="AboutVersionBlock"
-                                           FontFamily="Segoe UI" FontSize="12"
+                                           FontFamily="{DynamicResource FontUI}" FontSize="12"
                                            Foreground="{DynamicResource Accent}"
                                            Cursor="Hand"/>
                             </StackPanel>
                             <StackPanel Margin="0,0,0,10">
                                 <TextBlock Text="{DynamicResource Str_About_Publisher}" Foreground="{DynamicResource TextDim}"
-                                           FontFamily="Segoe UI" FontSize="11" Margin="0,0,0,2"/>
+                                           FontFamily="{DynamicResource FontUI}" FontSize="11" Margin="0,0,0,2"/>
                                 <TextBlock x:Name="AboutPublisherBlock"
-                                           FontFamily="Segoe UI" FontSize="12"
+                                           FontFamily="{DynamicResource FontUI}" FontSize="12"
                                            Foreground="{DynamicResource TextPrimary}"/>
                             </StackPanel>
                             <StackPanel Margin="0,0,0,10">
                                 <TextBlock Text="{DynamicResource Str_About_Thumbprint}" Foreground="{DynamicResource TextDim}"
-                                           FontFamily="Segoe UI" FontSize="11" Margin="0,0,0,2"/>
+                                           FontFamily="{DynamicResource FontUI}" FontSize="11" Margin="0,0,0,2"/>
                                 <TextBlock x:Name="AboutThumbprintBlock"
                                            FontFamily="Consolas" FontSize="11"
                                            Foreground="{DynamicResource TextPrimary}"
@@ -1204,7 +1156,7 @@
                             </StackPanel>
                             <StackPanel Margin="0,0,0,10">
                                 <TextBlock Text="{DynamicResource Str_About_ExeSha}" Foreground="{DynamicResource TextDim}"
-                                           FontFamily="Segoe UI" FontSize="11" Margin="0,0,0,2"/>
+                                           FontFamily="{DynamicResource FontUI}" FontSize="11" Margin="0,0,0,2"/>
                                 <TextBlock x:Name="AboutSha256Block"
                                            FontFamily="Consolas" FontSize="11"
                                            Foreground="{DynamicResource TextPrimary}"
@@ -1215,28 +1167,10 @@
                     </StackPanel>
                     <!-- X close button overlaid at top-right - no vertical space consumed -->
                     <Button Click="AboutOverlayClose_Click"
+                            Style="{StaticResource StudioIconButton}"
                             HorizontalAlignment="Right" VerticalAlignment="Top"
-                            Cursor="Hand" FocusVisualStyle="{x:Null}"
-                            Width="24" Height="24">
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <TextBlock Text="&#xE711;"
-                                           FontFamily="Segoe MDL2 Assets" FontSize="11"
-                                           Foreground="{DynamicResource TextSecondary}"
-                                           HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <TextBlock.Style>
-                                        <Style TargetType="TextBlock">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Button}}" Value="True">
-                                                    <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </TextBlock.Style>
-                                </TextBlock>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
+                            FocusVisualStyle="{x:Null}"
+                            Content="{StaticResource Ico_WinClose}"/>
                 </Grid>
             </Border>
         </Grid>

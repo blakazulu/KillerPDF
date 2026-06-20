@@ -1321,36 +1321,118 @@ namespace KillerPDF
         private string? PromptForPassword(string filename)
         {
             string? result = null;
+            var fontUI  = (FontFamily)Application.Current.FindResource("FontUI");
+            var bgModal = (Brush)Application.Current.FindResource("BgModal");
+            var bgCtrl  = (Brush)Application.Current.FindResource("BgControl");
+            var fgPri   = (Brush)Application.Current.FindResource("TextPrimary");
+            var fgSec   = (Brush)Application.Current.FindResource("TextSecondary");
+            var bdrDim  = (Brush)Application.Current.FindResource("BorderDim");
+            var accent  = (Brush)Application.Current.FindResource("Accent");
+
             var win = new Window
             {
                 Title = "Password Required",
                 Width = 360,
-                Height = 165,
+                SizeToContent = SizeToContent.Height,
+                WindowStyle = WindowStyle.None,
+                AllowsTransparency = true,
+                Background = Brushes.Transparent,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 Owner = this,
                 ResizeMode = ResizeMode.NoResize,
-                Background = new SolidColorBrush(Color.FromRgb(0x22, 0x22, 0x22))
+                FontFamily = fontUI
             };
+
+            var outerBorder = new Border
+            {
+                Background      = bgModal,
+                BorderBrush     = (Brush)Application.Current.FindResource("BorderDim"),
+                BorderThickness = new Thickness(1),
+                CornerRadius    = new CornerRadius(12),
+                Effect          = new System.Windows.Media.Effects.DropShadowEffect
+                {
+                    Color = Colors.Black, BlurRadius = 24, ShadowDepth = 4, Opacity = 0.4, Direction = 270
+                }
+            };
+
+            // Title bar
+            var titleBar = new Border
+            {
+                Background   = (Brush)Application.Current.FindResource("BgPanel"),
+                Padding      = new Thickness(16, 10, 8, 10),
+                CornerRadius = new CornerRadius(11, 11, 0, 0)
+            };
+            titleBar.MouseLeftButtonDown += (_, e) => { if (e.ButtonState == MouseButtonState.Pressed) win.DragMove(); };
+            var titleGrid = new Grid();
+            titleGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            titleGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            titleGrid.Children.Add(new TextBlock
+            {
+                Text       = "Password Required",
+                Foreground = fgPri,
+                FontWeight = FontWeights.SemiBold,
+                FontSize   = (double)Application.Current.FindResource("FsDialogTitle"),
+                FontFamily = fontUI,
+                VerticalAlignment = VerticalAlignment.Center
+            });
+            var closeTitleBtn = new Button
+            {
+                Style   = (Style)Application.Current.FindResource("StudioIconButton"),
+                Content = Application.Current.FindResource("Ico_WinClose")
+            };
+            closeTitleBtn.Click += (_, _2) => { win.DialogResult = false; };
+            Grid.SetColumn(closeTitleBtn, 1);
+            titleGrid.Children.Add(closeTitleBtn);
+            titleBar.Child = titleGrid;
+
+            // Body
             var sp = new StackPanel { Margin = new Thickness(20, 16, 20, 16) };
             sp.Children.Add(new TextBlock
             {
-                Text = $"\"{System.IO.Path.GetFileName(filename)}\" is password protected.",
-                Foreground = Brushes.White,
+                Text         = $"\"{System.IO.Path.GetFileName(filename)}\" is password protected.",
+                Foreground   = fgPri,
+                FontFamily   = fontUI,
+                FontSize     = (double)Application.Current.FindResource("FsBody"),
                 TextWrapping = TextWrapping.Wrap,
-                Margin = new Thickness(0, 0, 0, 10)
+                Margin       = new Thickness(0, 0, 0, 10)
             });
-            var pwBox = new PasswordBox { Margin = new Thickness(0, 0, 0, 14) };
+            var pwBox = new PasswordBox
+            {
+                Margin           = new Thickness(0, 0, 0, 14),
+                Background       = bgCtrl,
+                Foreground       = fgPri,
+                BorderBrush      = bdrDim,
+                CaretBrush       = accent,
+                Padding          = new Thickness(8, 6, 8, 6)
+            };
             sp.Children.Add(pwBox);
+
             var btnRow = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
-            var okBtn = new Button { Content = "Open", Width = 76, Margin = new Thickness(0, 0, 8, 0) };
-            var cancelBtn = new Button { Content = "Cancel", Width = 76 };
-            okBtn.Click += (s, ev) => { result = pwBox.Password; win.DialogResult = true; };
+            var cancelBtn = new Button
+            {
+                Content = "Cancel",
+                Style   = (Style)Application.Current.FindResource("StudioToolButton"),
+                Width   = 80,
+                Margin  = new Thickness(0, 0, 8, 0)
+            };
+            var okBtn = new Button
+            {
+                Content = "Open",
+                Style   = (Style)Application.Current.FindResource("StudioPrimaryButton"),
+                Width   = 80
+            };
+            okBtn.Click     += (s, ev) => { result = pwBox.Password; win.DialogResult = true; };
             cancelBtn.Click += (s, ev) => { win.DialogResult = false; };
-            pwBox.KeyDown += (s, ev) => { if (ev.Key == Key.Enter) { result = pwBox.Password; win.DialogResult = true; } };
-            btnRow.Children.Add(okBtn);
+            pwBox.KeyDown   += (s, ev) => { if (ev.Key == Key.Enter) { result = pwBox.Password; win.DialogResult = true; } };
             btnRow.Children.Add(cancelBtn);
+            btnRow.Children.Add(okBtn);
             sp.Children.Add(btnRow);
-            win.Content = sp;
+
+            var root = new StackPanel();
+            root.Children.Add(titleBar);
+            root.Children.Add(sp);
+            outerBorder.Child = root;
+            win.Content = outerBorder;
             return win.ShowDialog() == true ? result : null;
         }
 
@@ -4472,6 +4554,9 @@ namespace KillerPDF
 
         private void OpenSignatureCreator()
         {
+            var fontUI  = (FontFamily)Application.Current.FindResource("FontUI");
+            var bgModal = (Brush)Application.Current.FindResource("BgModal");
+
             var win = new Window
             {
                 Title = "Create Signature",
@@ -4481,25 +4566,30 @@ namespace KillerPDF
                 ResizeMode = ResizeMode.NoResize,
                 WindowStyle = WindowStyle.None,
                 AllowsTransparency = true,
-                Background = System.Windows.Media.Brushes.Transparent
+                Background = System.Windows.Media.Brushes.Transparent,
+                FontFamily = fontUI
             };
 
             // Outer chrome
             var outerChrome = new Border
             {
-                Background      = new SolidColorBrush(Color.FromRgb(0x1a, 0x1a, 0x1a)),
-                BorderBrush     = new SolidColorBrush(Color.FromRgb(0x22, 0x54, 0x3d)),
+                Background      = bgModal,
+                BorderBrush     = (Brush)Application.Current.FindResource("BorderDim"),
                 BorderThickness = new Thickness(1),
-                CornerRadius    = new CornerRadius(6)
+                CornerRadius    = new CornerRadius(12),
+                Effect          = new System.Windows.Media.Effects.DropShadowEffect
+                {
+                    Color = Colors.Black, BlurRadius = 24, ShadowDepth = 4, Opacity = 0.4, Direction = 270
+                }
             };
             var rootStack = new StackPanel();
 
             // Title bar
             var titleBar = new Border
             {
-                Background   = new SolidColorBrush(Color.FromRgb(0x24, 0x24, 0x24)),
+                Background   = (Brush)Application.Current.FindResource("BgPanel"),
                 Padding      = new Thickness(14, 8, 8, 8),
-                CornerRadius = new CornerRadius(5, 5, 0, 0)
+                CornerRadius = new CornerRadius(11, 11, 0, 0)
             };
             titleBar.MouseLeftButtonDown += (_, e) => { if (e.ButtonState == MouseButtonState.Pressed) win.DragMove(); };
             var titleGrid = new Grid();
@@ -4508,27 +4598,19 @@ namespace KillerPDF
             var titleText = new TextBlock
             {
                 Text       = "Create Signature",
-                Foreground = new SolidColorBrush(Color.FromRgb(0x4a, 0xde, 0x80)),
+                Foreground = (Brush)Application.Current.FindResource("TextPrimary"),
                 FontWeight = FontWeights.SemiBold,
-                FontSize   = 13,
-                FontFamily = new FontFamily("Consolas"),
+                FontSize   = (double)Application.Current.FindResource("FsDialogTitle"),
+                FontFamily = fontUI,
                 VerticalAlignment = VerticalAlignment.Center
             };
             Grid.SetColumn(titleText, 0);
             var closeWinBtn = new Button
             {
-                Content         = "",
-                FontFamily      = new FontFamily("Segoe MDL2 Assets"),
-                FontSize        = 10,
-                Width           = 28, Height = 28,
-                Background      = System.Windows.Media.Brushes.Transparent,
-                Foreground      = new SolidColorBrush(Color.FromRgb(0x88, 0x88, 0x88)),
-                BorderThickness = new Thickness(0),
-                Cursor          = Cursors.Hand,
+                Style             = (Style)Application.Current.FindResource("StudioIconButton"),
+                Content           = Application.Current.FindResource("Ico_WinClose"),
                 VerticalAlignment = VerticalAlignment.Center
             };
-            closeWinBtn.MouseEnter += (_, _2) => closeWinBtn.Foreground = new SolidColorBrush(Color.FromRgb(0xef, 0x44, 0x44));
-            closeWinBtn.MouseLeave += (_, _2) => closeWinBtn.Foreground = new SolidColorBrush(Color.FromRgb(0x88, 0x88, 0x88));
             closeWinBtn.Click += (_, _2) => win.Close();
             Grid.SetColumn(closeWinBtn, 1);
             titleGrid.Children.Add(titleText);
@@ -4558,8 +4640,8 @@ namespace KillerPDF
             var placeholder = new TextBlock
             {
                 Text = "Draw your signature here",
-                Foreground = new SolidColorBrush(Color.FromRgb(0xbb, 0xbb, 0xbb)),
-                FontFamily = new FontFamily("Segoe UI"),
+                Foreground = (Brush)Application.Current.FindResource("TextSecondary"),
+                FontFamily = fontUI,
                 FontSize = 14, FontStyle = FontStyles.Italic,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
@@ -4626,14 +4708,8 @@ namespace KillerPDF
             var clearBtn = new Button
             {
                 Content = "Clear",
-                Style = (Style)FindResource("DarkButton"),
-                Padding = new Thickness(16, 6, 16, 6),
-                Margin = new Thickness(0, 0, 8, 0),
-                Background = new SolidColorBrush(Color.FromRgb(0x33, 0x33, 0x33)),
-                Foreground = new SolidColorBrush(Color.FromRgb(0xe0, 0xe0, 0xe0)),
-                BorderBrush = new SolidColorBrush(Color.FromRgb(0x44, 0x44, 0x44)),
-                BorderThickness = new Thickness(1),
-                FontFamily = new FontFamily("Consolas")
+                Style   = (Style)Application.Current.FindResource("StudioToolButton"),
+                Margin  = new Thickness(0, 0, 8, 0)
             };
             clearBtn.Click += (s, e) =>
             {
@@ -4646,14 +4722,7 @@ namespace KillerPDF
             var saveBtn = new Button
             {
                 Content = "Save Signature",
-                Style = (Style)FindResource("DarkButton"),
-                Padding = new Thickness(16, 6, 16, 6),
-                Background = new SolidColorBrush(Color.FromRgb(0x22, 0x54, 0x3d)),
-                Foreground = new SolidColorBrush(Color.FromRgb(0x4a, 0xde, 0x80)),
-                BorderBrush = new SolidColorBrush(Color.FromRgb(0x4a, 0xde, 0x80)),
-                BorderThickness = new Thickness(1),
-                FontFamily = new FontFamily("Consolas"),
-                FontWeight = FontWeights.SemiBold
+                Style   = (Style)Application.Current.FindResource("StudioPrimaryButton")
             };
             saveBtn.Click += (s, e) =>
             {
@@ -9117,12 +9186,19 @@ namespace KillerPDF
                 ResizeMode = ResizeMode.NoResize
             };
 
+            var fontUI = (FontFamily)Application.Current.FindResource("FontUI");
+            win.FontFamily = fontUI;
+
             var outerBorder = new Border
             {
                 Background      = R("BgModal"),
-                BorderBrush     = R("Accent"),
+                BorderBrush     = R("BorderDim"),
                 BorderThickness = new Thickness(1),
-                CornerRadius    = new CornerRadius(6)
+                CornerRadius    = new CornerRadius(12),
+                Effect          = new System.Windows.Media.Effects.DropShadowEffect
+                {
+                    Color = Colors.Black, BlurRadius = 24, ShadowDepth = 4, Opacity = 0.4, Direction = 270
+                }
             };
 
             var root = new StackPanel();
@@ -9132,16 +9208,16 @@ namespace KillerPDF
             {
                 Background   = R("BgPanel"),
                 Padding      = new Thickness(16, 10, 16, 10),
-                CornerRadius = new CornerRadius(5, 5, 0, 0)
+                CornerRadius = new CornerRadius(11, 11, 0, 0)
             };
             titleBar.MouseLeftButtonDown += (_, e) => { if (e.ButtonState == MouseButtonState.Pressed) win.DragMove(); };
             titleBar.Child = new TextBlock
             {
                 Text       = title,
-                Foreground = R("Accent"),
+                Foreground = R("TextPrimary"),
                 FontWeight = FontWeights.SemiBold,
-                FontSize   = 13,
-                FontFamily = new System.Windows.Media.FontFamily("Consolas")
+                FontSize   = (double)Application.Current.FindResource("FsDialogTitle"),
+                FontFamily = fontUI
             };
             root.Children.Add(titleBar);
 
@@ -9153,84 +9229,54 @@ namespace KillerPDF
                 {
                     Text         = message,
                     Foreground   = R("TextPrimary"),
-                    FontSize     = 13,
+                    FontFamily   = fontUI,
+                    FontSize     = (double)Application.Current.FindResource("FsBody"),
                     TextWrapping = TextWrapping.Wrap
                 }
             };
             root.Children.Add(msgBorder);
 
-            // Buttons
+            // Buttons — use Studio styles. Primary/confirm = StudioPrimaryButton,
+            // secondary/cancel = StudioToolButton. KillerDialog cannot distinguish
+            // destructive from non-destructive callers, so destructive confirm
+            // buttons remain StudioPrimaryButton (noted in Task 10 report).
             var btnPanel = new StackPanel
             {
                 Orientation         = Orientation.Horizontal,
                 HorizontalAlignment = HorizontalAlignment.Right
             };
 
-            // Build a minimal ControlTemplate so Background binds correctly and
-            // WPF's default blue hover chrome can't override our colors.
-            static ControlTemplate MakeBtnTemplate()
+            Button MakeBtn(string label, MessageBoxResult res, bool primary = false)
             {
-                var bf = new FrameworkElementFactory(typeof(Border));
-                bf.SetBinding(Border.BackgroundProperty,
-                    new System.Windows.Data.Binding("Background")
-                    { RelativeSource = new System.Windows.Data.RelativeSource(System.Windows.Data.RelativeSourceMode.TemplatedParent) });
-                bf.SetBinding(Border.BorderBrushProperty,
-                    new System.Windows.Data.Binding("BorderBrush")
-                    { RelativeSource = new System.Windows.Data.RelativeSource(System.Windows.Data.RelativeSourceMode.TemplatedParent) });
-                bf.SetBinding(Border.BorderThicknessProperty,
-                    new System.Windows.Data.Binding("BorderThickness")
-                    { RelativeSource = new System.Windows.Data.RelativeSource(System.Windows.Data.RelativeSourceMode.TemplatedParent) });
-                bf.SetBinding(Border.PaddingProperty,
-                    new System.Windows.Data.Binding("Padding")
-                    { RelativeSource = new System.Windows.Data.RelativeSource(System.Windows.Data.RelativeSourceMode.TemplatedParent) });
-                bf.SetValue(Border.CornerRadiusProperty, new CornerRadius(3));
-                var cp = new FrameworkElementFactory(typeof(ContentPresenter));
-                cp.SetValue(ContentPresenter.HorizontalAlignmentProperty, HorizontalAlignment.Center);
-                cp.SetValue(ContentPresenter.VerticalAlignmentProperty, VerticalAlignment.Center);
-                bf.AppendChild(cp);
-                return new ControlTemplate(typeof(Button)) { VisualTree = bf };
-            }
-
-            Button MakeBtn(string label, MessageBoxResult res, bool accent = false)
-            {
-                var bgNorm = accent ? R("AccentDim") : R("BgPanel");
-                var bgHov  = accent ? R("AccentDim") : R("BgHover");
+                var styleKey = primary ? "StudioPrimaryButton" : "StudioToolButton";
                 var btn = new Button
                 {
-                    Content         = label,
-                    Padding         = new Thickness(18, 6, 18, 6),
-                    Margin          = new Thickness(8, 0, 0, 0),
-                    Background      = bgNorm,
-                    Foreground      = accent ? R("Accent") : R("TextPrimary"),
-                    BorderBrush     = accent ? R("Accent") : R("BorderDim"),
-                    BorderThickness = new Thickness(1),
-                    Cursor          = Cursors.Hand,
-                    FontSize        = 12,
-                    Template        = MakeBtnTemplate()
+                    Content = label,
+                    Style   = (Style)Application.Current.FindResource(styleKey),
+                    Width   = 80,
+                    Margin  = new Thickness(8, 0, 0, 0)
                 };
-                btn.Click      += (_, _2) => { result = res; win.Close(); };
-                btn.MouseEnter += (_, _2) => btn.Background = bgHov;
-                btn.MouseLeave += (_, _2) => btn.Background = bgNorm;
+                btn.Click += (_, _2) => { result = res; win.Close(); };
                 return btn;
             }
 
             switch (buttons)
             {
                 case MessageBoxButton.OK:
-                    btnPanel.Children.Add(MakeBtn("OK", MessageBoxResult.OK, accent: true));
+                    btnPanel.Children.Add(MakeBtn("OK", MessageBoxResult.OK, primary: true));
                     break;
                 case MessageBoxButton.OKCancel:
-                    btnPanel.Children.Add(MakeBtn("OK",     MessageBoxResult.OK,     accent: true));
                     btnPanel.Children.Add(MakeBtn("Cancel", MessageBoxResult.Cancel));
+                    btnPanel.Children.Add(MakeBtn("OK",     MessageBoxResult.OK,     primary: true));
                     break;
                 case MessageBoxButton.YesNo:
-                    btnPanel.Children.Add(MakeBtn("Yes", MessageBoxResult.Yes, accent: true));
                     btnPanel.Children.Add(MakeBtn("No",  MessageBoxResult.No));
+                    btnPanel.Children.Add(MakeBtn("Yes", MessageBoxResult.Yes, primary: true));
                     break;
                 case MessageBoxButton.YesNoCancel:
-                    btnPanel.Children.Add(MakeBtn("Yes",    MessageBoxResult.Yes,    accent: true));
-                    btnPanel.Children.Add(MakeBtn("No",     MessageBoxResult.No));
                     btnPanel.Children.Add(MakeBtn("Cancel", MessageBoxResult.Cancel));
+                    btnPanel.Children.Add(MakeBtn("No",     MessageBoxResult.No));
+                    btnPanel.Children.Add(MakeBtn("Yes",    MessageBoxResult.Yes,    primary: true));
                     break;
             }
 

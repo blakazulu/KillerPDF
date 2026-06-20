@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -41,9 +41,6 @@ namespace KillerPDF
         private ComboBox _printerCombo = null!;
         private TextBox _copiesBox = null!;
         private TextBox _pagesBox = null!;
-
-        // Segoe MDL2 Assets close glyph, matching the main window chrome close button.
-        private const string CloseGlyph = "";
 
         /// <summary>Number of pages sent to the printer (set when the user prints).</summary>
         public int PrintedPageCount { get; private set; }
@@ -94,6 +91,12 @@ namespace KillerPDF
         private static SolidColorBrush R(string key)
             => (SolidColorBrush)Application.Current.Resources[key];
 
+        private static FontFamily FontUI()
+            => (FontFamily)Application.Current.FindResource("FontUI");
+
+        private static Style S(string key)
+            => (Style)Application.Current.FindResource(key);
+
         // Pulls a named Style from the owning MainWindow so this dialog reuses the
         // app's themed ComboBox / chrome-close-button styling verbatim.
         private Style? FindOwnerStyle(string key) => Owner?.TryFindResource(key) as Style;
@@ -122,15 +125,15 @@ namespace KillerPDF
                 Background      = R("BgSidebar"),
                 BorderBrush     = R("BorderDim"),
                 BorderThickness = new Thickness(1),
-                CornerRadius    = new CornerRadius(0),
+                CornerRadius    = new CornerRadius(8),
                 Margin          = new Thickness(14),   // room for the drop shadow
                 Effect          = new System.Windows.Media.Effects.DropShadowEffect
                 {
                     Color       = Colors.Black,
-                    BlurRadius  = 14,
-                    ShadowDepth = 2,
+                    BlurRadius  = 24,
+                    ShadowDepth = 4,
                     Direction   = 270,
-                    Opacity     = 0.5
+                    Opacity     = 0.4
                 }
             };
             var root = new DockPanel();
@@ -140,8 +143,8 @@ namespace KillerPDF
             // Title bar
             var titleBar = new Border
             {
-                Background   = R("BgSidebar"),
-                CornerRadius = new CornerRadius(0)
+                Background   = R("BgPanel"),
+                CornerRadius = new CornerRadius(7, 7, 0, 0)
             };
             DockPanel.SetDock(titleBar, Dock.Top);
             titleBar.MouseLeftButtonDown += (_, e) => { if (e.ButtonState == MouseButtonState.Pressed) DragMove(); };
@@ -151,30 +154,21 @@ namespace KillerPDF
             titleGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             var titleText = new TextBlock
             {
-                Text       = "KillerPDF - Print",
-                Foreground = R("Accent"),
+                Text       = "KillerPDF – Print",
+                Foreground = R("TextPrimary"),
                 FontWeight = FontWeights.SemiBold,
-                FontSize   = 13,
-                FontFamily = new FontFamily("Consolas"),
+                FontSize   = (double)Application.Current.FindResource("FsDialogTitle"),
+                FontFamily = FontUI(),
                 Margin     = new Thickness(16, 0, 0, 0),
                 VerticalAlignment = VerticalAlignment.Center
             };
             Grid.SetColumn(titleText, 0);
 
-            // Match the main window's chrome close button: Segoe MDL2 close glyph,
-            // red normally, white-on-red on hover (and white on the Blood theme).
-            var closeBtn = new Button { Content = CloseGlyph };
-            if (FindOwnerStyle("ChromeCloseButton") is Style chromeClose)
+            var closeBtn = new Button
             {
-                closeBtn.Style = chromeClose;
-            }
-            else
-            {
-                closeBtn = MakeButton(CloseGlyph, false);
-                closeBtn.FontFamily = new FontFamily("Segoe MDL2 Assets");
-                closeBtn.FontSize   = 10;
-                closeBtn.Foreground = R("DangerRed");
-            }
+                Style   = S("StudioIconButton"),
+                Content = Application.Current.FindResource("Ico_WinClose")
+            };
             closeBtn.Click += (_, _) => { DialogResult = false; Close(); };
             Grid.SetColumn(closeBtn, 1);
 
@@ -250,7 +244,8 @@ namespace KillerPDF
             {
                 Text         = "e.g. 1-3,5  (blank = all)",
                 Foreground   = R("TextSecondary"),
-                FontSize     = 11,
+                FontFamily   = FontUI(),
+                FontSize     = (double)Application.Current.FindResource("FsStatus"),
                 Margin       = new Thickness(0, 0, 0, 16),
                 TextWrapping = TextWrapping.Wrap
             });
@@ -296,9 +291,10 @@ namespace KillerPDF
             var next = MakeButton("▶", false);   // right triangle
             next.Click += (_, _) => { if (_previewIndex < _pages.Length - 1) { _previewIndex++; UpdatePreview(); } };
             _pageLabel.Foreground = R("TextPrimary");
+            _pageLabel.FontFamily = FontUI();
             _pageLabel.VerticalAlignment = VerticalAlignment.Center;
             _pageLabel.Margin = new Thickness(12, 0, 12, 0);
-            _pageLabel.FontSize = 12;
+            _pageLabel.FontSize = (double)Application.Current.FindResource("FsBody");
             nav.Children.Add(prev);
             nav.Children.Add(_pageLabel);
             nav.Children.Add(next);
@@ -333,7 +329,8 @@ namespace KillerPDF
         {
             Text       = text,
             Foreground = R("TextPrimary"),
-            FontSize   = 12,
+            FontFamily = FontUI(),
+            FontSize   = (double)Application.Current.FindResource("FsBody"),
             FontWeight = FontWeights.SemiBold
         };
 
@@ -517,39 +514,15 @@ namespace KillerPDF
             return set.Count == 0 ? [.. Enumerable.Range(0, count)] : [.. set];
         }
 
-        // ---- Button factory (matches KillerDialog styling, no blue hover chrome) ----
+        // ---- Button factory — wraps Studio styles ----
 
-        private static ControlTemplate MakeBtnTemplate()
-        {
-            var bf = new FrameworkElementFactory(typeof(Border));
-            bf.SetBinding(Border.BackgroundProperty,
-                new Binding("Background") { RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent) });
-            bf.SetBinding(Border.BorderBrushProperty,
-                new Binding("BorderBrush") { RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent) });
-            bf.SetBinding(Border.BorderThicknessProperty,
-                new Binding("BorderThickness") { RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent) });
-            bf.SetBinding(Border.PaddingProperty,
-                new Binding("Padding") { RelativeSource = new RelativeSource(RelativeSourceMode.TemplatedParent) });
-            bf.SetValue(Border.CornerRadiusProperty, new CornerRadius(3));
-            var cp = new FrameworkElementFactory(typeof(ContentPresenter));
-            cp.SetValue(ContentPresenter.HorizontalAlignmentProperty, HorizontalAlignment.Center);
-            cp.SetValue(ContentPresenter.VerticalAlignmentProperty, VerticalAlignment.Center);
-            bf.AppendChild(cp);
-            return new ControlTemplate(typeof(Button)) { VisualTree = bf };
-        }
-
-        private static Button MakeButton(string label, bool accent)
+        private static Button MakeButton(string label, bool primary)
         {
             return new Button
             {
-                Content         = label,
-                Padding         = new Thickness(18, 6, 18, 6),
-                Background      = accent ? R("AccentDim") : R("BgPanel"),
-                Foreground      = accent ? R("Accent") : R("TextPrimary"),
-                BorderBrush     = accent ? R("Accent") : R("BorderDim"),
-                BorderThickness = new Thickness(1),
-                Cursor          = Cursors.Hand,
-                Template        = MakeBtnTemplate()
+                Content = label,
+                Style   = S(primary ? "StudioPrimaryButton" : "StudioToolButton"),
+                Width   = 80
             };
         }
     }
