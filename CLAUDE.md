@@ -80,4 +80,5 @@ Both managers persist the user's choice and restore it at startup (`Initialize()
 
 - `docs/OVERVIEW.md` — full architecture/what-it-does reference.
 - `docs/UI-REFERENCE.md` — every button/control, mapped to its handler.
+- `docs/DESIGN-SYSTEM.md` — the "Studio" design system: tokens, type scale, icons, components, layout, and how to extend.
 - `docs/STORE-PUBLISHING.md` — MSIX build + Store submission (incl. the GPLv3-on-Store licensing note).
