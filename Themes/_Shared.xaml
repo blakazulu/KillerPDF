@@ -15,4 +15,44 @@
     <sys:Double x:Key="FsSidebarLabel">10</sys:Double>
     <sys:Double x:Key="FsStatus">10.5</sys:Double>
 
+    <!-- Icon glyph map (Tabler 3.7.0, verified). These 36 codepoints == the subset tabler-icons.ttf. -->
+    <sys:String x:Key="Ico_New">&#xeaa0;</sys:String>          <!-- file-plus -->
+    <sys:String x:Key="Ico_Open">&#xeaad;</sys:String>         <!-- folder -->
+    <sys:String x:Key="Ico_Close">&#xeaa3;</sys:String>        <!-- file-x -->
+    <sys:String x:Key="Ico_Save">&#xeb62;</sys:String>         <!-- device-floppy -->
+    <sys:String x:Key="Ico_Flatten">&#xeb2d;</sys:String>      <!-- stack -->
+    <sys:String x:Key="Ico_Print">&#xeb0e;</sys:String>        <!-- printer -->
+    <sys:String x:Key="Ico_Merge">&#xedaf;</sys:String>        <!-- arrows-join -->
+    <sys:String x:Key="Ico_Extract">&#xede9;</sys:String>      <!-- file-export -->
+    <sys:String x:Key="Ico_InsertPage">&#xeaa0;</sys:String>   <!-- file-plus -->
+    <sys:String x:Key="Ico_Delete">&#xeb41;</sys:String>       <!-- trash -->
+    <sys:String x:Key="Ico_MoveUp">&#xea25;</sys:String>       <!-- arrow-up -->
+    <sys:String x:Key="Ico_MoveDown">&#xea16;</sys:String>     <!-- arrow-down -->
+    <sys:String x:Key="Ico_Rotate">&#xeb15;</sys:String>       <!-- rotate-clockwise -->
+    <sys:String x:Key="Ico_Select">&#xf265;</sys:String>       <!-- pointer -->
+    <sys:String x:Key="Ico_Text">&#xebc5;</sys:String>        <!-- typography -->
+    <sys:String x:Key="Ico_Highlight">&#xef3f;</sys:String>    <!-- highlight -->
+    <sys:String x:Key="Ico_Draw">&#xeb04;</sys:String>        <!-- pencil -->
+    <sys:String x:Key="Ico_Image">&#xeb0a;</sys:String>       <!-- photo -->
+    <sys:String x:Key="Ico_Crop">&#xea85;</sys:String>        <!-- crop -->
+    <sys:String x:Key="Ico_Signature">&#xeee0;</sys:String>   <!-- signature -->
+    <sys:String x:Key="Ico_FillForm">&#xee8f;</sys:String>    <!-- forms -->
+    <sys:String x:Key="Ico_Undo">&#xeb77;</sys:String>        <!-- arrow-back-up -->
+    <sys:String x:Key="Ico_Clear">&#xeb8b;</sys:String>       <!-- eraser -->
+    <sys:String x:Key="Ico_ZoomIn">&#xeb56;</sys:String>      <!-- zoom-in -->
+    <sys:String x:Key="Ico_ZoomOut">&#xeb57;</sys:String>     <!-- zoom-out -->
+    <sys:String x:Key="Ico_Search">&#xeb1c;</sys:String>      <!-- search -->
+    <sys:String x:Key="Ico_Settings">&#xeb20;</sys:String>    <!-- settings -->
+    <sys:String x:Key="Ico_Shortcuts">&#xebd6;</sys:String>   <!-- keyboard -->
+    <sys:String x:Key="Ico_View">&#xea9a;</sys:String>        <!-- eye -->
+    <sys:String x:Key="Ico_Single">&#xeaa4;</sys:String>      <!-- file -->
+    <sys:String x:Key="Ico_Continuous">&#xead8;</sys:String>  <!-- layout-rows -->
+    <sys:String x:Key="Ico_TwoPage">&#xeb83;</sys:String>     <!-- columns -->
+    <sys:String x:Key="Ico_Grid">&#xedba;</sys:String>       <!-- layout-grid -->
+    <sys:String x:Key="Ico_Fit">&#xea28;</sys:String>        <!-- arrows-maximize -->
+    <sys:String x:Key="Ico_Chevron">&#xea5f;</sys:String>    <!-- chevron-down -->
+    <sys:String x:Key="Ico_Min">&#xeaf2;</sys:String>        <!-- minus -->
+    <sys:String x:Key="Ico_Max">&#xeb2c;</sys:String>        <!-- square -->
+    <sys:String x:Key="Ico_WinClose">&#xeaa3;</sys:String>   <!-- file-x (reuse) -->
+
 </ResourceDictionary>
