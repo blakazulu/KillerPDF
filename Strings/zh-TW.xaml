@@ -158,4 +158,11 @@
     <sys:String x:Key="Str_View_Grid">格狀</sys:String>
     <sys:String x:Key="Str_Continuous_EditMsg">請切換至單頁模式以使用編輯工具</sys:String>
 
+    <!-- ── Mode tab strip ────────────────────────────────────────────── -->
+    <sys:String x:Key="Str_Mode_View">檢視</sys:String>
+    <sys:String x:Key="Str_Mode_Edit">編輯</sys:String>
+    <sys:String x:Key="Str_Mode_Pages">頁面</sys:String>
+    <sys:String x:Key="Str_Mode_Sign">簽名</sys:String>
+    <sys:String x:Key="Str_TT_Search">搜尋 (Ctrl+F)</sys:String>
+
 </ResourceDictionary>

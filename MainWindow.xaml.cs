@@ -39,6 +39,9 @@ namespace KillerPDF
         private System.Threading.CancellationTokenSource? _secondaryRenderCts;
         private enum ViewMode { Single, Continuous, TwoPage, Grid }
         private ViewMode _viewMode = ViewMode.Continuous;
+        private enum AppMode { View, Edit, Pages, Sign }
+        private AppMode _mode = AppMode.View;
+        private bool _suppressModeEvents;
         private readonly StackPanel _continuousPanel = null!;
         private System.Threading.CancellationTokenSource? _continuousRenderCts;
         private readonly List<double> _continuousTops = [];
@@ -218,6 +221,7 @@ namespace KillerPDF
             LoadSignatures();
             BuildContextMenu();
             SetTool(EditTool.Select);
+            SetMode(AppMode.View);
             ApplyGrainTexture();
             SourceInitialized += MainWindow_SourceInitialized;
             Closed += (_, _) => { _doc?.Close(); App.CleanupSessionTemps(); };
@@ -2897,6 +2901,31 @@ namespace KillerPDF
             }
 
             return null;
+        }
+
+        // ============================================================
+        // App mode (View / Edit / Pages / Sign)
+        // ============================================================
+
+        private void ModeTab_Checked(object sender, RoutedEventArgs e)
+        {
+            if (_suppressModeEvents) return;
+            if (sender is System.Windows.Controls.Primitives.ToggleButton tb && tb.Tag is string s
+                && Enum.TryParse<AppMode>(s, out var m))
+                SetMode(m);
+        }
+
+        private void SetMode(AppMode mode)
+        {
+            _mode = mode;
+            _suppressModeEvents = true;
+            ModeViewTab.IsChecked  = mode == AppMode.View;
+            ModeEditTab.IsChecked  = mode == AppMode.Edit;
+            ModePagesTab.IsChecked = mode == AppMode.Pages;
+            ModeSignTab.IsChecked  = mode == AppMode.Sign;
+            _suppressModeEvents = false;
+
+            // Task 6 wires mode-panel visibility here.
         }
 
         // ============================================================
@@ -5738,6 +5767,8 @@ namespace KillerPDF
             return string.Join("\n", lines.Select(l =>
                 string.Join(" ", l.OrderBy(w => w.BoundingBox.Left).Select(w => w.Text))));
         }
+
+        private void OpenSearch_Click(object sender, RoutedEventArgs e) => ShowSearchBar();
 
         private void ToggleSearchBar()
         {

@@ -432,6 +432,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="36"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="28"/>
         </Grid.RowDefinitions>
@@ -454,8 +455,22 @@
             </Grid>
         </Border>
 
+        <!-- Mode tab strip -->
+        <Border Grid.Row="1" Background="{DynamicResource BgSidebar}" BorderBrush="{DynamicResource BorderDim}" BorderThickness="0,0,0,1">
+            <DockPanel LastChildFill="False" Margin="8,4">
+                <ToggleButton x:Name="ModeViewTab"  Style="{StaticResource StudioModeTab}" Content="{DynamicResource Str_Mode_View}"  Checked="ModeTab_Checked" Tag="View"/>
+                <ToggleButton x:Name="ModeEditTab"  Style="{StaticResource StudioModeTab}" Content="{DynamicResource Str_Mode_Edit}"  Checked="ModeTab_Checked" Tag="Edit"  Margin="2,0,0,0"/>
+                <ToggleButton x:Name="ModePagesTab" Style="{StaticResource StudioModeTab}" Content="{DynamicResource Str_Mode_Pages}" Checked="ModeTab_Checked" Tag="Pages" Margin="2,0,0,0"/>
+                <ToggleButton x:Name="ModeSignTab"  Style="{StaticResource StudioModeTab}" Content="{DynamicResource Str_Mode_Sign}"  Checked="ModeTab_Checked" Tag="Sign"  Margin="2,0,0,0"/>
+                <Button DockPanel.Dock="Right" Style="{StaticResource StudioIconButton}" Click="SettingsBtn_Click"
+                        Content="{StaticResource Ico_Settings}" FontFamily="{DynamicResource FontIcon}" ToolTip="{DynamicResource Str_TT_Settings}"/>
+                <Button DockPanel.Dock="Right" Style="{StaticResource StudioIconButton}" Click="OpenSearch_Click"
+                        Content="{StaticResource Ico_Search}" FontFamily="{DynamicResource FontIcon}" ToolTip="{DynamicResource Str_TT_Search}" Margin="0,0,4,0"/>
+            </DockPanel>
+        </Border>
+
         <!-- Toolbar -->
-        <Border Grid.Row="1" Background="{DynamicResource BgSidebar}" BorderBrush="{DynamicResource BorderDim}" BorderThickness="0,0,0,1" Padding="4,2">
+        <Border Grid.Row="2" Background="{DynamicResource BgSidebar}" BorderBrush="{DynamicResource BorderDim}" BorderThickness="0,0,0,1" Padding="4,2">
             <Grid>
                 <!-- File operations -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
@@ -512,7 +527,7 @@
         </Border>
 
         <!-- Main content -->
-        <Grid Grid.Row="2" x:Name="MainContentGrid">
+        <Grid Grid.Row="3" x:Name="MainContentGrid">
             <Grid.ColumnDefinitions>
                 <!-- SidebarCol never collapses to 0 — it shrinks to 24px (the toggle strip width). -->
                 <ColumnDefinition x:Name="SidebarCol" Width="180" MinWidth="24" MaxWidth="260"/>
@@ -809,7 +824,7 @@
         </Grid>
 
         <!-- Status bar -->
-        <Border Grid.Row="3" Background="{DynamicResource BgSidebar}" BorderBrush="{DynamicResource BorderDim}" BorderThickness="0,1,0,0">
+        <Border Grid.Row="4" Background="{DynamicResource BgSidebar}" BorderBrush="{DynamicResource BorderDim}" BorderThickness="0,1,0,0">
             <Grid Margin="16,0">
                 <TextBlock x:Name="StatusText" Text="{DynamicResource Str_Ready}"
                            Foreground="{DynamicResource TextSecondary}"
@@ -867,7 +882,7 @@
 
         <!-- Settings overlay -->
         <Grid x:Name="SettingsOverlay"
-              Grid.RowSpan="4"
+              Grid.RowSpan="5"
               Panel.ZIndex="9999"
               Visibility="Collapsed"
               Background="Transparent"
@@ -1010,7 +1025,7 @@
 
         <!-- Keyboard shortcut overlay — neutral dark dim regardless of theme -->
         <Grid x:Name="ShortcutOverlay"
-              Grid.RowSpan="4"
+              Grid.RowSpan="5"
               Panel.ZIndex="10000"
               Visibility="Collapsed"
               Background="#88000000"
@@ -1107,7 +1122,7 @@
         </Grid>
         <!-- About overlay -->
         <Grid x:Name="AboutOverlay"
-              Grid.RowSpan="4"
+              Grid.RowSpan="5"
               Panel.ZIndex="10001"
               Visibility="Collapsed"
               Background="#88000000"
@@ -1198,7 +1213,7 @@
 
         <!-- Film grain overlay - main content area only -->
         <Border x:Name="GrainOverlay"
-                Grid.Row="2"
+                Grid.Row="3"
                 IsHitTestVisible="False"
                 Opacity="0.15"
                 Panel.ZIndex="9999">

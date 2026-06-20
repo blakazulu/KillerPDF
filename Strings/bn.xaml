@@ -156,4 +156,11 @@
     <sys:String x:Key="Str_View_Grid">গ্রিড</sys:String>
     <sys:String x:Key="Str_Continuous_EditMsg">সম্পাদনা টুল ব্যবহার করতে একক পৃষ্ঠায় স্যুইচ করুন</sys:String>
 
+    <!-- ── Mode tab strip ────────────────────────────────────────────── -->
+    <sys:String x:Key="Str_Mode_View">দেখুন</sys:String>
+    <sys:String x:Key="Str_Mode_Edit">সম্পাদনা</sys:String>
+    <sys:String x:Key="Str_Mode_Pages">পৃষ্ঠা</sys:String>
+    <sys:String x:Key="Str_Mode_Sign">স্বাক্ষর</sys:String>
+    <sys:String x:Key="Str_TT_Search">অনুসন্ধান (Ctrl+F)</sys:String>
+
 </ResourceDictionary>
