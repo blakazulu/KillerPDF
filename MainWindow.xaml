@@ -481,10 +481,21 @@
 
             <!-- Persistent: File group (left) -->
             <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+              <!-- Open split button: Open + chevron dropdown (Open / New / Close) -->
               <Button Style="{StaticResource StudioToolButton}" Click="Open_Click" ToolTip="{DynamicResource Str_TT_Open}">
                 <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Open}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_Open}" VerticalAlignment="Center"/></StackPanel>
               </Button>
-              <!-- Save split button: primary Save + chevron dropdown (Save As) -->
+              <Button x:Name="OpenMenuBtn" Style="{StaticResource StudioIconButton}" Click="FileMenu_Click" Width="22" ToolTip="{DynamicResource Str_TT_FileMenu}" Margin="1,0,0,0">
+                <TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Chevron}"/>
+                <Button.ContextMenu>
+                  <ContextMenu>
+                    <MenuItem Header="{DynamicResource Str_Lbl_Open}" Click="Open_Click"/>
+                    <MenuItem Header="{DynamicResource Str_Lbl_New}" Click="New_Click"/>
+                    <MenuItem x:Name="CloseFileMenuItem" Header="{DynamicResource Str_Lbl_CloseFile}" Click="CloseFile_Click" IsEnabled="False"/>
+                  </ContextMenu>
+                </Button.ContextMenu>
+              </Button>
+              <!-- Save split button: primary Save + chevron dropdown (Save As / Save Flattened) -->
               <Button x:Name="SaveAsBtn" Style="{StaticResource StudioPrimaryButton}" Click="Save_Click" ToolTip="{DynamicResource Str_TT_Save}" Margin="6,0,0,0">
                 <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Save}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_Save}" VerticalAlignment="Center"/></StackPanel>
               </Button>
@@ -493,23 +504,13 @@
                 <Button.ContextMenu>
                   <ContextMenu>
                     <MenuItem Header="{DynamicResource Str_Lbl_SaveAs}" Click="SaveAs_Click"/>
-                  </ContextMenu>
-                </Button.ContextMenu>
-              </Button>
-              <Button Style="{StaticResource StudioToolButton}" Click="Print_Click" ToolTip="{DynamicResource Str_TT_Print}" Margin="6,0,0,0">
-                <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Print}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_Print}" VerticalAlignment="Center"/></StackPanel>
-              </Button>
-              <!-- File ▾ overflow: New / Close / Save Flattened -->
-              <Button x:Name="FileMenuBtn" Style="{StaticResource StudioIconButton}" Click="FileMenu_Click"
-                      ToolTip="{DynamicResource Str_TT_FileMenu}" Margin="6,0,0,0">
-                <Button.Content><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Chevron}"/></Button.Content>
-                <Button.ContextMenu>
-                  <ContextMenu>
-                    <MenuItem Header="{DynamicResource Str_Lbl_New}" Click="New_Click"/>
-                    <MenuItem x:Name="CloseFileMenuItem" Header="{DynamicResource Str_Lbl_CloseFile}" Click="CloseFile_Click" IsEnabled="False"/>
                     <MenuItem Header="{DynamicResource Str_Lbl_SaveFlattened}" Click="SaveFlattened_Click"/>
                   </ContextMenu>
                 </Button.ContextMenu>
+              </Button>
+              <!-- Print: plain button, opens the print preview directly -->
+              <Button Style="{StaticResource StudioToolButton}" Click="Print_Click" ToolTip="{DynamicResource Str_TT_Print}" Margin="6,0,0,0">
+                <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Print}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_Print}" VerticalAlignment="Center"/></StackPanel>
               </Button>
               <Border Width="1" Background="{DynamicResource BorderDim}" Margin="10,3"/>
             </StackPanel>

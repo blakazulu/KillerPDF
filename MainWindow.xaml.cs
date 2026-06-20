@@ -7103,7 +7103,8 @@ namespace Scalpel
         // File toolbar handlers
         // ============================================================
 
-        // Opens the File ▾ overflow ContextMenu attached to FileMenuBtn.
+        // Generic "open the ContextMenu attached to this button" handler — used by the
+        // Open split-button chevron (Open / New / Close File).
         private void FileMenu_Click(object sender, RoutedEventArgs e)
         {
             if (sender is Button b && b.ContextMenu is not null)
