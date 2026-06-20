@@ -194,4 +194,10 @@
     <sys:String x:Key="Str_Mode_Sign">签名</sys:String>
     <sys:String x:Key="Str_TT_Search">搜索 (Ctrl+F)</sys:String>
 
+    <!-- ── Diagnostics / logging ─────────────────────────────────────── -->
+    <sys:String x:Key="Str_Settings_Diagnostics">诊断</sys:String>
+    <sys:String x:Key="Str_Log_Enable">启用日志</sys:String>
+    <sys:String x:Key="Str_Log_OpenFolder">打开日志文件夹</sys:String>
+    <sys:String x:Key="Str_Log_Clear">清除日志</sys:String>
+
 </ResourceDictionary>

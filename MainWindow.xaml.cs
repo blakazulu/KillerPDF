@@ -287,6 +287,7 @@ namespace Scalpel
             LangZhCNRadio.IsChecked = curLoc == Scalpel.Services.Locale.ZhCN;
             LangBnRadio.IsChecked   = curLoc == Scalpel.Services.Locale.Bn;
             LangTrRadio.IsChecked   = curLoc == Scalpel.Services.Locale.TrTR;
+            LogEnabledCheck.IsChecked = Scalpel.Services.Logger.Enabled;
             SettingsOverlay.Visibility = Visibility.Visible;
         }
 
@@ -298,6 +299,33 @@ namespace Scalpel
 
         private void SettingsOverlayClose_Click(object sender, RoutedEventArgs e)
             => SettingsOverlay.Visibility = Visibility.Collapsed;
+
+        private void LogEnabledCheck_Changed(object sender, RoutedEventArgs e)
+        {
+            bool on = LogEnabledCheck.IsChecked == true;
+            Scalpel.Services.Logger.SetEnabled(on);
+            App.SetSetting("LoggingEnabled", on ? "1" : "0");
+            Scalpel.Services.Logger.Info("Settings", "logging.toggle", on ? "enabled" : "disabled");
+        }
+
+        private void OpenLogsBtn_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                System.IO.Directory.CreateDirectory(Scalpel.Services.Logger.LogDirectory);
+                System.Diagnostics.Process.Start("explorer.exe", Scalpel.Services.Logger.LogDirectory);
+            }
+            catch { }
+        }
+
+        private void ClearLogsBtn_Click(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show(this,
+                "Delete all log files except the current session?",
+                "Clear logs", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+                Scalpel.Services.Logger.ClearLogs();
+        }
 
         private void OnThemeChanged()
         {

@@ -1037,6 +1037,28 @@
                                   GroupName="LangGroup"
                                   Style="{StaticResource ThemeRadio}"
                                   Checked="LangTrRadio_Checked"/>
+
+                    <TextBlock Text="{DynamicResource Str_Settings_Diagnostics}" Foreground="{DynamicResource Accent}"
+                               FontFamily="{DynamicResource FontUI}" FontSize="11" FontWeight="SemiBold"
+                               Margin="0,12,0,8"/>
+                    <CheckBox x:Name="LogEnabledCheck"
+                              Content="{DynamicResource Str_Log_Enable}"
+                              Foreground="{DynamicResource TextPrimary}"
+                              FontFamily="{DynamicResource FontUI}" FontSize="12"
+                              Margin="0,0,0,8"
+                              Checked="LogEnabledCheck_Changed"
+                              Unchecked="LogEnabledCheck_Changed"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="OpenLogsBtn"
+                                Content="{DynamicResource Str_Log_OpenFolder}"
+                                Style="{StaticResource StudioToolButton}"
+                                Margin="0,0,8,0"
+                                Click="OpenLogsBtn_Click"/>
+                        <Button x:Name="ClearLogsBtn"
+                                Content="{DynamicResource Str_Log_Clear}"
+                                Style="{StaticResource StudioToolButton}"
+                                Click="ClearLogsBtn_Click"/>
+                    </StackPanel>
                 </StackPanel>
             </Border>
         </Grid>

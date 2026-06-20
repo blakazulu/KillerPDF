@@ -194,4 +194,10 @@
     <sys:String x:Key="Str_Mode_Sign">স্বাক্ষর</sys:String>
     <sys:String x:Key="Str_TT_Search">অনুসন্ধান (Ctrl+F)</sys:String>
 
+    <!-- ── Diagnostics / logging ─────────────────────────────────────── -->
+    <sys:String x:Key="Str_Settings_Diagnostics">ডায়াগনস্টিকস</sys:String>
+    <sys:String x:Key="Str_Log_Enable">লগিং সক্রিয় করুন</sys:String>
+    <sys:String x:Key="Str_Log_OpenFolder">লগ ফোল্ডার খুলুন</sys:String>
+    <sys:String x:Key="Str_Log_Clear">লগ মুছুন</sys:String>
+
 </ResourceDictionary>

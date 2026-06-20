@@ -194,4 +194,10 @@ Puede desinstalarla en cualquier momento desde Agregar o quitar programas.</sys:
     <sys:String x:Key="Str_Mode_Sign">Firmar</sys:String>
     <sys:String x:Key="Str_TT_Search">Buscar (Ctrl+F)</sys:String>
 
+    <!-- ── Diagnostics / logging ─────────────────────────────────────── -->
+    <sys:String x:Key="Str_Settings_Diagnostics">Diagnóstico</sys:String>
+    <sys:String x:Key="Str_Log_Enable">Activar registro</sys:String>
+    <sys:String x:Key="Str_Log_OpenFolder">Abrir carpeta de registros</sys:String>
+    <sys:String x:Key="Str_Log_Clear">Borrar registros</sys:String>
+
 </ResourceDictionary>
