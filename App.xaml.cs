@@ -353,7 +353,7 @@ namespace Scalpel
                         $"```\n{stack}\n```\n\n" +
                         $"_Log folder: `{CrashReporter.LogDir}`_");
                     Process.Start(new ProcessStartInfo(
-                        $"https://github.com/YOUR-GH-USER/Scalpel/issues/new?title={title}&body={body}")
+                        $"https://github.com/blakazulu/ScalpelPDF/issues/new?title={title}&body={body}")
                         { UseShellExecute = true });
                 }
                 catch { }
@@ -1078,7 +1078,7 @@ namespace Scalpel
             };
             var cardContent = new StackPanel();
             cardContent.Children.Add(MakeRow("VERSION", $"v{version}", fgDim, accent,
-                onClick: () => OpenUrl($"https://github.com/YOUR-GH-USER/Scalpel/releases/tag/v{version}")));
+                onClick: () => OpenUrl($"https://github.com/blakazulu/ScalpelPDF/releases/tag/v{version}")));
             cardContent.Children.Add(MakeRow("PUBLISHER", sigInfo,         fgDim, fg));
             cardContent.Children.Add(MakeRow("THUMBPRINT", thumbInfo,      fgDim, fg, mono, wrap: true));
             cardContent.Children.Add(MakeRow("EXE SHA256", sha256,         fgDim, fg, mono, wrap: true));

@@ -7,7 +7,7 @@ $installExe = Join-Path $installDir 'Scalpel.exe'
 $packageArgs = @{
     packageName    = $env:ChocolateyPackageName
     fileFullPath   = Join-Path $toolsDir 'Scalpel.exe'
-    url64bit       = "https://github.com/YOUR-GH-USER/Scalpel/releases/download/v$version/Scalpel.exe"
+    url64bit       = "https://github.com/blakazulu/ScalpelPDF/releases/download/v$version/Scalpel.exe"
     checksum64     = 'REPLACE_HASH'
     checksumType64 = 'sha256'
 }

@@ -68,13 +68,13 @@ Six themes to choose from:
 winget install scalpel
 ```
 
-- Prebuilt binary: <https://github.com/YOUR-GH-USER/Scalpel/releases/latest/download/Scalpel.exe>
-- Source (GPL3 corresponding source for this release): <https://github.com/YOUR-GH-USER/Scalpel/releases/download/v1.5.1/Scalpel-1.5.1-src.zip>
+- Prebuilt binary: <https://github.com/blakazulu/ScalpelPDF/releases/latest/download/Scalpel.exe>
+- Source (GPL3 corresponding source for this release): <https://github.com/blakazulu/ScalpelPDF/releases/download/v1.5.1/Scalpel-1.5.1-src.zip>
 
 ## Build from source
 
 ```powershell
-git clone https://github.com/YOUR-GH-USER/Scalpel.git
+git clone https://github.com/blakazulu/ScalpelPDF.git
 cd Scalpel
 dotnet publish -c Release
 ```

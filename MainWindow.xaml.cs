@@ -8836,7 +8836,7 @@ namespace Scalpel
             };
             verHl.Click += (_, _) =>
                 Process.Start(new ProcessStartInfo(
-                    $"https://github.com/YOUR-GH-USER/Scalpel/releases/tag/v{version}")
+                    $"https://github.com/blakazulu/ScalpelPDF/releases/tag/v{version}")
                 { UseShellExecute = true });
             AboutVersionBlock.Inlines.Add(verHl);
 

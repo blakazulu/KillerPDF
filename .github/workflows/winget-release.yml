@@ -26,7 +26,7 @@ jobs:
         run: |
           $releaseTag = if ("${{ github.event_name }}" -eq "workflow_dispatch") { "${{ github.event.inputs.tag }}" } else { "${{ github.event.release.tag_name }}" }
           $version = $releaseTag.TrimStart('v')
-          $url = "https://github.com/YOUR-GH-USER/Scalpel/releases/download/$releaseTag/Scalpel.exe"
+          $url = "https://github.com/blakazulu/ScalpelPDF/releases/download/$releaseTag/Scalpel.exe"
           komac update YOUR-PUBLISHER.Scalpel --version $version --urls $url --submit
         env:
           GITHUB_TOKEN: ${{ secrets.WINGET_TOKEN }}
