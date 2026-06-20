@@ -1,0 +1,48 @@
+#!/bin/sh
+#
+# pre-push: bump the revision (4th) component of the version in
+# KillerPDF.csproj whenever commits are pushed to main
+# (1.5.1 -> 1.5.1.1 -> 1.5.1.2 ...).
+#
+# Git decides which commits to send before this hook runs, so the bump
+# cannot ride the push that triggered it. Instead the hook bumps, commits
+# ("... [skip-bump]"), and ABORTS the push -- run 'git push' again and your
+# work plus the bump go up together. The retry sees [skip-bump] at HEAD and
+# lets it through without bumping again.
+#
+# Setup (once per clone): git config core.hooksPath build/hooks
+# Skip for a one-off push:  git push --no-verify
+# See build/hooks/README.md.
+
+zero=0000000000000000000000000000000000000000
+pushing_to_main=0
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+	# Only bump for updates to main; ignore branch deletions (zero local sha).
+	if [ "$remote_ref" = "refs/heads/main" ] && [ "$local_sha" != "$zero" ]; then
+		pushing_to_main=1
+	fi
+done
+
+[ "$pushing_to_main" -eq 1 ] || exit 0
+
+# The bump commit itself is pushed on the retry; don't bump it again.
+if git log -1 --pretty=%B | grep -q '\[skip-bump\]'; then
+	exit 0
+fi
+
+if command -v pwsh >/dev/null 2>&1; then
+	ps=pwsh
+else
+	ps=powershell
+fi
+
+repo_root=$(git rev-parse --show-toplevel)
+if ! "$ps" -NoProfile -ExecutionPolicy Bypass -File "$repo_root/build/hooks/bump-version.ps1"; then
+	echo "pre-push: version bump failed; push aborted." >&2
+	exit 1
+fi
+
+echo "" >&2
+echo "pre-push: version bumped and committed. Re-run 'git push' to include it." >&2
+exit 1

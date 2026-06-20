@@ -55,4 +55,351 @@
     <sys:String x:Key="Ico_Max">&#xeb2c;</sys:String>        <!-- square -->
     <sys:String x:Key="Ico_WinClose">&#xeaa3;</sys:String>   <!-- file-x (reuse) -->
 
+    <!-- ============================================================ -->
+    <!-- Studio control styles                                        -->
+    <!-- ============================================================ -->
+
+    <!-- StudioToolButton: standard toolbar button — Tabler icon + Geist label -->
+    <Style x:Key="StudioToolButton" TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource BgControl}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource FontUI}"/>
+        <Setter Property="FontSize" Value="{DynamicResource FsButton}"/>
+        <Setter Property="Height" Value="34"/>
+        <Setter Property="Padding" Value="11,0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="8"
+                            Padding="{TemplateBinding Padding}" ToolTip="{TemplateBinding ToolTip}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource BgHover}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.4"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- StudioPrimaryButton: accent-fill (Save) -->
+    <Style x:Key="StudioPrimaryButton" TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource AccentDim}"/>
+        <Setter Property="Foreground" Value="{DynamicResource AccentText}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource FontUI}"/>
+        <Setter Property="FontSize" Value="{DynamicResource FsButton}"/>
+        <Setter Property="Height" Value="34"/>
+        <Setter Property="Padding" Value="11,0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="8"
+                            BorderBrush="{DynamicResource AccentBorder}" BorderThickness="1"
+                            Padding="{TemplateBinding Padding}" ToolTip="{TemplateBinding ToolTip}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource BgHover}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.4"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- StudioDangerButton: danger foreground variant -->
+    <Style x:Key="StudioDangerButton" TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource BgControl}"/>
+        <Setter Property="Foreground" Value="{DynamicResource DangerRed}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource FontUI}"/>
+        <Setter Property="FontSize" Value="{DynamicResource FsButton}"/>
+        <Setter Property="Height" Value="34"/>
+        <Setter Property="Padding" Value="11,0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="8"
+                            Padding="{TemplateBinding Padding}" ToolTip="{TemplateBinding ToolTip}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource BgHover}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.4"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- StudioModeTab: ToggleButton with accent active state + underline -->
+    <Style x:Key="StudioModeTab" TargetType="ToggleButton">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondary}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource FontUI}"/>
+        <Setter Property="FontSize" Value="{DynamicResource FsTab}"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Padding" Value="15,0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Grid>
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="8"
+                                BorderBrush="Transparent" BorderThickness="1" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <Border x:Name="Underline" Height="2" VerticalAlignment="Bottom" CornerRadius="1"
+                                Background="Transparent" Margin="6,0"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource BgHover}"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource AccentDim}"/>
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource AccentBorder}"/>
+                            <Setter TargetName="Underline" Property="Background" Value="{DynamicResource Accent}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource AccentText}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- StudioIconButton: icon-only, 34x32, transparent -> BgHover, FontIcon 18 -->
+    <Style x:Key="StudioIconButton" TargetType="Button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource FontIcon}"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="Width" Value="34"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="8"
+                            Padding="{TemplateBinding Padding}" ToolTip="{TemplateBinding ToolTip}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource BgHover}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.4"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- StudioToolToggle: ToggleButton variant of StudioToolButton (active editing tool) -->
+    <Style x:Key="StudioToolToggle" TargetType="ToggleButton">
+        <Setter Property="Background" Value="{DynamicResource BgControl}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource FontUI}"/>
+        <Setter Property="FontSize" Value="{DynamicResource FsButton}"/>
+        <Setter Property="Height" Value="34"/>
+        <Setter Property="Padding" Value="11,0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="8"
+                            BorderBrush="Transparent" BorderThickness="1"
+                            Padding="{TemplateBinding Padding}" ToolTip="{TemplateBinding ToolTip}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource BgHover}"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource AccentDim}"/>
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource AccentBorder}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource AccentText}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.4"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- StudioPill: zoom value box / small value chips -->
+    <Style x:Key="StudioPill" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource BgControl}"/>
+        <Setter Property="CornerRadius" Value="7"/>
+        <Setter Property="Padding" Value="10,4"/>
+    </Style>
+
+    <!-- StudioSwatch: 16x16 color swatch ToggleButton -->
+    <Style x:Key="StudioSwatch" TargetType="ToggleButton">
+        <Setter Property="Width" Value="16"/>
+        <Setter Property="Height" Value="16"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="6"
+                            BorderBrush="Transparent" BorderThickness="2">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource Accent}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- StudioOverlayCard: Border style for overlay/dialog surfaces -->
+    <Style x:Key="StudioOverlayCard" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource BgModal}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderDim}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect Color="Black" BlurRadius="24" ShadowDepth="4" Opacity="0.4" Direction="270"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ============================================================ -->
+    <!-- App-wide implicit styles (moved from MainWindow.xaml)        -->
+    <!-- ============================================================ -->
+
+    <!-- Thin scrollbar -->
+    <Style TargetType="ScrollBar">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Width" Value="6"/>
+        <Setter Property="MinWidth" Value="6"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ScrollBar">
+                    <Grid>
+                        <Track x:Name="PART_Track" IsDirectionReversed="True">
+                            <Track.Thumb>
+                                <Thumb>
+                                    <Thumb.Style>
+                                        <Style TargetType="Thumb">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="Thumb">
+                                                        <Border x:Name="thumbBorder"
+                                                                Background="{DynamicResource BgScrollThumb}"
+                                                                CornerRadius="3"
+                                                                Margin="1,0"/>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                <Setter TargetName="thumbBorder" Property="Background" Value="{DynamicResource Accent}"/>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </Thumb.Style>
+                                </Thumb>
+                            </Track.Thumb>
+                        </Track>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="Orientation" Value="Horizontal">
+                <Setter Property="Height" Value="6"/>
+                <Setter Property="MinHeight" Value="6"/>
+                <Setter Property="Width" Value="Auto"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Dark context menu -->
+    <Style TargetType="ContextMenu">
+        <Setter Property="Background" Value="{DynamicResource BgPanel}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderDim}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource FontUI}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="HasDropShadow" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ContextMenu">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="4" Padding="4">
+                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="MenuItem">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+        <Setter Property="Padding" Value="20,6,40,6"/>
+        <Setter Property="FontFamily" Value="{DynamicResource FontUI}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="MenuItem">
+                    <Border x:Name="MenuBd" Background="{TemplateBinding Background}"
+                            Padding="{TemplateBinding Padding}" CornerRadius="3">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <ContentPresenter ContentSource="Header" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="1" Text="{TemplateBinding InputGestureText}"
+                                       Foreground="{DynamicResource TextSecondary}" FontSize="11"
+                                       VerticalAlignment="Center" Margin="24,0,0,0"/>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsHighlighted" Value="True">
+                            <Setter TargetName="MenuBd" Property="Background" Value="{DynamicResource BgHover}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style TargetType="Separator">
+        <Setter Property="Background" Value="{DynamicResource BorderDim}"/>
+        <Setter Property="Height" Value="1"/>
+        <Setter Property="Margin" Value="4,4"/>
+    </Style>
+
 </ResourceDictionary>
