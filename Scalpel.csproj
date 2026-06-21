@@ -48,6 +48,7 @@
 
   <ItemGroup>
     <Compile Remove="Scalpel.Tests\**" />
+    <Compile Remove="Scalpel.E2E\**" />
   </ItemGroup>
 
   <ItemGroup>
