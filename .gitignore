@@ -35,3 +35,6 @@ obj/
 
 # Brainstorming visual companion
 .superpowers/
+
+# E2E harness output
+e2e-reports/
