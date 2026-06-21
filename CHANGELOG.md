@@ -6,6 +6,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this
 
 ## Unreleased
 
+### Added
+- Local-only session logging for diagnostics and QA. Each app launch writes a JSONL log to `%LOCALAPPDATA%\Scalpel\logs\` (one file per session, named `scalpel-<timestamp>.jsonl`) recording app start/exit, every button and menu click, the outcome of major operations (open, save, save-flattened, merge, extract, sign, print), and all errors and crashes. On by default, with a **Settings → Diagnostics** section to toggle logging, open the logs folder, or clear old logs; session logs older than 7 days are removed automatically on startup. Stays fully offline — logs are written only to the local machine and never transmitted. See `docs/LOGGING.md`.
+
+### Fixed
+- Opening the Settings panel no longer records a spurious `logging.toggle` event or re-saves the logging setting on every open; the Diagnostics checkbox now syncs to the current state without re-triggering its change handler.
+
 ## 1.5.1 - 2026-06-14
 
 ### Fixed

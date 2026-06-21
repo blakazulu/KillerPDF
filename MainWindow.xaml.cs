@@ -42,6 +42,7 @@ namespace Scalpel
         private enum AppMode { View, Edit, Pages, Sign }
         private AppMode _mode = AppMode.View;
         private bool _suppressModeEvents;
+        private bool _suppressLogToggleEvent;
         private readonly StackPanel _continuousPanel = null!;
         private System.Threading.CancellationTokenSource? _continuousRenderCts;
         private readonly List<double> _continuousTops = [];
@@ -287,7 +288,11 @@ namespace Scalpel
             LangZhCNRadio.IsChecked = curLoc == Scalpel.Services.Locale.ZhCN;
             LangBnRadio.IsChecked   = curLoc == Scalpel.Services.Locale.Bn;
             LangTrRadio.IsChecked   = curLoc == Scalpel.Services.Locale.TrTR;
+            // Sync without re-triggering the toggle handler (would log a spurious
+            // logging.toggle and re-save the setting on every Settings open).
+            _suppressLogToggleEvent = true;
             LogEnabledCheck.IsChecked = Scalpel.Services.Logger.Enabled;
+            _suppressLogToggleEvent = false;
             SettingsOverlay.Visibility = Visibility.Visible;
         }
 
@@ -302,6 +307,7 @@ namespace Scalpel
 
         private void LogEnabledCheck_Changed(object sender, RoutedEventArgs e)
         {
+            if (_suppressLogToggleEvent) return;
             bool on = LogEnabledCheck.IsChecked == true;
             Scalpel.Services.Logger.SetEnabled(on);
             App.SetSetting("LoggingEnabled", on ? "1" : "0");
