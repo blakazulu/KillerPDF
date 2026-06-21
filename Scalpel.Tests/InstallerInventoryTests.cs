@@ -19,6 +19,8 @@ namespace Scalpel.Tests
                 Installer.OwnedRegistryKeys);
             Assert.Contains(@"Software\Classes\Scalpel.pdf", Installer.OwnedRegistryKeys);
             Assert.Contains(@"Software\Classes\Applications\Scalpel.exe", Installer.OwnedRegistryKeys);
+            Assert.Contains(@"Software\Classes\SystemFileAssociations\.pdf\shell\Scalpel.edit",
+                Installer.OwnedRegistryKeys);
         }
 
         [Fact]

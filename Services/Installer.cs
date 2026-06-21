@@ -42,6 +42,7 @@ namespace Scalpel.Services
             @"Software\Microsoft\Windows\CurrentVersion\Uninstall\Scalpel",
             @"Software\Classes\Scalpel.pdf",
             @"Software\Classes\Applications\Scalpel.exe",
+            @"Software\Classes\SystemFileAssociations\.pdf\shell\Scalpel.edit",
         ];
 
         // Stray values under shared shell keys we must NOT delete wholesale.
