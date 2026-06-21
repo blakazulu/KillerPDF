@@ -44,6 +44,9 @@
     <sys:String x:Key="Str_About_Thumbprint">THUMBPRINT</sys:String>
     <sys:String x:Key="Str_About_ExeSha">EXE SHA256</sys:String>
     <sys:String x:Key="Str_About_Computing">Computing...</sys:String>
+    <sys:String x:Key="Str_About_Author">AUTHOR</sys:String>
+    <sys:String x:Key="Str_About_Repository">REPOSITORY</sys:String>
+    <sys:String x:Key="Str_About_License">LICENSE</sys:String>
 
     <!-- ── Sidebar tabs ──────────────────────────────────────────────── -->
     <sys:String x:Key="Str_TabPages">PAGES</sys:String>
@@ -155,6 +158,7 @@ You can uninstall via Add/Remove Programs at any time.</sys:String>
     <sys:String x:Key="Str_Mode_Edit">Edit</sys:String>
     <sys:String x:Key="Str_Mode_Pages">Pages</sys:String>
     <sys:String x:Key="Str_Mode_Sign">Sign</sys:String>
+    <sys:String x:Key="Str_Mode_About">About</sys:String>
     <sys:String x:Key="Str_TT_Search">Search (Ctrl+F)</sys:String>
 
     <!-- ── Toolbar new tooltip keys ──────────────────────────────────── -->

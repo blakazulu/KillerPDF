@@ -46,6 +46,9 @@
     <sys:String x:Key="Str_About_Thumbprint">憑證指紋</sys:String>
     <sys:String x:Key="Str_About_ExeSha">EXE SHA256</sys:String>
     <sys:String x:Key="Str_About_Computing">計算中...</sys:String>
+    <sys:String x:Key="Str_About_Author">作者</sys:String>
+    <sys:String x:Key="Str_About_Repository">程式碼儲存庫</sys:String>
+    <sys:String x:Key="Str_About_License">授權</sys:String>
 
     <!-- ── Sidebar tabs ──────────────────────────────────────────────── -->
     <sys:String x:Key="Str_TabPages">頁面</sys:String>
@@ -196,6 +199,7 @@
     <sys:String x:Key="Str_Mode_Edit">編輯</sys:String>
     <sys:String x:Key="Str_Mode_Pages">頁面</sys:String>
     <sys:String x:Key="Str_Mode_Sign">簽名</sys:String>
+    <sys:String x:Key="Str_Mode_About">關於</sys:String>
     <sys:String x:Key="Str_TT_Search">搜尋 (Ctrl+F)</sys:String>
 
     <!-- ── Diagnostics / logging ─────────────────────────────────────── -->

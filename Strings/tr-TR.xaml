@@ -44,6 +44,9 @@
     <sys:String x:Key="Str_About_Thumbprint">PARMAK İZİ</sys:String>
     <sys:String x:Key="Str_About_ExeSha">EXE SHA256</sys:String>
     <sys:String x:Key="Str_About_Computing">Hesaplanıyor...</sys:String>
+    <sys:String x:Key="Str_About_Author">YAZAR</sys:String>
+    <sys:String x:Key="Str_About_Repository">DEPO</sys:String>
+    <sys:String x:Key="Str_About_License">LİSANS</sys:String>
 
     <!-- ── Kenar çubuğu sekmeleri ───────────────────────────────────── -->
     <sys:String x:Key="Str_TabPages">SAYFALAR</sys:String>
@@ -194,6 +197,7 @@ Bu işlem uygulamayı %LocalAppData%\Scalpel konumuna kopyalar ve bir Başlat Me
     <sys:String x:Key="Str_Mode_Edit">Düzenle</sys:String>
     <sys:String x:Key="Str_Mode_Pages">Sayfalar</sys:String>
     <sys:String x:Key="Str_Mode_Sign">İmzala</sys:String>
+    <sys:String x:Key="Str_Mode_About">Hakkında</sys:String>
     <sys:String x:Key="Str_TT_Search">Ara (Ctrl+F)</sys:String>
 
     <!-- ── Diagnostics / logging ─────────────────────────────────────── -->

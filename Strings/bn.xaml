@@ -44,6 +44,9 @@
     <sys:String x:Key="Str_About_Thumbprint">থাম্বপ্রিন্ট</sys:String>
     <sys:String x:Key="Str_About_ExeSha">EXE SHA256</sys:String>
     <sys:String x:Key="Str_About_Computing">গণনা করা হচ্ছে...</sys:String>
+    <sys:String x:Key="Str_About_Author">লেখক</sys:String>
+    <sys:String x:Key="Str_About_Repository">রিপোজিটরি</sys:String>
+    <sys:String x:Key="Str_About_License">লাইসেন্স</sys:String>
 
     <!-- ── Sidebar tabs ──────────────────────────────────────────────── -->
     <sys:String x:Key="Str_TabPages">পৃষ্ঠাসমূহ</sys:String>
@@ -194,6 +197,7 @@
     <sys:String x:Key="Str_Mode_Edit">সম্পাদনা</sys:String>
     <sys:String x:Key="Str_Mode_Pages">পৃষ্ঠা</sys:String>
     <sys:String x:Key="Str_Mode_Sign">স্বাক্ষর</sys:String>
+    <sys:String x:Key="Str_Mode_About">সম্পর্কে</sys:String>
     <sys:String x:Key="Str_TT_Search">অনুসন্ধান (Ctrl+F)</sys:String>
 
     <!-- ── Diagnostics / logging ─────────────────────────────────────── -->

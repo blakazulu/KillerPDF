@@ -44,6 +44,9 @@
     <sys:String x:Key="Str_About_Thumbprint">证书指纹</sys:String>
     <sys:String x:Key="Str_About_ExeSha">EXE SHA256</sys:String>
     <sys:String x:Key="Str_About_Computing">计算中...</sys:String>
+    <sys:String x:Key="Str_About_Author">作者</sys:String>
+    <sys:String x:Key="Str_About_Repository">代码仓库</sys:String>
+    <sys:String x:Key="Str_About_License">许可证</sys:String>
 
     <!-- ── Sidebar tabs ──────────────────────────────────────────────── -->
     <sys:String x:Key="Str_TabPages">页面</sys:String>
@@ -194,6 +197,7 @@
     <sys:String x:Key="Str_Mode_Edit">编辑</sys:String>
     <sys:String x:Key="Str_Mode_Pages">页面</sys:String>
     <sys:String x:Key="Str_Mode_Sign">签名</sys:String>
+    <sys:String x:Key="Str_Mode_About">关于</sys:String>
     <sys:String x:Key="Str_TT_Search">搜索 (Ctrl+F)</sys:String>
 
     <!-- ── Diagnostics / logging ─────────────────────────────────────── -->

@@ -44,6 +44,9 @@
     <sys:String x:Key="Str_About_Thumbprint">HUELLA DIGITAL</sys:String>
     <sys:String x:Key="Str_About_ExeSha">SHA256 EXE</sys:String>
     <sys:String x:Key="Str_About_Computing">Calculando...</sys:String>
+    <sys:String x:Key="Str_About_Author">AUTOR</sys:String>
+    <sys:String x:Key="Str_About_Repository">REPOSITORIO</sys:String>
+    <sys:String x:Key="Str_About_License">LICENCIA</sys:String>
 
     <!-- ── Sidebar tabs ──────────────────────────────────────────────── -->
     <sys:String x:Key="Str_TabPages">PÁGINAS</sys:String>
@@ -194,6 +197,7 @@ Puede desinstalarla en cualquier momento desde Agregar o quitar programas.</sys:
     <sys:String x:Key="Str_Mode_Edit">Editar</sys:String>
     <sys:String x:Key="Str_Mode_Pages">Páginas</sys:String>
     <sys:String x:Key="Str_Mode_Sign">Firmar</sys:String>
+    <sys:String x:Key="Str_Mode_About">Acerca de</sys:String>
     <sys:String x:Key="Str_TT_Search">Buscar (Ctrl+F)</sys:String>
 
     <!-- ── Diagnostics / logging ─────────────────────────────────────── -->
