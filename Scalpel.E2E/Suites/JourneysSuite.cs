@@ -25,9 +25,9 @@ public static class JourneysSuite
         // Journey 4: settings overlay round-trip (open, toggle theme, close).
         report.Results.Add(runner.RunRaw("journeys", "settings:open",
             () => driver.Click("SettingsBtn"), "SettingsBtn", "settingsOverlayOpen"));
-        report.Results.Add(runner.RunRaw("journeys", "settings:theme-blood",
-            () => driver.Click("ThemeBloodRadio"), "ThemeBloodRadio", null));
-        report.Results.Add(runner.RunRaw("journeys", "settings:theme-dark",
-            () => driver.Click("ThemeDarkRadio"), "ThemeDarkRadio", null));
+        report.Results.Add(runner.RunRaw("journeys", "settings:accent-red",
+            () => driver.Click("AccentRedRadio"), "AccentRedRadio", null));
+        report.Results.Add(runner.RunRaw("journeys", "settings:accent-amber",
+            () => driver.Click("AccentAmberRadio"), "AccentAmberRadio", null));
     }
 }

@@ -12,7 +12,7 @@ public class CatalogTests
         Assert.Contains(Catalog.All, c => c.AutomationId == "ZoomInBtn" && c.Surface == Surface.AlwaysVisible);
         Assert.Contains(Catalog.All, c => c.AutomationId == "ToolDrawBtn" && c.Surface == Surface.EditMode);
         Assert.Contains(Catalog.All, c => c.AutomationId == "ViewGridBtn" && c.Surface == Surface.ViewMode);
-        Assert.Contains(Catalog.All, c => c.AutomationId == "ThemeBloodRadio" && c.Surface == Surface.SettingsOverlay);
+        Assert.Contains(Catalog.All, c => c.AutomationId == "AccentRedRadio" && c.Surface == Surface.SettingsOverlay);
     }
 
     [Fact]
