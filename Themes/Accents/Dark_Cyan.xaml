@@ -1,0 +1,16 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:po="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options">
+    <!-- Dark base, Cyan accent -->
+    <SolidColorBrush x:Key="Accent"        Color="#22D3EE" po:Freeze="True"/>
+    <SolidColorBrush x:Key="AccentText"    Color="#67E8F9" po:Freeze="True"/>
+    <SolidColorBrush x:Key="AccentDim"     Color="#0C2A30" po:Freeze="True"/>
+    <SolidColorBrush x:Key="AccentBorder"  Color="#155E75" po:Freeze="True"/>
+    <SolidColorBrush x:Key="SelectionAccent" Color="#22D3EE" po:Freeze="True"/>
+    <SolidColorBrush x:Key="AccentLogo"    Color="#22D3EE" po:Freeze="True"/>
+    <SolidColorBrush x:Key="BgScrollThumb" Color="#5B22D3EE" po:Freeze="True"/>
+    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"                      Color="#0C2A30" po:Freeze="True"/>
+    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}"                  Color="#67E8F9" po:Freeze="True"/>
+    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}"     Color="#0C2A30" po:Freeze="True"/>
+    <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey}" Color="#67E8F9" po:Freeze="True"/>
+</ResourceDictionary>
