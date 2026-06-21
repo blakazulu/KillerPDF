@@ -134,9 +134,11 @@
     <sys:String x:Key="Str_Theme_Dark">深色</sys:String>
     <sys:String x:Key="Str_Theme_Light">浅色</sys:String>
     <sys:String x:Key="Str_Theme_HighContrast">高对比度</sys:String>
-    <sys:String x:Key="Str_Theme_Blood">血色</sys:String>
-    <sys:String x:Key="Str_Theme_Greed">贪婪</sys:String>
-    <sys:String x:Key="Str_Theme_Cyanotic">青色</sys:String>
+    <sys:String x:Key="Str_Accent">强调色</sys:String>
+    <sys:String x:Key="Str_Accent_Amber">琥珀色</sys:String>
+    <sys:String x:Key="Str_Accent_Red">红色</sys:String>
+    <sys:String x:Key="Str_Accent_Green">绿色</sys:String>
+    <sys:String x:Key="Str_Accent_Cyan">青色</sys:String>
 
     <!-- ── Zoom dropdown ──────────────────────────────────────────────── -->
     <sys:String x:Key="Str_Zoom_FitWidth">适合宽度</sys:String>

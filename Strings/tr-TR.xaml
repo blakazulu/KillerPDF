@@ -134,9 +134,11 @@ Bu işlem uygulamayı %LocalAppData%\Scalpel konumuna kopyalar ve bir Başlat Me
     <sys:String x:Key="Str_Theme_Dark">Koyu</sys:String>
     <sys:String x:Key="Str_Theme_Light">Açık</sys:String>
     <sys:String x:Key="Str_Theme_HighContrast">Yüksek Karşıtlık</sys:String>
-    <sys:String x:Key="Str_Theme_Blood">Kanlı</sys:String>
-    <sys:String x:Key="Str_Theme_Greed">Açgözlü</sys:String>
-    <sys:String x:Key="Str_Theme_Cyanotic">Siyanotik</sys:String>
+    <sys:String x:Key="Str_Accent">VURGU</sys:String>
+    <sys:String x:Key="Str_Accent_Amber">Kehribar</sys:String>
+    <sys:String x:Key="Str_Accent_Red">Kırmızı</sys:String>
+    <sys:String x:Key="Str_Accent_Green">Yeşil</sys:String>
+    <sys:String x:Key="Str_Accent_Cyan">Camgöbeği</sys:String>
 
     <!-- ── Yakınlaştırma açılır listesi ──────────────────────────────── -->
     <sys:String x:Key="Str_Zoom_FitWidth">Genişliğe Sığdır</sys:String>

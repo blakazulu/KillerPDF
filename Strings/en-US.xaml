@@ -134,9 +134,11 @@ You can uninstall via Add/Remove Programs at any time.</sys:String>
     <sys:String x:Key="Str_Theme_Dark">Dark</sys:String>
     <sys:String x:Key="Str_Theme_Light">Light</sys:String>
     <sys:String x:Key="Str_Theme_HighContrast">High Contrast</sys:String>
-    <sys:String x:Key="Str_Theme_Blood">Blood</sys:String>
-    <sys:String x:Key="Str_Theme_Greed">Greed</sys:String>
-    <sys:String x:Key="Str_Theme_Cyanotic">Cyanotic</sys:String>
+    <sys:String x:Key="Str_Accent">ACCENT</sys:String>
+    <sys:String x:Key="Str_Accent_Amber">Amber</sys:String>
+    <sys:String x:Key="Str_Accent_Red">Red</sys:String>
+    <sys:String x:Key="Str_Accent_Green">Green</sys:String>
+    <sys:String x:Key="Str_Accent_Cyan">Cyan</sys:String>
 
     <!-- ── Zoom dropdown ──────────────────────────────────────────────── -->
     <sys:String x:Key="Str_Zoom_FitWidth">Fit Width</sys:String>

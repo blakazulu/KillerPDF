@@ -134,9 +134,11 @@ Puede desinstalarla en cualquier momento desde Agregar o quitar programas.</sys:
     <sys:String x:Key="Str_Theme_Dark">Oscuro</sys:String>
     <sys:String x:Key="Str_Theme_Light">Claro</sys:String>
     <sys:String x:Key="Str_Theme_HighContrast">Alto Contraste</sys:String>
-    <sys:String x:Key="Str_Theme_Blood">Sangre</sys:String>
-    <sys:String x:Key="Str_Theme_Greed">Codicia</sys:String>
-    <sys:String x:Key="Str_Theme_Cyanotic">Cianótico</sys:String>
+    <sys:String x:Key="Str_Accent">ACENTO</sys:String>
+    <sys:String x:Key="Str_Accent_Amber">Ámbar</sys:String>
+    <sys:String x:Key="Str_Accent_Red">Rojo</sys:String>
+    <sys:String x:Key="Str_Accent_Green">Verde</sys:String>
+    <sys:String x:Key="Str_Accent_Cyan">Cian</sys:String>
 
     <!-- ── Zoom dropdown ──────────────────────────────────────────────── -->
     <sys:String x:Key="Str_Zoom_FitWidth">Ajustar ancho</sys:String>

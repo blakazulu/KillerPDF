@@ -134,9 +134,11 @@
     <sys:String x:Key="Str_Theme_Dark">অন্ধকার</sys:String>
     <sys:String x:Key="Str_Theme_Light">হালকা</sys:String>
     <sys:String x:Key="Str_Theme_HighContrast">উচ্চ কন্ট্রাস্ট</sys:String>
-    <sys:String x:Key="Str_Theme_Blood">রক্ত</sys:String>
-    <sys:String x:Key="Str_Theme_Greed">লোভ</sys:String>
-    <sys:String x:Key="Str_Theme_Cyanotic">সায়ানোটিক</sys:String>
+    <sys:String x:Key="Str_Accent">অ্যাকসেন্ট</sys:String>
+    <sys:String x:Key="Str_Accent_Amber">অ্যাম্বার</sys:String>
+    <sys:String x:Key="Str_Accent_Red">লাল</sys:String>
+    <sys:String x:Key="Str_Accent_Green">সবুজ</sys:String>
+    <sys:String x:Key="Str_Accent_Cyan">সায়ান</sys:String>
 
     <!-- ── Zoom dropdown ──────────────────────────────────────────────── -->
     <sys:String x:Key="Str_Zoom_FitWidth">প্রস্থ মেলান</sys:String>
