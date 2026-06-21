@@ -64,6 +64,14 @@ dead link. All hyperlinks use the existing
 Existing rows (version, publisher, thumbprint, SHA256) are unchanged. The
 version row still links to the GitHub release tag.
 
+### 2b. Fix the footer credit link
+
+The status-bar footer (`MainWindow.xaml:935`–`943`) shows `© 2026 Liraz Amir`,
+where `Liraz Amir` is a `Hyperlink` pointing to the same dead placeholder
+`https://scalpel.example.com`. Repoint its `NavigateUri` to
+`https://github.com/blakazulu/ScalpelPDF`. This is the same dead-link fix as the
+About logo and is done in the same pass. The text and styling are unchanged.
+
 Row population for the new author/license/repo rows can be static XAML
 (`Hyperlink` with `RequestNavigate="Hyperlink_RequestNavigate"`, which already
 exists at `MainWindow.xaml.cs:8930`) rather than code-behind, keeping
@@ -100,3 +108,5 @@ not translated; only the row labels are localized.
 - Switch locale → tab label and info-card labels remain populated (no blanks),
   confirming all six locale files carry the new keys.
 - Status-bar version label still opens the same overlay.
+- Footer `© 2026 Liraz Amir` link opens the GitHub repo (no longer the dead
+  placeholder).
