@@ -247,7 +247,14 @@ namespace Scalpel
                     // Reopen the last file if no CLI arg was provided
                     var lastFile = App.GetSetting("LastFile");
                     if (!string.IsNullOrEmpty(lastFile) && System.IO.File.Exists(lastFile))
+                    {
                         OpenFile(lastFile!);
+                        // If the reopen didn't actually load a document (open failed, or the
+                        // user declined the repair prompt), forget it — otherwise the same
+                        // damaged file would re-prompt on every subsequent launch.
+                        if (_doc is null)
+                            App.SetSetting("LastFile", "");
+                    }
                 }
 
                 if (App.IsPortable())
@@ -638,10 +645,26 @@ namespace Scalpel
                 }
                 App.SetSetting("FitMode",   _fitMode.ToString());
                 App.SetSetting("ZoomLevel", _zoomLevel.ToString(System.Globalization.CultureInfo.InvariantCulture));
-                if (_currentFile is not null)
+                // Persist as "last file" only for real, durable documents — never a
+                // transient temp/repaired copy (those get swept and would re-prompt).
+                if (_currentFile is not null && !IsTransientPath(_currentFile))
                     App.SetSetting("LastFile", _currentFile);
             }
             catch { /* best-effort */ }
+        }
+
+        /// <summary>True if the path lives under a temp location (system %TEMP% or our
+        /// own session temp dir) — such files are transient and must not be remembered
+        /// as the last opened file.</summary>
+        private static bool IsTransientPath(string path)
+        {
+            try
+            {
+                var full = System.IO.Path.GetFullPath(path);
+                return full.StartsWith(System.IO.Path.GetTempPath(), StringComparison.OrdinalIgnoreCase)
+                    || full.StartsWith(App.TempDir, StringComparison.OrdinalIgnoreCase);
+            }
+            catch { return false; }
         }
 
         private void RestoreWindowSettings()
@@ -8858,6 +8881,8 @@ namespace Scalpel
         }
 
         // ── About overlay ───────────────────────────────────────────────
+
+        private void AboutTab_Click(object sender, RoutedEventArgs e) => ShowAboutOverlay();
 
         private void ShowAboutOverlay()
         {

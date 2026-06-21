@@ -187,6 +187,34 @@
         </Setter>
     </Style>
 
+    <!-- StudioModeTabButton: Button sibling of StudioModeTab for one-shot actions
+         (opens an overlay) - same idle/hover look, but never shows a "checked" state. -->
+    <Style x:Key="StudioModeTabButton" TargetType="Button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondary}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource FontUI}"/>
+        <Setter Property="FontSize" Value="{DynamicResource FsTab}"/>
+        <Setter Property="FontWeight" Value="Medium"/>
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Padding" Value="15,0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="8"
+                            BorderBrush="Transparent" BorderThickness="1" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource BgHover}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!-- StudioIconButton: icon-only, 34x32, transparent -> BgHover, FontIcon 18 -->
     <Style x:Key="StudioIconButton" TargetType="Button">
         <Setter Property="Background" Value="Transparent"/>
