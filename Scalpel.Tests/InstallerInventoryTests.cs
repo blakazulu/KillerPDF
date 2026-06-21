@@ -18,6 +18,7 @@ namespace Scalpel.Tests
             Assert.Contains(@"Software\Microsoft\Windows\CurrentVersion\Uninstall\Scalpel",
                 Installer.OwnedRegistryKeys);
             Assert.Contains(@"Software\Classes\Scalpel.pdf", Installer.OwnedRegistryKeys);
+            Assert.Contains(@"Software\Classes\Applications\Scalpel.exe", Installer.OwnedRegistryKeys);
         }
 
         [Fact]
@@ -35,6 +36,7 @@ namespace Scalpel.Tests
             Assert.Contains(Path.Combine(Local, "Programs", "Scalpel"), Installer.OwnedPaths);
             Assert.Contains(Path.Combine(Local, "Scalpel"), Installer.OwnedPaths);
             Assert.Contains(Installer.StartMenuLnk, Installer.OwnedPaths);
+            Assert.Contains(Installer.UninstallLnk, Installer.OwnedPaths);
             Assert.Contains(Installer.DesktopLnk, Installer.OwnedPaths);
         }
 

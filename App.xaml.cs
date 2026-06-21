@@ -86,11 +86,28 @@ namespace Scalpel
 
             if (!CheckPdfiumIntegrity()) { Shutdown(2); return; }
 
-            // Handle uninstall flag (called by Add/Remove Programs). Ignored in
-            // packaged mode — the Store/OS removes MSIX packages, and the desktop
-            // self-uninstall would target a non-existent per-user install dir.
-            if (!IsPackaged() && e.Args.Length > 0 &&
-                string.Equals(e.Args[0], "/uninstall", StringComparison.OrdinalIgnoreCase))
+            // Handle uninstall flag (called by Add/Remove Programs). Check the full raw
+            // command line (not just e.Args[0]) so it works regardless of how the shell
+            // passes the argument. Ignored in packaged mode — the Store/OS removes MSIX
+            // packages, and the desktop self-uninstall would target a non-existent dir.
+            // Detect "running as the uninstaller": launched as uninstall.exe (the argument-less
+            // uninstaller) OR with a /uninstall flag. The command-line exe path (arg[0]) is the
+            // reliable source for a copied exe; MainModule is a secondary fallback.
+            string arg0    = Environment.GetCommandLineArgs().FirstOrDefault() ?? "";
+            string mainMod = "";
+            try { mainMod = Process.GetCurrentProcess().MainModule?.FileName ?? ""; } catch { }
+            bool runningAsUninstaller =
+                string.Equals(System.IO.Path.GetFileName(arg0),    "uninstall.exe", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(System.IO.Path.GetFileName(mainMod), "uninstall.exe", StringComparison.OrdinalIgnoreCase);
+            bool uninstallRequested = runningAsUninstaller
+                || Environment.GetCommandLineArgs()
+                    .Any(a => string.Equals(a, "/uninstall", StringComparison.OrdinalIgnoreCase));
+            // uninstall.exe is ONLY ever created by the per-user installer — a real MSIX
+            // build never self-installs it. So when we are the dedicated uninstaller, always
+            // honor it, even though IsPackaged() can falsely report true: Windows' Settings
+            // app is itself packaged and the child uninstall.exe inherits its package context.
+            // The legacy /uninstall-flag path stays gated by !IsPackaged() for real MSIX builds.
+            if (uninstallRequested && (runningAsUninstaller || !IsPackaged()))
             {
                 InstallerUI.RunUninstallFlow(
                     Scalpel.Services.Installer.WipeAllData,
@@ -566,15 +583,42 @@ namespace Scalpel
             if (!IsDefaultPdfHandler())
             {
                 var res = ScalpelDialog.Show(null,
-                    "Would you like to set Scalpel as your default PDF viewer?\n\n" +
-                    "Opens Windows Settings → Default Apps.",
-                    "Scalpel", MessageBoxButton.YesNo);
+                    "Make Scalpel your default PDF viewer?\n\n" +
+                    "Windows only lets you change this yourself. Click \"Yes\" to open " +
+                    "Default Apps settings, then:\n\n" +
+                    "    1.  Search for  .pdf  (or scroll to it)\n" +
+                    "    2.  Click the app currently shown (e.g. your browser)\n" +
+                    "    3.  Pick Scalpel, then choose Set default\n\n" +
+                    "Open Default Apps settings now?",
+                    "Set Scalpel as default", MessageBoxButton.YesNo);
                 if (res == MessageBoxResult.Yes)
-                    Process.Start(new ProcessStartInfo("ms-settings:defaultapps")
-                        { UseShellExecute = true });
+                {
+                    try
+                    {
+                        Process.Start(new ProcessStartInfo("ms-settings:defaultapps")
+                            { UseShellExecute = true });
+                    }
+                    catch
+                    {
+                        // Fallback for older shells without the ms-settings: URI.
+                        try { Process.Start(new ProcessStartInfo("control.exe", "/name Microsoft.DefaultPrograms")
+                            { UseShellExecute = true }); } catch { }
+                    }
+                }
             }
 
-            var psi = new ProcessStartInfo(Installer.InstallExe);
+            // Guard: if the install didn't actually produce the EXE, don't blindly relaunch
+            // (that throws a fatal Win32Exception). Surface it and stay put instead.
+            if (!File.Exists(Installer.InstallExe))
+            {
+                MessageBox.Show(
+                    "Installation did not complete: the installed copy was not created. " +
+                    "Scalpel will keep running from its current location.",
+                    AppName, MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var psi = new ProcessStartInfo(Installer.InstallExe) { UseShellExecute = true };
             if (fileToOpen != null)
                 psi.Arguments = $"\"{fileToOpen}\"";
             Process.Start(psi);
@@ -1104,13 +1148,18 @@ namespace Scalpel
 
             try
             {
-                // Copy EXE to install location
+                // Copy EXE to install location, plus a same-binary copy named uninstall.exe
+                // (argument-less uninstaller — see Installer.UninstallExe).
                 Directory.CreateDirectory(Installer.InstallDir);
                 File.Copy(src, Installer.InstallExe, overwrite: true);
+                try { File.Copy(src, Installer.UninstallExe, overwrite: true); } catch { }
 
                 // Shortcuts
                 Directory.CreateDirectory(Installer.StartMenuDir);
                 CreateShortcut(Installer.StartMenuLnk, Installer.InstallExe);
+                // Dedicated uninstall shortcut — a .lnk reliably preserves its arguments,
+                // unlike the ARP UninstallString which Windows' Settings uninstall can strip.
+                CreateShortcut(Installer.UninstallLnk, Installer.InstallExe, "/uninstall");
                 if (wantDesktop)
                     CreateShortcut(Installer.DesktopLnk, Installer.InstallExe);
 
@@ -1133,8 +1182,11 @@ namespace Scalpel
                     key.SetValue("Publisher",            "Liraz Amir");
                     key.SetValue("InstallLocation",      Installer.InstallDir);
                     key.SetValue("DisplayIcon",          $"{Installer.InstallExe},0");
-                    key.SetValue("UninstallString",      $"\"{Installer.InstallExe}\" /uninstall");
-                    key.SetValue("QuietUninstallString", $"\"{Installer.InstallExe}\" /uninstall");
+                    // Point at the argument-less uninstall.exe — Windows 11's Settings uninstall
+                    // strips arguments from UninstallString, so "Scalpel.exe /uninstall" would just
+                    // launch the app. A dedicated exe (no args) can't be mis-parsed.
+                    key.SetValue("UninstallString",      $"\"{Installer.UninstallExe}\"");
+                    // No QuietUninstallString — our uninstall is interactive (shows a confirm dialog).
                     key.SetValue("NoModify",             1);
                     key.SetValue("NoRepair",             1);
                 }
@@ -1163,6 +1215,23 @@ namespace Scalpel
                 @"Software\Classes\Scalpel.pdf\shell\open\command"))
                 k.SetValue("", $"\"{Installer.InstallExe}\" \"%1\"");
 
+            // Application registration — REQUIRED for Scalpel to appear in the shell's
+            // "Open with" / "Choose another app" list (and therefore be selectable as the
+            // default). Without Applications\Scalpel.exe + SupportedTypes, the OpenWithProgids
+            // hint alone is unreliable on Windows 10/11.
+            using (var k = Registry.CurrentUser.CreateSubKey(
+                @"Software\Classes\Applications\Scalpel.exe"))
+                k.SetValue("FriendlyAppName", "Scalpel");
+            using (var k = Registry.CurrentUser.CreateSubKey(
+                @"Software\Classes\Applications\Scalpel.exe\DefaultIcon"))
+                k.SetValue("", $"{Installer.InstallExe},0");
+            using (var k = Registry.CurrentUser.CreateSubKey(
+                @"Software\Classes\Applications\Scalpel.exe\shell\open\command"))
+                k.SetValue("", $"\"{Installer.InstallExe}\" \"%1\"");
+            using (var k = Registry.CurrentUser.CreateSubKey(
+                @"Software\Classes\Applications\Scalpel.exe\SupportedTypes"))
+                k.SetValue(".pdf", "");
+
             // Associate .pdf extension — adds Scalpel to the "Open with" list
             using (var k = Registry.CurrentUser.CreateSubKey(
                 @"Software\Classes\.pdf\OpenWithProgids"))
@@ -1186,7 +1255,7 @@ namespace Scalpel
             SHChangeNotify(SHCNE_ASSOCCHANGED, SHCNF_IDLIST, IntPtr.Zero, IntPtr.Zero);
         }
 
-        private static void CreateShortcut(string lnkPath, string targetPath)
+        private static void CreateShortcut(string lnkPath, string targetPath, string? arguments = null)
         {
             try
             {
@@ -1195,6 +1264,8 @@ namespace Scalpel
                 dynamic shell    = Activator.CreateInstance(shellType)!;
                 dynamic shortcut = shell.CreateShortcut(lnkPath);
                 shortcut.TargetPath       = targetPath;
+                if (!string.IsNullOrEmpty(arguments))
+                    shortcut.Arguments = arguments;
                 shortcut.WorkingDirectory = Path.GetDirectoryName(targetPath);
                 shortcut.Save();
             }

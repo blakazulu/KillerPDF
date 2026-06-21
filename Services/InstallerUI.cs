@@ -115,7 +115,13 @@ namespace Scalpel.Services
                 WindowStyle           = WindowStyle.None,
                 Background            = Canvas,
                 AllowsTransparency    = false,
+                // These dialogs are launched from a process with no main window (e.g. the
+                // /uninstall invocation). Force them to the foreground so they can't open
+                // hidden behind an already-running Scalpel window.
+                Topmost               = true,
+                ShowInTaskbar         = true,
             };
+            win.Loaded += (_, _) => { win.Activate(); };
 
             var root = new DockPanel();
 

@@ -21,10 +21,16 @@ namespace Scalpel.Services
         // ── Canonical paths ───────────────────────────────────────────────
         public static string InstallDir   => Path.Combine(Local, "Programs", AppName);
         public static string InstallExe   => Path.Combine(InstallDir, ExeName);
+        // Dedicated argument-less uninstaller (a copy of the app exe). Windows' uninstall —
+        // especially the Win11 Settings "Installed apps" page — does not reliably pass the
+        // arguments in UninstallString, so we follow the Inno/NSIS pattern: a separate exe
+        // that needs no args. The app runs the uninstall flow when launched as this file.
+        public static string UninstallExe => Path.Combine(InstallDir, "uninstall.exe");
         public static string DataDir      => Path.Combine(Local, AppName);   // signatures, logs, Temp, crash logs
         public static string StartMenuDir => Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.Programs), AppName);
         public static string StartMenuLnk => Path.Combine(StartMenuDir, $"{AppName}.lnk");
+        public static string UninstallLnk => Path.Combine(StartMenuDir, $"Uninstall {AppName}.lnk");
         public static string DesktopLnk   => Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory), $"{AppName}.lnk");
 
@@ -35,6 +41,7 @@ namespace Scalpel.Services
             @"Software\Scalpel",
             @"Software\Microsoft\Windows\CurrentVersion\Uninstall\Scalpel",
             @"Software\Classes\Scalpel.pdf",
+            @"Software\Classes\Applications\Scalpel.exe",
         ];
 
         // Stray values under shared shell keys we must NOT delete wholesale.
@@ -51,6 +58,8 @@ namespace Scalpel.Services
             Path.Combine(Local, AppName),              // == DataDir
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Programs), AppName,
                 $"{AppName}.lnk"),                     // == StartMenuLnk
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Programs), AppName,
+                $"Uninstall {AppName}.lnk"),           // == UninstallLnk
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory),
                 $"{AppName}.lnk"),                     // == DesktopLnk
         ];
@@ -83,7 +92,8 @@ namespace Scalpel.Services
                 catch { }
 
             try { File.Delete(StartMenuLnk); } catch { }
-            try { Directory.Delete(StartMenuDir, recursive: false); } catch { }
+            try { File.Delete(UninstallLnk); } catch { }
+            try { Directory.Delete(StartMenuDir, recursive: true); } catch { }
             try { File.Delete(DesktopLnk); } catch { }
 
             try
@@ -111,7 +121,9 @@ namespace Scalpel.Services
                 "set /a tries=0\r\n" +
                 ":retry\r\n" +
                 $"rmdir /s /q \"{InstallDir}\" 2>nul\r\n" +
-                $"if not exist \"{InstallExe}\" goto wipedata\r\n" +
+                // Retry until the whole dir is gone — the running uninstaller (Scalpel.exe OR
+                // uninstall.exe) holds a lock on its own image until it exits.
+                $"if not exist \"{InstallDir}\" goto wipedata\r\n" +
                 "set /a tries+=1\r\n" +
                 "if %tries% geq 20 goto wipedata\r\n" +
                 "ping -n 2 127.0.0.1 >nul\r\n" +
