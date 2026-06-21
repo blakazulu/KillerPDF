@@ -38,11 +38,17 @@ namespace Scalpel
                 AddAnnotation(new SignatureAnnotation
                 {
                     PageIndex = page,
-                    Position = new Point(360, 480),
-                    Scale = 0.6,
+                    Position = new Point(330, 120),
+                    Scale = 1.3,
                     Strokes =
                     [
-                        [ new(0, 40), new(30, 5), new(55, 45), new(85, 8), new(120, 42), new(160, 12) ],
+                        // Flowing cursive-style signature stroke.
+                        [
+                            new(10, 70), new(35, 18), new(60, 72), new(95, 22), new(130, 66),
+                            new(165, 26), new(205, 70), new(245, 28), new(285, 62), new(325, 40),
+                        ],
+                        // Underline flourish.
+                        [ new(5, 98), new(335, 92) ],
                     ],
                 });
             }

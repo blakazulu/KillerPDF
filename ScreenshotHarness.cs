@@ -17,7 +17,7 @@ namespace Scalpel
 
         private sealed record Shot(
             string FileName, AppMode Mode, Theme Theme, Accent Accent,
-            int Page, EditTool? Tool, bool Seed);
+            int Page, EditTool? Tool, bool Seed, ViewMode? View = null);
 
         // NOTE: the LAST shot must have Seed:false (and use no annotating tool). Seeding sets
         // _isDirty; OpenFile resets it each iteration, so only the final shot's dirty state
@@ -30,7 +30,8 @@ namespace Scalpel
             new Shot("03-pages-dark.png",   AppMode.Pages, Theme.Dark,         Accent.Cyan,  0, null,               false),
             new Shot("04-sign-dark.png",    AppMode.Sign,  Theme.Dark,         Accent.Amber, 2, null,               true),
             new Shot("05-highcontrast.png", AppMode.View,  Theme.HighContrast, Accent.Amber, 3, null,               false),
-            new Shot("06-edit-green.png",   AppMode.Edit,  Theme.Dark,         Accent.Green, 0, EditTool.Draw,      false),
+            // Merge/split shot: Pages-mode toolbar over a Grid layout that tiles all 4 pages.
+            new Shot("06-pages-grid-green.png", AppMode.Pages, Theme.Dark,     Accent.Green, 0, null,               false, ViewMode.Grid),
         ];
 
         /// <summary>
@@ -59,6 +60,10 @@ namespace Scalpel
                     ThemeManager.ApplyAccent(shot.Accent);
                     OpenFile(sample);
                     SetMode(shot.Mode);
+                    // Set the view mode for EVERY shot (default Continuous) so the layout is
+                    // deterministic — a prior run can persist ViewMode (e.g. Grid) to the registry,
+                    // which the app loads at construction and /shoot does not reset.
+                    SetViewMode(shot.View ?? ViewMode.Continuous); UpdateViewModeButtons();
                     // Let OpenFile's deferred Background callbacks (FitToWidth, page-0 reset) drain
                     // before we navigate to the target page — otherwise FinishOpenFile resets to 0.
                     await SettleAsync();
