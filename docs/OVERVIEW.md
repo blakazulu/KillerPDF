@@ -75,7 +75,7 @@ Design pillars:
 ```
 Scalpel.sln
 ├─ Scalpel.csproj           WinExe, the app
-│  ├─ App.xaml(.cs)           Entry point + installer + crash handling + settings/temp lifecycle
+│  ├─ App.xaml(.cs)           Entry point + orchestrator — crash handling, install delegation, settings/temp lifecycle
 │  ├─ MainWindow.xaml(.cs)    The monolith — almost all UI/editing logic (~9.2k LOC code-behind)
 │  ├─ PrintPreviewWindow.cs   Custom print dialog with preview
 │  ├─ PageThumbnailVm.cs      Sidebar page-list view model
@@ -83,6 +83,8 @@ Scalpel.sln
 │  ├─ BuildInfo.cs            pdfium.dll expected hash (written by release.ps1)
 │  ├─ Models/EditingTypes.cs  Annotation model + EditTool enum
 │  ├─ Services/
+│  │   ├─ Installer.cs        Install/uninstall engine — cleanup inventory, WipeAllData, deferred dir-wipe .bat
+│  │   ├─ InstallerUI.cs      Branded install/uninstall dialogs (dark+amber, Geist/Tabler, custom chrome)
 │  │   ├─ SearchService.cs    PdfPig full-text search
 │  │   ├─ SignatureStore.cs   Saved signatures (JSON in AppData)
 │  │   ├─ ThemeManager.cs     Theme/accent dictionaries + DWM title bar
@@ -107,7 +109,11 @@ Scalpel.sln
 
 **5. Hot-swappable theme/locale via merged dictionaries.** `Application.Current.Resources.MergedDictionaries` is a fixed two-slot array: **index 0 = theme**, **index 1 = strings**. `ThemeManager` updates the theme dict **in place per key** (not structural add/remove) specifically to avoid a synchronous `ResourcesChanged` firing `FindResource` before the new dict is settled (`ResourceReferenceKeyNotFoundException`). It also sets the native dark title bar through `DwmSetWindowAttribute` P/Invoke, and force-refreshes icon colors. Adding a language = add `Strings/<locale>.xaml`, a `Locale` enum case, and a `pack://` URI case in `LocaleManager`.
 
-**6. App.xaml.cs is also the installer.** Beyond being the entry point, it: registers three unhandled-exception sinks (Dispatcher, AppDomain, unobserved Task — note `AccessViolationException` is intentionally **not** caught on net48), handles the `/uninstall` flag from Add/Remove Programs, performs per-user self-install to `%LOCALAPPDATA%\Programs\Scalpel` with `.pdf` ProgId registration and Start-Menu/Desktop shortcuts (no UAC), and verifies pdfium integrity at startup.
+**6. Install/uninstall is split across three files.** `App.xaml.cs` registers three unhandled-exception sinks (Dispatcher, AppDomain, unobserved Task — `AccessViolationException` is intentionally **not** caught on net48) and orchestrates install/uninstall, but the logic lives in dedicated services:
+- **`Services/Installer.cs`** (WPF-free): the canonical cleanup inventory (`OwnedRegistryKeys`, `OwnedRegistryValues`, `OwnedPaths`), `WipeAllData()` (registry, shortcuts, `%TEMP%` scratch, `SHChangeNotify`), and `WriteDeferredDirWipeScript()` — a `.bat` that removes both `%LOCALAPPDATA%\Programs\Scalpel` and `%LOCALAPPDATA%\Scalpel` after the EXE exits, giving a **zero-leftover uninstall** (the old uninstaller left the data dir behind). Publisher in Add/Remove Programs is "Liraz Amir". Install path constants also live here.
+- **`Services/InstallerUI.cs`**: self-contained branded dialogs — `ShowInstallConfirm(...)` (with desktop-shortcut toggle) and `RunUninstallFlow(...)` (confirm → progress → farewell auto-close).
+- An xUnit test (`InstallerInventoryTests`) guards the inventory completeness.
+- pdfium integrity is still verified at startup by `App.xaml.cs` (`CheckPdfiumIntegrity`).
 
 **7. pdfium integrity gate.** `BuildInfo.PdfiumSha256` holds the expected hash. At startup `CheckPdfiumIntegrity()` decompresses the Costura-embedded pdfium resource and compares; a mismatch aborts the process (`Shutdown(2)`). All-zeros (`PdfiumSha256Disabled`) or a non-Costura dev build skips the check. `release.ps1` writes the real hash before each signed build.
 
