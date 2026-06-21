@@ -20,15 +20,20 @@
     pwsh -File packaging\build-msix.ps1 -SelfSign
 
 .EXAMPLE
-    # Store submission package (unsigned; upload the .msix to Partner Center):
+    # Store submission package — RECOMMENDED. Bakes in the Partner Center identity,
+    # forces a Store-legal .0 version, and leaves it unsigned (the Store signs it):
+    pwsh -File packaging\build-msix.ps1 -Store
+
+.EXAMPLE
+    # Store submission package with explicit identity (advanced):
     pwsh -File packaging\build-msix.ps1 -NoSign `
-         -IdentityName "12345Publisher.Scalpel" `
-         -Publisher "CN=ABCD1234-1234-1234-1234-1234567890AB" `
-         -PublisherDisplayName "Steve The Killer"
+         -IdentityName "Publisher.AppName" `
+         -Publisher "CN=00000000-0000-0000-0000-000000000000" `
+         -PublisherDisplayName "Your Publisher Display Name"
 #>
 [CmdletBinding(DefaultParameterSetName = 'SelfSign')]
 param(
-    [string]$Version             = '',                       # defaults to csproj <Version> + .0
+    [string]$Version             = '',                       # defaults to csproj <Version> with Revision forced to .0
     [string]$IdentityName        = 'Scalpel',
     [string]$Publisher           = 'CN=Scalpel Dev',       # MUST match signing cert subject
     [string]$PublisherDisplayName= 'Scalpel',
@@ -38,9 +43,18 @@ param(
     [Parameter(ParameterSetName='Cert')][string]$CertPath,       # sign with an existing .pfx
     [Parameter(ParameterSetName='Cert')][string]$CertPassword,
     [Parameter(ParameterSetName='NoSign')][switch]$NoSign,       # leave unsigned (Store signs it)
+    [Parameter(ParameterSetName='Store')][switch]$Store,         # NoSign + this app's Partner Center identity
 
     [switch]$SkipPublish
 )
+
+# ── -Store: use this app's real Partner Center identity (Product Identity page) ──
+if ($Store) {
+    $IdentityName         = 'LirazShakaAmir.ScalpelPDF'
+    $Publisher            = 'CN=8B3919EF-5B9D-4935-A322-FC9435A969F6'
+    $PublisherDisplayName = 'LirazShakaAmir'
+    $DisplayName          = 'Scalpel PDF'
+}
 
 $ErrorActionPreference = 'Stop'
 $repo  = Resolve-Path (Join-Path $PSScriptRoot '..')
@@ -57,7 +71,12 @@ if (-not $Version) {
     if (-not $v) { $v = '1.0.0' }
     $parts = @($v.ToString().Split('.'))
     while ($parts.Count -lt 4) { $parts += '0' }
-    $Version = ($parts[0..3] -join '.')
+    # The Microsoft Store reserves the 4th part (Revision) and requires it to be 0
+    # (WACK "app count" test). Keep the internal build counter OUT of the package version.
+    $Version = "$($parts[0]).$($parts[1]).$($parts[2]).0"
+}
+if ($Version -notmatch '^\d+\.\d+\.\d+\.0$') {
+    throw "Package version '$Version' is invalid for the Store: it must be Major.Minor.Build.0 (Revision must be 0)."
 }
 Write-Host "==> Package version: $Version" -ForegroundColor Cyan
 
@@ -96,6 +115,17 @@ if (-not $SkipPublish) {
 }
 $exe = Join-Path $publishDir 'Scalpel.exe'
 if (-not (Test-Path $exe)) { throw "Published EXE not found at $exe" }
+
+# ── 1b. Purge stale/foreign package artifacts (e.g. old KillerPDF builds) ───
+# Ensures 'out' only ever contains the current Scalpel package + its own staging.
+if (Test-Path $outDir) {
+    Get-ChildItem -Path (Join-Path $outDir '*') -Include *.msix,*.appx,*.cer,*.pfx -File -ErrorAction SilentlyContinue |
+        Where-Object { $_.Name -notlike 'Scalpel_*.msix' } |
+        ForEach-Object {
+            Write-Host "    Removing stale artifact: $($_.Name)" -ForegroundColor DarkGray
+            Remove-Item $_.FullName -Force
+        }
+}
 
 # ── 2. Stage the package layout ────────────────────────────────────────────
 Write-Host "`n==> Staging package layout..." -ForegroundColor Cyan
@@ -137,6 +167,12 @@ Write-Host "    Packed: $msix" -ForegroundColor Green
 switch ($PSCmdlet.ParameterSetName) {
     'NoSign' {
         Write-Host "`n==> -NoSign: package left unsigned. Upload the .msix to Partner Center; the Store signs it." -ForegroundColor Yellow
+    }
+    'Store' {
+        Write-Host "`n==> -Store: built with this app's Partner Center identity, left unsigned." -ForegroundColor Yellow
+        Write-Host "    Identity : $IdentityName" -ForegroundColor DarkGray
+        Write-Host "    Publisher: $Publisher" -ForegroundColor DarkGray
+        Write-Host "    Upload the .msix to Partner Center; the Store signs it." -ForegroundColor Yellow
     }
     'Cert' {
         if (-not (Test-Path $CertPath)) { throw "CertPath not found: $CertPath" }
