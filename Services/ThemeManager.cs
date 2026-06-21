@@ -20,50 +20,62 @@ namespace Scalpel.Services
 
         // ── State ─────────────────────────────────────────────────────────
 
-        private static Theme _current = Theme.Dark;
+        private static Theme  _theme  = Theme.Dark;
+        private static Accent _accent = Accent.Amber;
 
-        public static Theme Current => _current;
+        public static Theme  CurrentTheme  => _theme;
+        public static Accent CurrentAccent => _accent;
 
-        /// <summary>Fired after the theme dictionary has been updated.</summary>
+        /// <summary>Fired after the theme/accent dictionary has been updated.</summary>
         public static event Action? ThemeChanged;
 
         // ── Public API ───────────────────────────────────────────────────
 
         /// <summary>
-        /// Call once at startup (before MainWindow is created) to restore the saved theme.
-        /// DWM title bar is applied later via ApplyDwm(hwnd) from SourceInitialized.
+        /// Call once at startup (before MainWindow is created) to restore the saved
+        /// theme + accent, migrating legacy single-axis values. DWM title bar is
+        /// applied later via ApplyDwm(hwnd) from SourceInitialized.
         /// </summary>
         public static void Initialize()
         {
-            var saved = App.GetSetting("Theme");
-            _current = Enum.TryParse<Theme>(saved, out var t) ? t : Theme.Dark;
-            ApplyInternal(_current, applyDwm: false);
+            var (theme, accent) = ThemeMigration.Resolve(App.GetSetting("Theme"), App.GetSetting("Accent"));
+            _theme  = theme;
+            _accent = accent;
+            // Normalize persisted values so later loads are clean (drops legacy names).
+            App.SetSetting("Theme",  _theme.ToString());
+            App.SetSetting("Accent", _accent.ToString());
+            ApplyInternal(applyDwm: false);
         }
 
-        /// <summary>
-        /// Change to a new theme, persist the choice, and update DWM immediately.
-        /// </summary>
-        public static void Apply(Theme theme)
+        /// <summary>Change the base theme, keep the current accent, persist, update DWM.</summary>
+        public static void ApplyTheme(Theme theme)
         {
-            _current = theme;
+            _theme = theme;
             App.SetSetting("Theme", theme.ToString());
-            ApplyInternal(theme, applyDwm: true);
+            ApplyInternal(applyDwm: true);
             ThemeChanged?.Invoke();
         }
 
-        /// <summary>
-        /// Called from Window.SourceInitialized to set the native title bar colour.
-        /// </summary>
+        /// <summary>Change the accent, keep the current base theme, persist.</summary>
+        public static void ApplyAccent(Accent accent)
+        {
+            _accent = accent;
+            App.SetSetting("Accent", accent.ToString());
+            ApplyInternal(applyDwm: false);
+            ThemeChanged?.Invoke();
+        }
+
+        /// <summary>Called from Window.SourceInitialized to set the native title bar colour.</summary>
         public static void ApplyDwm(IntPtr hwnd)
         {
-            SetDwm(hwnd, _current != Theme.Light);
+            SetDwm(hwnd, _theme != Theme.Light);
         }
 
         // ── Internal ─────────────────────────────────────────────────────
 
-        private static void ApplyInternal(Theme theme, bool applyDwm)
+        private static void ApplyInternal(bool applyDwm)
         {
-            LoadDict(theme);
+            LoadDict(_theme, _accent);
 
             if (applyDwm)
             {
@@ -72,39 +84,60 @@ namespace Scalpel.Services
                 {
                     var hwnd = new WindowInteropHelper(win).Handle;
                     if (hwnd != IntPtr.Zero)
-                        SetDwm(hwnd, theme != Theme.Light);
+                        SetDwm(hwnd, _theme != Theme.Light);
                 }
             }
         }
 
-        private static void LoadDict(Theme theme)
+        private static Uri BaseUri(Theme theme) => theme switch
         {
-            var uri = theme switch
-            {
-                Theme.Light        => new Uri("pack://application:,,,/Themes/Light.xaml"),
-                Theme.HighContrast => new Uri("pack://application:,,,/Themes/HighContrast.xaml"),
-                _                  => new Uri("pack://application:,,,/Themes/Dark.xaml"),
-            };
+            Theme.Light        => new Uri("pack://application:,,,/Themes/Light.xaml"),
+            Theme.HighContrast => new Uri("pack://application:,,,/Themes/HighContrast.xaml"),
+            _                  => new Uri("pack://application:,,,/Themes/Dark.xaml"),
+        };
 
-            var newDict = new ResourceDictionary { Source = uri };
-            var merged  = Application.Current.Resources.MergedDictionaries;
+        // Accent overlay exists only for Dark/Light and only for non-Amber accents.
+        // Amber is the base file's built-in default; High Contrast has a fixed accent.
+        private static Uri? AccentUri(Theme theme, Accent accent)
+        {
+            if (theme == Theme.HighContrast || accent == Accent.Amber) return null;
+            return new Uri($"pack://application:,,,/Themes/Accents/{theme}_{accent}.xaml");
+        }
 
-            // In-place per-key update: fires a targeted notification for each changed key without
-            // structurally modifying MergedDictionaries. Structural add/remove fires a synchronous
-            // ResourcesChanged that can invoke FindResource() calls (e.g. in SwitchSidebarToPagesTab)
-            // before the new dict is fully in place, causing ResourceReferenceKeyNotFoundException.
+        private static void LoadDict(Theme theme, Accent accent)
+        {
+            var merged = Application.Current.Resources.MergedDictionaries;
+
+            var baseDict = new ResourceDictionary { Source = BaseUri(theme) };
+
+            // In-place per-key update of the theme slot [0]. Structural add/remove fires a
+            // synchronous ResourcesChanged that can invoke FindResource() before the new dict
+            // is in place (e.g. SwitchSidebarToPagesTab), causing ResourceReferenceKeyNotFoundException.
             if (merged.Count > 0)
             {
                 var existing = merged[0];
-                foreach (object key in newDict.Keys)
-                    existing[key] = newDict[key];
+                foreach (object key in baseDict.Keys)
+                    existing[key] = baseDict[key];
+
+                // Overlay the accent's keys on top (Dark/Light + non-Amber only).
+                var accentUri = AccentUri(theme, accent);
+                if (accentUri != null)
+                {
+                    var accentDict = new ResourceDictionary { Source = accentUri };
+                    foreach (object key in accentDict.Keys)
+                        existing[key] = accentDict[key];
+                }
             }
             else
             {
-                merged.Add(newDict);
+                // First load before the slot exists: merge base, then accent overlay.
+                merged.Add(baseDict);
+                var accentUri = AccentUri(theme, accent);
+                if (accentUri != null)
+                    merged.Add(new ResourceDictionary { Source = accentUri });
             }
 
-            // One SystemIdle pass to nudge any elements whose effective value didn't auto-update
+            // One SystemIdle pass to nudge elements whose effective value didn't auto-update
             // (e.g. ControlTemplate trigger bindings with TargetName that missed the per-key signal).
             Application.Current?.Dispatcher.BeginInvoke(DispatcherPriority.SystemIdle, (Action)RefreshIcons);
         }
