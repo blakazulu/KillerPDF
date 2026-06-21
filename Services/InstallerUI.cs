@@ -126,7 +126,7 @@ namespace Scalpel.Services
 
             var close = new Button
             {
-                Content = "", // Tabler "x"
+                Content = "", // Tabler "x"
                 FontFamily = new FontFamily(new Uri("pack://application:,,,/"), "./Resources/Fonts/#tabler-icons"),
                 FontSize = 14, Width = 46, Foreground = TextDim,
                 Background = Brushes.Transparent, BorderThickness = new Thickness(0),
