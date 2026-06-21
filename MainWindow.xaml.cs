@@ -238,13 +238,30 @@ namespace Scalpel
                 RestoreWindowSettings();
 
                 var args = Environment.GetCommandLineArgs();
-                if (args.Length > 1 && System.IO.File.Exists(args[1]))
+                // Find the first argument that is an existing file (skipping arg[0] = exe path
+                // and flags like /edit), so flag-vs-path order doesn't matter. The "Edit with
+                // Scalpel PDF" context-menu verb launches us as: <exe> /edit "<file>".
+                string? fileArg = null;
+                bool editMode = false;
+                for (int i = 1; i < args.Length; i++)
                 {
-                    OpenFile(args[1]);
+                    if (string.Equals(args[i], "/edit", StringComparison.OrdinalIgnoreCase))
+                        editMode = true;
+                    else if (fileArg is null && System.IO.File.Exists(args[i]))
+                        fileArg = args[i];
+                }
+                if (fileArg is not null)
+                {
+                    OpenFile(fileArg);
+                    // Jump straight to Edit mode for the "Edit with Scalpel PDF" verb — but only
+                    // once a document actually loaded (OpenFile runs synchronously; _doc is null
+                    // on failure or a declined repair prompt).
+                    if (editMode && _doc is not null)
+                        SetMode(AppMode.Edit);
                 }
                 else
                 {
-                    // Reopen the last file if no CLI arg was provided
+                    // Reopen the last file if no file argument was provided
                     var lastFile = App.GetSetting("LastFile");
                     if (!string.IsNullOrEmpty(lastFile) && System.IO.File.Exists(lastFile))
                     {
