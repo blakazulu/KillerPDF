@@ -19,6 +19,10 @@ namespace Scalpel
             string FileName, AppMode Mode, Theme Theme, Accent Accent,
             int Page, EditTool? Tool, bool Seed);
 
+        // NOTE: the LAST shot must have Seed:false (and use no annotating tool). Seeding sets
+        // _isDirty; OpenFile resets it each iteration, so only the final shot's dirty state
+        // survives to Application.Shutdown(). A dirty final shot would trip OnClosing's modal
+        // "unsaved changes" dialog and hang this headless run.
         private static readonly IReadOnlyList<Shot> ShotRecipe =
         [
             new Shot("01-view-dark.png",    AppMode.View,  Theme.Dark,         Accent.Amber, 0, null,               false),
