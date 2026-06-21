@@ -5,9 +5,9 @@ using PdfSharpCore.Pdf;
 namespace Scalpel.Services
 {
     /// <summary>
-    /// Generates a believable multi-page sample PDF for the screenshot harness, so captured
-    /// shots show a realistic document rather than a lorem-ipsum stub. Windows-only (relies on
-    /// PdfSharpCore's built-in font resolver). Not shipped behavior — used by the dev /shoot path.
+    /// Generates a believable 4-page sample PDF for the screenshot harness, so captured shots
+    /// show a realistic document and each shot can display a visually distinct page. Windows-only
+    /// (relies on PdfSharpCore's built-in font resolver). Not shipped behavior — used by /shoot.
     /// </summary>
     public static class SampleDocument
     {
@@ -18,22 +18,22 @@ namespace Scalpel.Services
             var titleFont   = new XFont("Arial", 26, XFontStyle.Bold);
             var headingFont = new XFont("Arial", 15, XFontStyle.Bold);
             var bodyFont    = new XFont("Arial", 11, XFontStyle.Regular);
-            var header      = new XSolidBrush(XColor.FromArgb(255, 30, 41, 59));   // slate header bar
+            var slate       = new XSolidBrush(XColor.FromArgb(255, 30, 41, 59));
             var ink         = XBrushes.Black;
 
             string body =
-                "This document is a sample used to demonstrate the application. It contains " +
-                "multiple paragraphs of body text, headings, and a small table so the page looks " +
-                "like a real document a user would view, annotate, and sign. The layout wraps " +
-                "across the width of the page and continues onto the following pages.";
+                "This document is a sample used to demonstrate the application. It contains multiple " +
+                "paragraphs of body text, headings, a table, a list, and a chart so the pages look " +
+                "like a real document a user would view, annotate, and sign. The layout wraps across " +
+                "the width of the page and continues onto the following pages.";
 
-            // ── Page 1: header bar + title + table ──────────────────────────────
+            // ── Page 1: header bar + title + summary table ──────────────────────
             {
                 var page = doc.AddPage();
                 using var gfx = XGraphics.FromPdfPage(page);
                 var tf = new XTextFormatter(gfx);
 
-                gfx.DrawRectangle(header, new XRect(0, 0, page.Width, 70));
+                gfx.DrawRectangle(slate, new XRect(0, 0, page.Width, 70));
                 gfx.DrawString("Quarterly Report", titleFont, XBrushes.White, new XPoint(40, 46));
 
                 double y = 100;
@@ -47,10 +47,10 @@ namespace Scalpel.Services
                 var pen = new XPen(XColors.Gray, 0.75);
                 string[,] cells =
                 {
-                    { "Region",  "Result", "Change" },
-                    { "North",   "1,204",  "+8%" },
-                    { "South",   "  986",  "+3%" },
-                    { "West",    "1,540",  "+12%" },
+                    { "Region", "Result", "Change" },
+                    { "North",  "1,204",  "+8%" },
+                    { "South",  "  986",  "+3%" },
+                    { "West",   "1,540",  "+12%" },
                 };
                 double colW = (page.Width - 80) / 3, rowH = 24;
                 for (int r = 0; r < 4; r++)
@@ -64,15 +64,58 @@ namespace Scalpel.Services
                     }
             }
 
-            // ── Pages 2-3: heading + wrapped body ───────────────────────────────
-            for (int p = 2; p <= 3; p++)
+            // ── Page 2: Methodology heading + bulleted list + paragraph ─────────
             {
                 var page = doc.AddPage();
                 using var gfx = XGraphics.FromPdfPage(page);
                 var tf = new XTextFormatter(gfx);
-                gfx.DrawString($"Section {p}", headingFont, ink, new XPoint(40, 60));
-                tf.DrawString(body + " " + body, bodyFont, ink,
-                    new XRect(40, 80, page.Width - 80, page.Height - 140));
+
+                gfx.DrawString("Methodology", headingFont, ink, new XPoint(40, 64));
+                string[] bullets =
+                [
+                    "Collected regional figures across four zones.",
+                    "Normalized results against the prior period.",
+                    "Validated outliers with a second review pass.",
+                    "Compiled the summary table shown on page one.",
+                ];
+                double by = 96;
+                foreach (var b in bullets)
+                {
+                    gfx.DrawEllipse(slate, new XRect(44, by + 4, 5, 5));
+                    tf.DrawString(b, bodyFont, ink, new XRect(60, by, page.Width - 100, 20));
+                    by += 26;
+                }
+                tf.DrawString(body, bodyFont, ink, new XRect(40, by + 12, page.Width - 80, 240));
+            }
+
+            // ── Page 3: Results heading + bar chart + caption ───────────────────
+            {
+                var page = doc.AddPage();
+                using var gfx = XGraphics.FromPdfPage(page);
+                var tf = new XTextFormatter(gfx);
+
+                gfx.DrawString("Results", headingFont, ink, new XPoint(40, 64));
+                var bar = new XSolidBrush(XColor.FromArgb(255, 37, 99, 235));
+                int[] heights = [120, 180, 90, 200, 150];
+                double baseY = 360, barW = 44, gap = 26, x = 60;
+                foreach (int h in heights)
+                {
+                    gfx.DrawRectangle(bar, new XRect(x, baseY - h, barW, h));
+                    x += barW + gap;
+                }
+                gfx.DrawLine(new XPen(XColors.Gray, 1), 50, baseY, x, baseY);
+                tf.DrawString("Figure 1. Regional results by zone.", bodyFont, ink,
+                    new XRect(40, baseY + 18, page.Width - 80, 40));
+            }
+
+            // ── Page 4: Appendix heading + long text ────────────────────────────
+            {
+                var page = doc.AddPage();
+                using var gfx = XGraphics.FromPdfPage(page);
+                var tf = new XTextFormatter(gfx);
+                gfx.DrawString("Appendix", headingFont, ink, new XPoint(40, 64));
+                tf.DrawString(body + " " + body + " " + body, bodyFont, ink,
+                    new XRect(40, 90, page.Width - 80, page.Height - 160));
             }
 
             doc.Save(path);
