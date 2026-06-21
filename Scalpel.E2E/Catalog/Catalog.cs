@@ -19,9 +19,8 @@ public static class Catalog
         new("ZoomOutBtn",    Surface.AlwaysVisible, true,  "zoomDecreased"),
         new("ZoomInBtn",     Surface.AlwaysVisible, true,  "zoomIncreased"),
         new("SidebarToggleBtn", Surface.AlwaysVisible, true, null),
-        // SettingsBtn is intentionally ordered LAST among the non-settings controls
-        // (just before the settings group below) so the overlay it opens never
-        // obscures the mode/view/edit/tool controls tested before it.
+        // NOTE: SettingsBtn is not here — it is placed just before the settings group
+        // below, so the overlay it opens never obscures the view/edit/tool controls.
 
         // View mode panel
         new("ViewSingleBtn",     Surface.ViewMode, true, null),

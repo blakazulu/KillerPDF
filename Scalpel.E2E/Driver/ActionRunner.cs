@@ -57,6 +57,9 @@ public sealed class ActionRunner
     public ActionResult RunRaw(string suite, string action, Action act,
         string? expectClickMsg, string? assertionKey)
     {
+        // Capture zoom before acting so a zoomIncreased/zoomDecreased assertion here
+        // does a real delta check (not just "ZoomBox still present").
+        string? priorZoom = ReadZoom();
         int snap = _log.Snapshot();
         try { act(); }
         catch (Exception ex)
@@ -77,7 +80,7 @@ public sealed class ActionRunner
             return new ActionResult(suite, action, Outcome.Fail, "app crashed", newLogs);
         }
 
-        return VerifyTail(suite, action, newLogs, expectClickMsg, assertionKey, priorZoom: null);
+        return VerifyTail(suite, action, newLogs, expectClickMsg, assertionKey, priorZoom);
     }
 
     // Shared verification tail: failure-line check → C assertion → expected-click check.
