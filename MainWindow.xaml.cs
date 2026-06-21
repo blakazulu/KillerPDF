@@ -8903,7 +8903,7 @@ namespace Scalpel
                 TextDecorations = null
             };
             logoHl.Click += (_, _) =>
-                Process.Start(new ProcessStartInfo("https://scalpel.example.com") { UseShellExecute = true });
+                Process.Start(new ProcessStartInfo("https://github.com/blakazulu/ScalpelPDF") { UseShellExecute = true });
             AboutLogoBlock.Inlines.Add(logoHl);
 
             // Tagline block

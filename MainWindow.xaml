@@ -1185,6 +1185,34 @@
                                            Cursor="Hand"/>
                             </StackPanel>
                             <StackPanel Margin="0,0,0,10">
+                                <TextBlock Text="{DynamicResource Str_About_Author}" Foreground="{DynamicResource TextDim}"
+                                           FontFamily="{DynamicResource FontUI}" FontSize="11" Margin="0,0,0,2"/>
+                                <TextBlock FontFamily="{DynamicResource FontUI}" FontSize="12"
+                                           Foreground="{DynamicResource TextPrimary}" Text="Liraz Amir"/>
+                            </StackPanel>
+                            <StackPanel Margin="0,0,0,10">
+                                <TextBlock Text="{DynamicResource Str_About_Repository}" Foreground="{DynamicResource TextDim}"
+                                           FontFamily="{DynamicResource FontUI}" FontSize="11" Margin="0,0,0,2"/>
+                                <TextBlock FontFamily="{DynamicResource FontUI}" FontSize="12">
+                                    <Hyperlink NavigateUri="https://github.com/blakazulu/ScalpelPDF"
+                                               RequestNavigate="Hyperlink_RequestNavigate"
+                                               Foreground="{DynamicResource Accent}" TextDecorations="None">
+                                        <Run Text="github.com/blakazulu/ScalpelPDF"/>
+                                    </Hyperlink>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Margin="0,0,0,10">
+                                <TextBlock Text="{DynamicResource Str_About_License}" Foreground="{DynamicResource TextDim}"
+                                           FontFamily="{DynamicResource FontUI}" FontSize="11" Margin="0,0,0,2"/>
+                                <TextBlock FontFamily="{DynamicResource FontUI}" FontSize="12">
+                                    <Hyperlink NavigateUri="https://www.gnu.org/licenses/gpl-3.0.html"
+                                               RequestNavigate="Hyperlink_RequestNavigate"
+                                               Foreground="{DynamicResource Accent}" TextDecorations="None">
+                                        <Run Text="GPLv3"/>
+                                    </Hyperlink>
+                                </TextBlock>
+                            </StackPanel>
+                            <StackPanel Margin="0,0,0,10">
                                 <TextBlock Text="{DynamicResource Str_About_Publisher}" Foreground="{DynamicResource TextDim}"
                                            FontFamily="{DynamicResource FontUI}" FontSize="11" Margin="0,0,0,2"/>
                                 <TextBlock x:Name="AboutPublisherBlock"
