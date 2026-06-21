@@ -33,6 +33,7 @@
     <Compile Include="..\Scalpel.E2E\Verify\LogReader.cs" Link="E2E\LogReader.cs" />
     <Compile Include="..\Scalpel.E2E\Model\ActionResult.cs" Link="E2E\ActionResult.cs" />
     <Compile Include="..\Scalpel.E2E\Model\RunReport.cs" Link="E2E\RunReport.cs" />
+    <Compile Include="..\Scalpel.E2E\Report\Reporter.cs" Link="E2E\Reporter.cs" />
   </ItemGroup>
 
 </Project>
