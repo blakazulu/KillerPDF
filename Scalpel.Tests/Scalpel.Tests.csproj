@@ -31,6 +31,7 @@
     <Compile Include="..\Services\SearchService.cs" Link="Services\SearchService.cs" />
     <Compile Include="..\Services\ThemeMigration.cs" Link="Services\ThemeMigration.cs" />
     <Compile Include="..\Services\Installer.cs" Link="Services\Installer.cs" />
+    <Compile Include="..\Services\SampleDocument.cs" Link="Services\SampleDocument.cs" />
     <Compile Include="..\Services\Logger.cs" Link="Services\Logger.cs" />
     <Compile Include="..\Scalpel.E2E\Model\LogEntry.cs" Link="E2E\LogEntry.cs" />
     <Compile Include="..\Scalpel.E2E\Verify\LogReader.cs" Link="E2E\LogReader.cs" />
