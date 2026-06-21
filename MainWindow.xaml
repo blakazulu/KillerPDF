@@ -937,7 +937,7 @@
                     <TextBlock FontSize="{DynamicResource FsStatus}" VerticalAlignment="Center"
                                FontFamily="{DynamicResource FontUI}">
                         <Run Text="&#x00A9; 2026 " Foreground="{DynamicResource TextFooter}"/>
-                        <Hyperlink NavigateUri="https://scalpel.example.com"
+                        <Hyperlink NavigateUri="https://github.com/blakazulu/ScalpelPDF"
                                    RequestNavigate="Hyperlink_RequestNavigate"
                                    Foreground="{DynamicResource TextFooter}" TextDecorations="None">
                             <Run Text="Liraz Amir"/>
