@@ -1,5 +1,4 @@
 using System.IO;
-using System.Linq;
 using Xunit;
 
 namespace Scalpel.Tests
@@ -8,9 +7,6 @@ namespace Scalpel.Tests
     {
         private static readonly string[] Locales =
             ["en-US", "es", "zh-TW", "zh-CN", "bn", "tr-TR"];
-
-        private static readonly string[] NewKeys =
-            ["Str_Mode_About", "Str_About_Author", "Str_About_Repository", "Str_About_License"];
 
         // Walk up from the test bin dir to the repo root (the folder that has a Strings dir).
         private static string StringsDir()
