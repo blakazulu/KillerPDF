@@ -29,6 +29,7 @@
     <Compile Include="..\Services\SignatureStore.cs" Link="Services\SignatureStore.cs" />
     <Compile Include="..\Services\SearchService.cs" Link="Services\SearchService.cs" />
     <Compile Include="..\Services\Logger.cs" Link="Services\Logger.cs" />
+    <Compile Include="..\Scalpel.E2E\Model\LogEntry.cs" Link="E2E\LogEntry.cs" />
   </ItemGroup>
 
 </Project>
