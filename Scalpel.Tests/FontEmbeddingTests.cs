@@ -53,5 +53,41 @@ namespace Scalpel.Tests
             }
             finally { if (File.Exists(path)) File.Delete(path); }
         }
+
+        [Fact]
+        public void DrawingRegisteredBundledFont_EmbedsIt()
+        {
+            EnsureResolver();
+            // Register the repo's bundled Geist as a uniquely-named family so this test
+            // is independent of whether Geist is installed on the machine.
+            string repo = RepoRoot();
+            string geist = Path.Combine(repo, "Resources", "Fonts", "Geist-Regular.ttf");
+            Assert.True(File.Exists(geist), $"expected bundled font at {geist}");
+            const string fam = "ScalpelBundledTestFont";
+            PdfFontResolver.Instance.RegisterBundledFont(fam, File.ReadAllBytes(geist), false, false);
+
+            string path = Path.Combine(Path.GetTempPath(), $"scalpel_embed_b_{Guid.NewGuid():N}.pdf");
+            try
+            {
+                using (var doc = new PdfDocument())
+                {
+                    var page = doc.AddPage();
+                    using var gfx = XGraphics.FromPdfPage(page);
+                    gfx.DrawString("Bundled embed 12345", new XFont(fam, 14), XBrushes.Black,
+                        new XPoint(50, 50));
+                    doc.Save(path);
+                }
+                Assert.True(HasEmbeddedFontProgram(path), "saved PDF should embed the bundled font");
+            }
+            finally { if (File.Exists(path)) File.Delete(path); }
+        }
+
+        private static string RepoRoot()
+        {
+            var dir = new DirectoryInfo(AppContext.BaseDirectory);
+            while (dir is not null && !File.Exists(Path.Combine(dir.FullName, "Scalpel.csproj")))
+                dir = dir.Parent;
+            return dir?.FullName ?? "";
+        }
     }
 }
