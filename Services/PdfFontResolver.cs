@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using PdfSharpCore.Fonts;
@@ -24,12 +25,9 @@ namespace Scalpel.Services
 
         // faceKey -> (filePath, ttcFaceIndex). faceKey is "family|b|i" lowercased.
         private Dictionary<string, (string Path, int Face)>? _systemIndex;
-        private readonly Dictionary<string, byte[]> _bundled = new(StringComparer.OrdinalIgnoreCase);
+        private readonly ConcurrentDictionary<string, byte[]> _bundled = new(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, byte[]> _byFaceCache = new(StringComparer.OrdinalIgnoreCase);
         private readonly object _lock = new();
-
-        // family -> "regular" exists? used for style simulation decisions.
-        private HashSet<string>? _families;
 
         /// <summary>Register a bundled font's bytes for a family + style. Bundled wins
         /// over system. Called at app startup (pack:// bytes) and from tests.</summary>
@@ -101,7 +99,6 @@ namespace Scalpel.Services
             {
                 if (_systemIndex is not null) return;
                 var index = new Dictionary<string, (string, int)>(StringComparer.OrdinalIgnoreCase);
-                var fams = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
                 try
                 {
                     string dir = Environment.GetFolderPath(Environment.SpecialFolder.Fonts);
@@ -121,14 +118,12 @@ namespace Scalpel.Services
                                 bool italic = ContainsCI(n.Subfamily, "italic") || ContainsCI(n.Subfamily, "oblique");
                                 string key = FaceKey(n.Family, bold, italic);
                                 if (!index.ContainsKey(key)) index[key] = (file, fi);
-                                fams.Add(n.Family.Trim().ToLowerInvariant());
                             }
                         }
                         catch { /* skip malformed file */ }
                     }
                 }
                 catch { /* leave index empty; fallback path still works */ }
-                _families = fams;
                 _systemIndex = index;
             }
         }
@@ -163,7 +158,7 @@ namespace Scalpel.Services
             {
                 try { return File.ReadAllBytes(f); } catch { }
             }
-            throw new FileNotFoundException("no usable system font found");
+            return Array.Empty<byte>();
         }
     }
 }
