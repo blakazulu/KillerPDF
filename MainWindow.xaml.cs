@@ -1892,6 +1892,7 @@ namespace Scalpel
         {
             try
             {
+                ToastHost.BeginAnimation(UIElement.OpacityProperty, null); // clear any HoldEnd animation from HideToast
                 ToastText.Text = message;
                 ToastCopyBtn.Visibility = string.IsNullOrEmpty(copyText) ? Visibility.Collapsed : Visibility.Visible;
                 ToastCopyBtn.Tag = copyText;
@@ -1932,6 +1933,9 @@ namespace Scalpel
 
         private static IReadOnlyCollection<string>? _availableFamiliesCache;
         /// <summary>System + bundled font families, cached; used for FontResolver availability checks.</summary>
+        private static FontWeight ToWeight(bool bold) => bold ? FontWeights.Bold : FontWeights.Normal;
+        private static FontStyle ToStyle(bool italic) => italic ? FontStyles.Italic : FontStyles.Normal;
+
         private static IReadOnlyCollection<string> AvailableFontFamilies()
         {
             if (_availableFamiliesCache is not null) return _availableFamiliesCache;
@@ -6324,6 +6328,8 @@ namespace Scalpel
                         BorderThickness = new Thickness(2),
                         FontFamily = new FontFamily(existingEdit.FontName),
                         FontSize = Math.Max(existingEdit.FontSize, 10),
+                        FontWeight = ToWeight(existingEdit.IsBold),
+                        FontStyle = ToStyle(existingEdit.IsItalic),
                         MinWidth = Math.Max(reb.Width + 20, 100),
                         Height = Math.Max(reb.Height + 12, 24),
                         Padding = new Thickness(2, 0, 2, 0),
@@ -6337,6 +6343,8 @@ namespace Scalpel
                             Position = existingEdit.Position,
                             FontSize = existingEdit.FontSize,
                             FontName = existingEdit.FontName,
+                            IsBold = existingEdit.IsBold,
+                            IsItalic = existingEdit.IsItalic,
                             ExistingAnnotation = existingEdit
                         }
                     };
@@ -6507,8 +6515,8 @@ namespace Scalpel
                     BorderBrush = (SolidColorBrush)FindResource("Accent"), SelectionBrush = AccentBrush(),
                     BorderThickness = new Thickness(2),
                     FontFamily = new FontFamily(fontName),
-                    FontWeight = isBold ? FontWeights.Bold : FontWeights.Normal,
-                    FontStyle = isItalic ? FontStyles.Italic : FontStyles.Normal,
+                    FontWeight = ToWeight(isBold),
+                    FontStyle = ToStyle(isItalic),
                     FontSize = Math.Max(canvasFontSize, 10),
                     MinWidth = Math.Max(cWidth + 20, 100),
                     Height = Math.Max(cHeight + 12, 24),
@@ -7035,6 +7043,8 @@ namespace Scalpel
                             Foreground = Brushes.Black,
                             FontFamily = new FontFamily(tea.FontName),
                             FontSize = tea.FontSize,
+                            FontWeight = ToWeight(tea.IsBold),
+                            FontStyle = ToStyle(tea.IsItalic),
                             Padding = new Thickness(0)
                         };
                         Canvas.SetLeft(etb, tea.Position.X);
