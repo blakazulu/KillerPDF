@@ -66,5 +66,32 @@ namespace Scalpel.Tests
             // "\u05E9\u05DC\u05D5\u05DD 42" -> "42 \u05DD\u05D5\u05DC\u05E9"
             Assert.Equal("42 " + ShalomVisual, BidiReorder.ToVisual(Shalom + " 42"));
         }
+
+        // --- Arabic ---------------------------------------------------------
+        // salam = U+0633 U+0644 U+0627 U+0645 (logical: seen lam alef meem)
+        private const string Salam = "\u0633\u0644\u0627\u0645";
+
+        private static string Reverse(string s)
+        {
+            char[] a = s.ToCharArray();
+            System.Array.Reverse(a);
+            return new string(a);
+        }
+
+        [Fact]
+        public void ContainsRtl_DetectsArabic()
+            => Assert.True(BidiReorder.ContainsRtl(Salam));
+
+        [Fact]
+        public void ContainsRtl_DetectsArabicPresentationForms()
+            => Assert.True(BidiReorder.ContainsRtl("\uFE91\uFE92")); // BEH initial+medial (Forms-B)
+
+        [Fact]
+        public void ToVisual_PureArabic_Reversed()
+            => Assert.Equal(Reverse(Salam), BidiReorder.ToVisual(Salam));
+
+        [Fact]
+        public void ToVisual_ArabicThenDigits_DigitsStayLtrOnLeft()
+            => Assert.Equal("42 " + Reverse(Salam), BidiReorder.ToVisual(Salam + " 42"));
     }
 }

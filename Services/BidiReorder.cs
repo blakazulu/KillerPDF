@@ -89,8 +89,15 @@ namespace Scalpel.Services
             return '\0';
         }
 
-        // U+0590\u2013U+05FF Hebrew; U+FB1D\u2013U+FB4F Hebrew presentation forms (FB4F = alef-lamed ligature, last Hebrew cp before Arabic at FB50)
+        // RTL scripts: Hebrew (U+0590-05FF) + Hebrew presentation forms (U+FB1D-FB4F);
+        // Arabic (U+0600-06FF), Arabic Supplement (U+0750-077F), and Arabic presentation
+        // forms A (U+FB50-FDFF) and B (U+FE70-FEFF). Latin digits/letters are not RTL.
         private static bool IsRtl(char c)
-            => (c >= '\u0590' && c <= '\u05FF') || (c >= '\uFB1D' && c <= '\uFB4F');
+            => (c >= '\u0590' && c <= '\u05FF')
+            || (c >= '\uFB1D' && c <= '\uFB4F')
+            || (c >= '\u0600' && c <= '\u06FF')
+            || (c >= '\u0750' && c <= '\u077F')
+            || (c >= '\uFB50' && c <= '\uFDFF')
+            || (c >= '\uFE70' && c <= '\uFEFF');
     }
 }
