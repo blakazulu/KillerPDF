@@ -6543,8 +6543,9 @@ namespace Scalpel
                 if (Scalpel.Services.BidiReorder.ContainsRtl(lineText))
                 {
                     tb.FlowDirection = FlowDirection.RightToLeft;
-                    if (!FontHasHebrew(fontName, isBold, isItalic))
-                        tb.FontFamily = new FontFamily("Segoe UI, Noto Sans Hebrew");
+                    int rtlProbe = Scalpel.Services.ArabicShaper.ContainsArabic(lineText) ? 0x0628 : 0x05D0;
+                    if (!FontCovers(fontName, isBold, isItalic, rtlProbe))
+                        tb.FontFamily = new FontFamily("Segoe UI, Noto Sans Hebrew, Noto Sans Arabic");
                 }
 
                 // Show white-out behind the edit box so original text is hidden
@@ -6696,7 +6697,7 @@ namespace Scalpel
                 Foreground = new SolidColorBrush(_textColor),
                 BorderBrush = (SolidColorBrush)FindResource("Accent"), SelectionBrush = AccentBrush(),
                 BorderThickness = new Thickness(1),
-                FontFamily = new FontFamily("Segoe UI, Noto Sans Hebrew"),
+                FontFamily = new FontFamily("Segoe UI, Noto Sans Hebrew, Noto Sans Arabic"),
                 FontSize = fontCanvas,
                 MinWidth = 120,
                 MinHeight = 24,
@@ -6993,7 +6994,7 @@ namespace Scalpel
             };
             if (Scalpel.Services.BidiReorder.ContainsRtl(ta.Content))
             {
-                tb.FontFamily = new FontFamily("Segoe UI, Noto Sans Hebrew");
+                tb.FontFamily = new FontFamily("Segoe UI, Noto Sans Hebrew, Noto Sans Arabic");
                 tb.FlowDirection = FlowDirection.RightToLeft;
             }
             Canvas.SetLeft(tb, ta.Position.X);
@@ -8058,12 +8059,33 @@ namespace Scalpel
         // Save annotations to PDF
         // ============================================================
 
-        /// <summary>True if <paramref name="family"/> (exact face) actually has Hebrew glyphs.</summary>
-        private static bool FontHasHebrew(string family, bool bold, bool italic)
+        /// <summary>True if <paramref name="family"/> (exact face) maps <paramref name="codepoint"/>.</summary>
+        private static bool FontCovers(string family, bool bold, bool italic, int codepoint)
         {
             if (Scalpel.Services.PdfFontResolver.Instance.TryGetExactFontBytes(family, bold, italic, out var bytes))
-                return Scalpel.Services.TrueTypeCmap.CoversCodepoint(bytes, 0x05D0);
+                return Scalpel.Services.TrueTypeCmap.CoversCodepoint(bytes, codepoint);
             return false;
+        }
+
+        /// <summary>Pick a bundled face covering the script of <paramref name="text"/>:
+        /// Arabic → Noto Sans Arabic, Hebrew → Noto Sans Hebrew, Cyrillic → Noto Sans,
+        /// otherwise the candidate (Latin). Falls back to the candidate if a bundled face
+        /// isn't registered, so a missing font never blanks the text.</summary>
+        private static string PickFace(string text, string candidate, bool bold, bool italic)
+        {
+            foreach (char c in text)
+            {
+                // Arabic base (0600-06FF) or presentation forms A/B (FB50-FDFF, FE70-FEFF)
+                if ((c >= '؀' && c <= 'ۿ') || (c >= 'ﭐ' && c <= '﷿') || (c >= 'ﹰ' && c <= '﻿'))
+                    return FontCovers(candidate, bold, italic, 0x0628) ? candidate : "Noto Sans Arabic";
+                // Hebrew (0590-05FF) or Hebrew presentation forms (FB1D-FB4F)
+                if ((c >= '֐' && c <= '׿') || (c >= 'יִ' && c <= 'ﭏ'))
+                    return FontCovers(candidate, bold, italic, 0x05D0) ? candidate : "Noto Sans Hebrew";
+                // Cyrillic (0400-04FF)
+                if (c >= 'Ѐ' && c <= 'ӿ')
+                    return FontCovers(candidate, bold, italic, 0x0410) ? candidate : "Noto Sans";
+            }
+            return candidate;
         }
 
         /// <summary>Draw one line of text, handling RTL: reorder to visual order, pick a
@@ -8074,16 +8096,24 @@ namespace Scalpel
             double fontSizePx, XFontStyle style, XBrush brush,
             double leftX, double rightX, double baselineY)
         {
-            if (!Scalpel.Services.BidiReorder.ContainsRtl(text))
-            {
-                gfx.DrawString(text, new XFont(candidateFamily, fontSizePx, style), brush, leftX, baselineY);
-                return;
-            }
             bool bold = style == XFontStyle.Bold || style == XFontStyle.BoldItalic;
             bool italic = style == XFontStyle.Italic || style == XFontStyle.BoldItalic;
-            string family = FontHasHebrew(candidateFamily, bold, italic) ? candidateFamily : "Noto Sans Hebrew";
+
+            if (!Scalpel.Services.BidiReorder.ContainsRtl(text))
+            {
+                // LTR (incl. Cyrillic): pick a covering face so Russian doesn't render as boxes.
+                string ltrFace = PickFace(text, candidateFamily, bold, italic);
+                gfx.DrawString(text, new XFont(ltrFace, fontSizePx, style), brush, leftX, baselineY);
+                return;
+            }
+
+            // RTL: shape Arabic (cursive joining) BEFORE reordering, then reverse to visual order.
+            string shaped = Scalpel.Services.ArabicShaper.ContainsArabic(text)
+                ? Scalpel.Services.ArabicShaper.Shape(text)
+                : text;
+            string family = PickFace(shaped, candidateFamily, bold, italic);
             var font = new XFont(family, fontSizePx, style);
-            string visual = Scalpel.Services.BidiReorder.ToVisual(text);
+            string visual = Scalpel.Services.BidiReorder.ToVisual(shaped);
             double width = gfx.MeasureString(visual, font).Width;
             double x = rightX > leftX ? rightX - width : leftX;
             gfx.DrawString(visual, font, brush, x, baselineY);
