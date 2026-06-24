@@ -127,8 +127,8 @@ namespace Scalpel.Tests
                 {
                     var page = doc.AddPage();
                     using var gfx = XGraphics.FromPdfPage(page);
-                    // visual order is irrelevant to embedding; draw Hebrew glyphs
-                    gfx.DrawString("םולש", new XFont(fam, 14), XBrushes.Black,
+                    // visual order is irrelevant to embedding; draw Hebrew glyphs (shalom)
+                    gfx.DrawString("\u05DD\u05D5\u05DC\u05E9", new XFont(fam, 14), XBrushes.Black,
                         new XPoint(50, 50));
                     doc.Save(path);
                 }
@@ -157,7 +157,7 @@ namespace Scalpel.Tests
                     var page = doc.AddPage();
                     using var gfx = XGraphics.FromPdfPage(page);
                     // visual order is irrelevant to embedding; draw bold Hebrew glyphs
-                    gfx.DrawString("םולש", new XFont(fam, 14, XFontStyle.Bold), XBrushes.Black,
+                    gfx.DrawString("\u05DD\u05D5\u05DC\u05E9", new XFont(fam, 14, XFontStyle.Bold), XBrushes.Black,
                         new XPoint(50, 50));
                     doc.Save(path);
                 }
