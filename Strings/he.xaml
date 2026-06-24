@@ -164,6 +164,8 @@
     <sys:String x:Key="Str_Mode_Pages">עמודים</sys:String>
     <sys:String x:Key="Str_Mode_Sign">חתימה</sys:String>
     <sys:String x:Key="Str_Mode_About">אודות</sys:String>
+    <sys:String x:Key="Str_Mode_WhatsNew">מה חדש</sys:String>
+    <sys:String x:Key="Str_WhatsNew_Title">מה חדש</sys:String>
     <sys:String x:Key="Str_TT_Search">חיפוש (Ctrl+F)</sys:String>
 
     <!-- ── Toolbar new tooltip keys ──────────────────────────────────── -->

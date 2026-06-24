@@ -164,6 +164,8 @@
     <sys:String x:Key="Str_Mode_Pages">Страницы</sys:String>
     <sys:String x:Key="Str_Mode_Sign">Подпись</sys:String>
     <sys:String x:Key="Str_Mode_About">О программе</sys:String>
+    <sys:String x:Key="Str_Mode_WhatsNew">Что нового</sys:String>
+    <sys:String x:Key="Str_WhatsNew_Title">Что нового</sys:String>
     <sys:String x:Key="Str_TT_Search">Поиск (Ctrl+F)</sys:String>
 
     <!-- ── Toolbar new tooltip keys ──────────────────────────────────── -->

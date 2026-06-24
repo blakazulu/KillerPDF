@@ -203,6 +203,8 @@
     <sys:String x:Key="Str_Mode_Pages">পৃষ্ঠা</sys:String>
     <sys:String x:Key="Str_Mode_Sign">স্বাক্ষর</sys:String>
     <sys:String x:Key="Str_Mode_About">সম্পর্কে</sys:String>
+    <sys:String x:Key="Str_Mode_WhatsNew">নতুন কী</sys:String>
+    <sys:String x:Key="Str_WhatsNew_Title">নতুন কী আছে</sys:String>
     <sys:String x:Key="Str_TT_Search">অনুসন্ধান (Ctrl+F)</sys:String>
 
     <!-- ── Diagnostics / logging ─────────────────────────────────────── -->

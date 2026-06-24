@@ -203,6 +203,8 @@
     <sys:String x:Key="Str_Mode_Pages">页面</sys:String>
     <sys:String x:Key="Str_Mode_Sign">签名</sys:String>
     <sys:String x:Key="Str_Mode_About">关于</sys:String>
+    <sys:String x:Key="Str_Mode_WhatsNew">新功能</sys:String>
+    <sys:String x:Key="Str_WhatsNew_Title">新功能</sys:String>
     <sys:String x:Key="Str_TT_Search">搜索 (Ctrl+F)</sys:String>
 
     <!-- ── Diagnostics / logging ─────────────────────────────────────── -->

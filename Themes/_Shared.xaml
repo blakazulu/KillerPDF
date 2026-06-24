@@ -6,6 +6,9 @@
     <FontFamily x:Key="FontUI">pack://application:,,,/Resources/Fonts/#Geist, Segoe UI Variable, Segoe UI</FontFamily>
     <FontFamily x:Key="FontIcon">pack://application:,,,/Resources/Fonts/#tabler-icons, Segoe MDL2 Assets</FontFamily>
 
+    <!-- Maps a bool to Visible/Collapsed; used by collapsible Settings sections. -->
+    <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+
     <!-- Type scale (Studio) -->
     <sys:Double x:Key="FsDialogTitle">16</sys:Double>
     <sys:Double x:Key="FsTab">13</sys:Double>
@@ -431,6 +434,44 @@
         <Setter Property="Background" Value="{DynamicResource BorderDim}"/>
         <Setter Property="Height" Value="1"/>
         <Setter Property="Margin" Value="4,4"/>
+    </Style>
+
+    <!-- Collapsible Settings section header: a full-width accent label with a chevron that
+         flips (right when collapsed, down when expanded). Bind the section's content panel
+         Visibility to this toggle's IsChecked via BoolToVis. Collapsed by default (IsChecked=false). -->
+    <Style x:Key="SettingsSectionToggle" TargetType="ToggleButton">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Margin" Value="0,12,0,2"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}" Padding="3,4" CornerRadius="4">
+                        <DockPanel>
+                            <TextBlock x:Name="Chev" DockPanel.Dock="Right"
+                                       FontFamily="{DynamicResource FontIcon}" FontSize="14"
+                                       Foreground="{DynamicResource Accent}"
+                                       Text="{StaticResource Ico_ChevronRight}"
+                                       VerticalAlignment="Center" Margin="8,0,0,0"/>
+                            <TextBlock Text="{TemplateBinding Content}"
+                                       FontFamily="{DynamicResource FontUI}" FontSize="11" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource Accent}" VerticalAlignment="Center"/>
+                        </DockPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Chev" Property="Text" Value="{StaticResource Ico_Chevron}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource BgHover}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
 </ResourceDictionary>

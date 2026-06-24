@@ -164,6 +164,8 @@ You can uninstall via Add/Remove Programs at any time.</sys:String>
     <sys:String x:Key="Str_Mode_Pages">Pages</sys:String>
     <sys:String x:Key="Str_Mode_Sign">Sign</sys:String>
     <sys:String x:Key="Str_Mode_About">About</sys:String>
+    <sys:String x:Key="Str_Mode_WhatsNew">What's New</sys:String>
+    <sys:String x:Key="Str_WhatsNew_Title">What's New</sys:String>
     <sys:String x:Key="Str_TT_Search">Search (Ctrl+F)</sys:String>
 
     <!-- ── Toolbar new tooltip keys ──────────────────────────────────── -->

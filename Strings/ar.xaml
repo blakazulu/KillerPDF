@@ -164,6 +164,8 @@
     <sys:String x:Key="Str_Mode_Pages">صفحات</sys:String>
     <sys:String x:Key="Str_Mode_Sign">توقيع</sys:String>
     <sys:String x:Key="Str_Mode_About">حول</sys:String>
+    <sys:String x:Key="Str_Mode_WhatsNew">ما الجديد</sys:String>
+    <sys:String x:Key="Str_WhatsNew_Title">ما الجديد</sys:String>
     <sys:String x:Key="Str_TT_Search">بحث (Ctrl+F)</sys:String>
 
     <!-- ── Toolbar new tooltip keys ──────────────────────────────────── -->

@@ -9166,6 +9166,75 @@ namespace Scalpel
             AboutOverlay.Visibility = Visibility.Collapsed;
         }
 
+        // ── What's New (changelog) ─────────────────────────────────────────
+        private void WhatsNewTab_Click(object sender, RoutedEventArgs e) => ShowWhatsNewOverlay();
+
+        private void ShowWhatsNewOverlay()
+        {
+            WhatsNewList.Children.Clear();
+            var accent = (System.Windows.Media.Brush)FindResource("Accent");
+            var dim    = (System.Windows.Media.Brush)FindResource("TextDim");
+            var body   = (System.Windows.Media.Brush)FindResource("TextPrimary");
+            var uiFont = (FontFamily)FindResource("FontUI");
+
+            bool first = true;
+            foreach (var rel in Scalpel.Services.Changelog.Releases)
+            {
+                // Version + date header
+                var header = new TextBlock
+                {
+                    FontFamily = uiFont, FontSize = 13, FontWeight = FontWeights.SemiBold,
+                    Foreground = accent,
+                    Margin = new Thickness(0, first ? 0 : 18, 0, 2),
+                };
+                header.Inlines.Add(new System.Windows.Documents.Run($"Version {rel.Version}"));
+                header.Inlines.Add(new System.Windows.Documents.Run($"   ·   {rel.Date}")
+                {
+                    Foreground = dim,
+                    FontWeight = FontWeights.Normal,
+                });
+                WhatsNewList.Children.Add(header);
+                first = false;
+
+                // Bulleted changes
+                foreach (var change in rel.Changes)
+                {
+                    var row = new DockPanel { Margin = new Thickness(0, 5, 0, 0) };
+                    var bullet = new TextBlock
+                    {
+                        Text = "•", FontFamily = uiFont, FontSize = 12, Foreground = accent,
+                        Margin = new Thickness(2, 0, 8, 0), VerticalAlignment = VerticalAlignment.Top,
+                    };
+                    DockPanel.SetDock(bullet, Dock.Left);
+                    var text = new TextBlock
+                    {
+                        Text = change, FontFamily = uiFont, FontSize = 12, Foreground = body,
+                        TextWrapping = TextWrapping.Wrap,
+                    };
+                    row.Children.Add(bullet);
+                    row.Children.Add(text);
+                    WhatsNewList.Children.Add(row);
+                }
+            }
+
+            WhatsNewOverlay.Visibility = Visibility.Visible;
+        }
+
+        private void WhatsNewOverlay_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            WhatsNewOverlay.Visibility = Visibility.Collapsed;
+        }
+
+        private void WhatsNewOverlayCard_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private void WhatsNewOverlayClose_Click(object sender, RoutedEventArgs e)
+        {
+            WhatsNewOverlay.Visibility = Visibility.Collapsed;
+        }
+
         private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
             Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true });
