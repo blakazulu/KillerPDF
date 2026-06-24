@@ -7,6 +7,16 @@ Each language is a single XAML `ResourceDictionary` file in this folder. The fil
 - `en-US.xaml` - English (US)
 - `es.xaml` - Spanish
 - `zh-TW.xaml` - Traditional Chinese
+- `zh-CN.xaml` - Simplified Chinese
+- `bn.xaml` - Bengali
+- `tr-TR.xaml` - Turkish
+- `he.xaml` - Hebrew (right-to-left)
+- `ar.xaml` - Arabic (right-to-left)
+- `ru.xaml` - Russian
+
+Hebrew and Arabic are right-to-left: when one of these locales is selected the
+whole UI is mirrored automatically (the window's `FlowDirection` flips). Write the
+strings in natural RTL order; do not add Unicode direction-mark characters.
 
 ## How to contribute
 
