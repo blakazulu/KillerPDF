@@ -8040,6 +8040,37 @@ namespace Scalpel
         // Save annotations to PDF
         // ============================================================
 
+        /// <summary>True if <paramref name="family"/> (exact face) actually has Hebrew glyphs.</summary>
+        private static bool FontHasHebrew(string family, bool bold, bool italic)
+        {
+            if (Scalpel.Services.PdfFontResolver.Instance.TryGetExactFontBytes(family, bold, italic, out var bytes))
+                return Scalpel.Services.TrueTypeCmap.CoversCodepoint(bytes, 0x05D0);
+            return false;
+        }
+
+        /// <summary>Draw one line of text, handling RTL: reorder to visual order, pick a
+        /// Hebrew-capable font (the candidate if it covers Hebrew, else bundled Noto), and
+        /// right-align to <paramref name="rightX"/> when it exceeds <paramref name="leftX"/>
+        /// (edits with known bounds); otherwise left-align at leftX. LTR text is unchanged.</summary>
+        private static void DrawTextRun(XGraphics gfx, string text, string candidateFamily,
+            double fontSizePx, XFontStyle style, XBrush brush,
+            double leftX, double rightX, double baselineY)
+        {
+            if (!Scalpel.Services.BidiReorder.ContainsRtl(text))
+            {
+                gfx.DrawString(text, new XFont(candidateFamily, fontSizePx, style), brush, leftX, baselineY);
+                return;
+            }
+            bool bold = style == XFontStyle.Bold || style == XFontStyle.BoldItalic;
+            bool italic = style == XFontStyle.Italic || style == XFontStyle.BoldItalic;
+            string family = FontHasHebrew(candidateFamily, bold, italic) ? candidateFamily : "Noto Sans Hebrew";
+            var font = new XFont(family, fontSizePx, style);
+            string visual = Scalpel.Services.BidiReorder.ToVisual(text);
+            double width = gfx.MeasureString(visual, font).Width;
+            double x = rightX > leftX ? rightX - width : leftX;
+            gfx.DrawString(visual, font, brush, x, baselineY);
+        }
+
         private void DrawAnnotationsOnDocument()
         {
             if (_doc is null) return;
@@ -8067,16 +8098,17 @@ namespace Scalpel
                     switch (annot)
                     {
                         case TextAnnotation ta:
-                            var font = new XFont("Geist", ta.FontSize * sy);
                             var lines = ta.Content.Split('\n');
                             double lineH = ta.FontSize * sy * 1.2;
                             double ty = ta.Position.Y * sy + ta.FontSize * sy;
                             var taColor = ta.GetColor();
                             var taBrush = new XSolidBrush(XColor.FromArgb(taColor.A, taColor.R, taColor.G, taColor.B));
+                            double taLeft = ta.Position.X * sx;
                             foreach (var line in lines)
                             {
                                 if (!string.IsNullOrEmpty(line))
-                                    gfx.DrawString(line, font, taBrush, ta.Position.X * sx, ty);
+                                    DrawTextRun(gfx, line, "Geist", ta.FontSize * sy, XFontStyle.Regular,
+                                        taBrush, taLeft, taLeft, ty); // rightX==leftX → left-anchored
                                 ty += lineH;
                             }
                             break;
@@ -8111,14 +8143,15 @@ namespace Scalpel
                             gfx.DrawRectangle(whiteRect,
                                 (tea.OriginalBounds.X - 2) * sx, (tea.OriginalBounds.Y - 2) * sy,
                                 (tea.OriginalBounds.Width + 4) * sx, (tea.OriginalBounds.Height + 4) * sy);
-                            // Draw replacement text
                             var editStyle = tea.IsBold && tea.IsItalic ? XFontStyle.BoldItalic
                                           : tea.IsBold ? XFontStyle.Bold
                                           : tea.IsItalic ? XFontStyle.Italic
                                           : XFontStyle.Regular;
-                            var editFont = new XFont(tea.FontName, tea.FontSize * sy, editStyle);
-                            double ety = tea.Position.Y * sy + tea.FontSize * sy;
-                            gfx.DrawString(tea.NewContent, editFont, XBrushes.Black, tea.Position.X * sx, ety);
+                            double etyB = tea.Position.Y * sy + tea.FontSize * sy;
+                            double eLeft = tea.OriginalBounds.X * sx;
+                            double eRight = (tea.OriginalBounds.X + tea.OriginalBounds.Width) * sx;
+                            DrawTextRun(gfx, tea.NewContent, tea.FontName, tea.FontSize * sy, editStyle,
+                                XBrushes.Black, eLeft, eRight, etyB);
                             break;
 
                         case SignatureAnnotation sa:
