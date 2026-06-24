@@ -129,7 +129,13 @@ namespace Scalpel
 
             // Logging is on by default; "0" disables it.
             bool loggingEnabled = GetSetting("LoggingEnabled") != "0";
-            Scalpel.Services.Logger.Init(enabled: loggingEnabled);
+            // Test hook: SCALPEL_LOG_DIR redirects this session's log to a private dir so the
+            // E2E harness can run several instances in parallel and read each one's log without
+            // ambiguity (default file name is timestamp-to-second only). Unset → default dir.
+            string? logDirOverride = Environment.GetEnvironmentVariable("SCALPEL_LOG_DIR");
+            Scalpel.Services.Logger.Init(
+                baseDir: string.IsNullOrWhiteSpace(logDirOverride) ? null : logDirOverride,
+                enabled: loggingEnabled);
             RegisterGlobalClickLogging();
             var ver = typeof(App).Assembly.GetName().Version?.ToString() ?? "?";
             Scalpel.Services.Logger.Info("App", "app.start", $"Scalpel {ver} starting",

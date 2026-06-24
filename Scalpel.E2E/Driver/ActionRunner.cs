@@ -39,7 +39,8 @@ public sealed class ActionRunner
         // so it can't wedge the next action. The in-window Settings overlay is not a
         // separate window, so it is unaffected. Then recover foreground.
         _driver.DismissModals();
-        _driver.FocusMainWindow();
+        // No unconditional FocusMainWindow here: it was a gratuitous foreground grab. Invoke
+        // clicks don't need focus, and the next physical Click re-foregrounds under the gate.
 
         // Crash check first.
         if (!_driver.IsAlive)
@@ -72,7 +73,8 @@ public sealed class ActionRunner
         // Close any modal OS dialog this action opened so it can't wedge the next one,
         // then recover foreground (a dialog/Explorer window stole it from Scalpel).
         _driver.DismissModals();
-        _driver.FocusMainWindow();
+        // No unconditional FocusMainWindow here: it was a gratuitous foreground grab. Invoke
+        // clicks don't need focus, and the next physical Click re-foregrounds under the gate.
 
         if (!_driver.IsAlive)
         {

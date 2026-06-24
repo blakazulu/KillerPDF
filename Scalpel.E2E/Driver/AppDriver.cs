@@ -70,26 +70,82 @@ public sealed class AppDriver : IDisposable
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
     private struct RECT { public int Left, Top, Right, Bottom; }
 
+    // The foreground + physical mouse/keyboard is a SINGLE machine-wide resource. Every
+    // physical action (a real click on a ToggleButton/RadioButton/CheckBox, or canvas
+    // mouse/keyboard input) acquires this gate, foregrounds its window, acts, and releases.
+    // UIA Invoke clicks and all UIA/log/PdfPig reads never touch it, so they run fully
+    // concurrently across instances. One permit = at most one physical action at a time.
+    public static readonly SemaphoreSlim ForegroundGate = new(1, 1);
+
     private readonly UIA3Automation _automation;
     private Application _app;
     private readonly string _exePath;
+    private readonly string? _logDir;
 
-    private AppDriver(string exePath, Application app, UIA3Automation automation)
+    private AppDriver(string exePath, Application app, UIA3Automation automation, string? logDir)
     {
         _exePath = exePath;
         _app = app;
         _automation = automation;
+        _logDir = logDir;
     }
 
-    public static AppDriver Launch(string exePath, string openWithPath)
+    /// <summary>
+    /// Launch an isolated Scalpel instance. <paramref name="logDir"/> (optional) is passed to
+    /// the app via the SCALPEL_LOG_DIR env var so this instance writes its session log to a
+    /// private directory — required when several instances run in parallel (the default log
+    /// file name is timestamp-to-second and would otherwise collide).
+    /// </summary>
+    public static AppDriver Launch(string exePath, string openWithPath, string? logDir = null)
     {
         var automation = new UIA3Automation();
         var psi = new ProcessStartInfo(exePath, $"\"{openWithPath}\"") { UseShellExecute = false };
+        if (!string.IsNullOrEmpty(logDir))
+        {
+            Directory.CreateDirectory(logDir);
+            psi.Environment["SCALPEL_LOG_DIR"] = logDir;
+        }
         var app = Application.Launch(psi);
-        var driver = new AppDriver(exePath, app, automation);
+        var driver = new AppDriver(exePath, app, automation, logDir);
         driver.WaitForMainWindow();
         driver.FocusMainWindow();
         return driver;
+    }
+
+    /// <summary>
+    /// Wait for and return this instance's session log path. When launched with a private
+    /// <c>logDir</c> the lookup is unambiguous; otherwise it falls back to the latest log
+    /// in the default directory. Polls up to ~5s for the file to appear.
+    /// </summary>
+    public string? ResolveLogPath()
+    {
+        string dir = _logDir ?? LogReader.DefaultLogDir();
+        for (int i = 0; i < 20; i++)
+        {
+            var p = LogReader.FindLatestLog(dir);
+            if (p != null) return p;
+            System.Threading.Thread.Sleep(250);
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Run a multi-step PHYSICAL sequence (canvas mouse + keyboard) under the global
+    /// foreground gate: acquire the gate, foreground this window, run <paramref name="body"/>,
+    /// release. Use this to wrap annotation place→type→commit and double-click-edit flows so
+    /// they hold the cursor exclusively. Single physical clicks via <see cref="Click"/> are
+    /// already gated internally.
+    /// </summary>
+    public void WithForeground(Action body)
+    {
+        ForegroundGate.Wait();
+        try
+        {
+            FocusMainWindow();
+            System.Threading.Thread.Sleep(60);
+            body();
+        }
+        finally { ForegroundGate.Release(); }
     }
 
     /// <summary>
@@ -198,13 +254,21 @@ public sealed class AppDriver : IDisposable
             // on whatever is on top). Foreground the window first, then click.
             if (el.Patterns.Invoke.IsSupported)
             {
+                // Invoke works on a BACKGROUND window and never touches the cursor — no gate.
                 el.Patterns.Invoke.Pattern.Invoke();
             }
             else
             {
-                FocusMainWindow(); // robust forced-foreground; physical clicks need it
-                System.Threading.Thread.Sleep(60); // let the window actually come forward
-                el.Click();
+                // Physical click (ToggleButton/RadioButton/CheckBox): needs the foreground and
+                // the shared cursor. Serialize all physical input through the global gate.
+                ForegroundGate.Wait();
+                try
+                {
+                    FocusMainWindow(); // robust forced-foreground; physical clicks need it
+                    System.Threading.Thread.Sleep(60); // let the window actually come forward
+                    el.Click();
+                }
+                finally { ForegroundGate.Release(); }
             }
             return true;
         }

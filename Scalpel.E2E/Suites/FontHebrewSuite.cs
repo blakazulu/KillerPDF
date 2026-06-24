@@ -38,7 +38,7 @@ public static class FontHebrewSuite
         // is not called between the canvas click (which creates a TextBox), Hebrew typing,
         // and the commit — keeping keyboard focus on the annotation TextBox throughout.
         report.Results.Add(runner.RunRaw(Suite, "canvas:place-type-commit",
-            () =>
+            () => driver.WithForeground(() =>
             {
                 // 3. Click the canvas to place an annotation TextBox.
                 driver.ClickCanvas();
@@ -60,7 +60,7 @@ public static class FontHebrewSuite
                 //    TextBox_KeyDown fires), and clicking the canvas creates a second empty TextBox.
                 driver.Click("ToolTextBtn");
                 System.Threading.Thread.Sleep(300);
-            }, null, null));
+            }), null, null));
 
         // Give the UI a moment to render the committed annotation overlay.
         System.Threading.Thread.Sleep(400);
@@ -68,15 +68,14 @@ public static class FontHebrewSuite
         // Step 7: Save in-place via Ctrl+S (saves back to the corpus temp file).
         // SaveInPlace() also calls CommitActiveTextBox() as a safety net.
         report.Results.Add(runner.RunRaw(Suite, "save:ctrl-s",
-            () =>
+            () => driver.WithForeground(() =>
             {
-                driver.FocusMainWindow();
                 System.Threading.Thread.Sleep(200);
                 using (Keyboard.Pressing(VirtualKeyShort.CONTROL))
                 {
                     Keyboard.Press(VirtualKeyShort.KEY_S);
                 }
-            }, null, null));
+            }), null, null));
 
         // Allow the save to flush to disk.
         System.Threading.Thread.Sleep(2000);
@@ -168,7 +167,7 @@ public static class FontHebrewSuite
 
             // B-3: double-click the canvas at center (~45%) to open the edit box.
             // The Hebrew glyph drawn by Corpus.WriteHebrew1P is at ~45% of the page.
-            driver.DoubleClickCanvas();
+            driver.WithForeground(() => driver.DoubleClickCanvas());
             System.Threading.Thread.Sleep(1200); // wait for PdfPig word extraction + TextBox render
 
             // B-4: assert the edit box appeared (unnamed TextBox in UIA tree)
@@ -186,27 +185,27 @@ public static class FontHebrewSuite
             report.Results.Add(new ActionResult(suite, "B:assert:editbox-open", Outcome.Pass,
                 null, emptyLogs));
 
-            // B-5: ensure focus on the edit box, then append the Hebrew suffix.
-            // Select-all then End to move caret to end; then type suffix.
-            try { editTb.Click(); } catch { }
-            System.Threading.Thread.Sleep(150);
-            using (Keyboard.Pressing(VirtualKeyShort.CONTROL))
-                Keyboard.Press(VirtualKeyShort.KEY_A);
-            System.Threading.Thread.Sleep(100);
-            Keyboard.Press(VirtualKeyShort.END);
-            System.Threading.Thread.Sleep(100);
-            driver.TypeText(HebrewSuffix);
-            System.Threading.Thread.Sleep(300);
+            // B-5/B-6: under the foreground gate — focus the edit box, append the Hebrew suffix,
+            // commit with Enter (EditTextBox_KeyDown handles it; AcceptsReturn=false), then save.
+            driver.WithForeground(() =>
+            {
+                try { editTb.Click(); } catch { }
+                System.Threading.Thread.Sleep(150);
+                using (Keyboard.Pressing(VirtualKeyShort.CONTROL))
+                    Keyboard.Press(VirtualKeyShort.KEY_A);
+                System.Threading.Thread.Sleep(100);
+                Keyboard.Press(VirtualKeyShort.END);
+                System.Threading.Thread.Sleep(100);
+                driver.TypeText(HebrewSuffix);
+                System.Threading.Thread.Sleep(300);
 
-            // B-6: commit by pressing Enter (EditTextBox_KeyDown handles Enter for TextEditContext;
-            // AcceptsReturn=false so Enter commits). Then save Ctrl+S.
-            Keyboard.Press(VirtualKeyShort.RETURN);
-            System.Threading.Thread.Sleep(500);
+                Keyboard.Press(VirtualKeyShort.RETURN);
+                System.Threading.Thread.Sleep(500);
 
-            driver.FocusMainWindow();
-            System.Threading.Thread.Sleep(200);
-            using (Keyboard.Pressing(VirtualKeyShort.CONTROL))
-                Keyboard.Press(VirtualKeyShort.KEY_S);
+                System.Threading.Thread.Sleep(200);
+                using (Keyboard.Pressing(VirtualKeyShort.CONTROL))
+                    Keyboard.Press(VirtualKeyShort.KEY_S);
+            });
             System.Threading.Thread.Sleep(2500);
 
             // B-7: assert Hebrew char still in PDF
@@ -251,7 +250,7 @@ public static class FontHebrewSuite
             // C-3: double-click center to open edit box -> triggers font-missing toast.
             // ShowToast fires at MainWindow.xaml.cs ~line 6504 when
             // FontResolver.Resolve(rawFont,...).IsInstalled == false.
-            driver.DoubleClickCanvas();
+            driver.WithForeground(() => driver.DoubleClickCanvas());
             System.Threading.Thread.Sleep(1500); // wait for PdfPig + FontResolver + toast render
 
             // Check whether the edit box opened (diagnostic only, not the main assertion)
@@ -330,7 +329,7 @@ public static class FontHebrewSuite
             () => driver.Click("ToolTextBtn"), null, null));
 
         report.Results.Add(runner.RunRaw(suite, $"{label}:canvas:place-type-commit",
-            () =>
+            () => driver.WithForeground(() =>
             {
                 driver.ClickCanvas();
                 System.Threading.Thread.Sleep(600);
@@ -341,18 +340,17 @@ public static class FontHebrewSuite
                 System.Threading.Thread.Sleep(200);
                 driver.Click("ToolTextBtn"); // re-click commits the active TextBox
                 System.Threading.Thread.Sleep(300);
-            }, null, null));
+            }), null, null));
 
         System.Threading.Thread.Sleep(400);
 
         report.Results.Add(runner.RunRaw(suite, $"{label}:save:ctrl-s",
-            () =>
+            () => driver.WithForeground(() =>
             {
-                driver.FocusMainWindow();
                 System.Threading.Thread.Sleep(200);
                 using (Keyboard.Pressing(VirtualKeyShort.CONTROL))
                     Keyboard.Press(VirtualKeyShort.KEY_S);
-            }, null, null));
+            }), null, null));
 
         System.Threading.Thread.Sleep(2000);
     }
