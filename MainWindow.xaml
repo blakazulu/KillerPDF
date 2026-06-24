@@ -1048,6 +1048,21 @@
                                   GroupName="LangGroup"
                                   Style="{StaticResource ThemeRadio}"
                                   Checked="LangTrRadio_Checked"/>
+                     <RadioButton x:Name="LangHeRadio"
+                                  Content="{DynamicResource Str_Lang_Hebrew}"
+                                  GroupName="LangGroup"
+                                  Style="{StaticResource ThemeRadio}"
+                                  Checked="LangHeRadio_Checked"/>
+                     <RadioButton x:Name="LangArRadio"
+                                  Content="{DynamicResource Str_Lang_Arabic}"
+                                  GroupName="LangGroup"
+                                  Style="{StaticResource ThemeRadio}"
+                                  Checked="LangArRadio_Checked"/>
+                     <RadioButton x:Name="LangRuRadio"
+                                  Content="{DynamicResource Str_Lang_Russian}"
+                                  GroupName="LangGroup"
+                                  Style="{StaticResource ThemeRadio}"
+                                  Checked="LangRuRadio_Checked"/>
 
                     <TextBlock Text="{DynamicResource Str_Settings_Diagnostics}" Foreground="{DynamicResource Accent}"
                                FontFamily="{DynamicResource FontUI}" FontSize="11" FontWeight="SemiBold"

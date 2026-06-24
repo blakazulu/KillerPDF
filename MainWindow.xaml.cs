@@ -329,6 +329,9 @@ namespace Scalpel
             LangZhCNRadio.IsChecked = curLoc == Scalpel.Services.Locale.ZhCN;
             LangBnRadio.IsChecked   = curLoc == Scalpel.Services.Locale.Bn;
             LangTrRadio.IsChecked   = curLoc == Scalpel.Services.Locale.TrTR;
+            LangHeRadio.IsChecked   = curLoc == Scalpel.Services.Locale.He;
+            LangArRadio.IsChecked   = curLoc == Scalpel.Services.Locale.Ar;
+            LangRuRadio.IsChecked   = curLoc == Scalpel.Services.Locale.Ru;
             // Sync without re-triggering the toggle handler (would log a spurious
             // logging.toggle and re-save the setting on every Settings open).
             _suppressLogToggleEvent = true;
@@ -444,6 +447,15 @@ namespace Scalpel
 
         private void LangTrRadio_Checked(object sender, RoutedEventArgs e)
             => Scalpel.Services.LocaleManager.Apply(Scalpel.Services.Locale.TrTR);
+
+        private void LangHeRadio_Checked(object sender, RoutedEventArgs e)
+            => Scalpel.Services.LocaleManager.Apply(Scalpel.Services.Locale.He);
+
+        private void LangArRadio_Checked(object sender, RoutedEventArgs e)
+            => Scalpel.Services.LocaleManager.Apply(Scalpel.Services.Locale.Ar);
+
+        private void LangRuRadio_Checked(object sender, RoutedEventArgs e)
+            => Scalpel.Services.LocaleManager.Apply(Scalpel.Services.Locale.Ru);
 
         private void ViewSingle_Click(object sender, RoutedEventArgs e)     { SetViewMode(ViewMode.Single);     UpdateViewModeButtons(); }
         private void ViewContinuous_Click(object sender, RoutedEventArgs e) { SetViewMode(ViewMode.Continuous); UpdateViewModeButtons(); }

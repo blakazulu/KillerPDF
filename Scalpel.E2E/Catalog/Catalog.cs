@@ -56,6 +56,9 @@ public static class Catalog
         new("LangZhCNRadio",      Surface.SettingsOverlay, null),
         new("LangBnRadio",        Surface.SettingsOverlay, null),
         new("LangTrRadio",        Surface.SettingsOverlay, null),
+        new("LangHeRadio",        Surface.SettingsOverlay, null),
+        new("LangArRadio",        Surface.SettingsOverlay, null),
+        new("LangRuRadio",        Surface.SettingsOverlay, null),
         new("OpenLogsBtn",        Surface.SettingsOverlay, null),
         // NOTE: LogEnabledCheck and ClearLogsBtn are deliberately NOT auto-exercised.
         // LogEnabledCheck toggles the very logging the harness reads to verify results
