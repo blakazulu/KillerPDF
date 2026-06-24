@@ -6540,6 +6540,13 @@ namespace Scalpel
                 _activeCanvas.Children.Add(tb);
                 _activeTextBox = tb;
 
+                if (Scalpel.Services.BidiReorder.ContainsRtl(lineText))
+                {
+                    tb.FlowDirection = FlowDirection.RightToLeft;
+                    if (!FontHasHebrew(fontName, isBold, isItalic))
+                        tb.FontFamily = new FontFamily("Segoe UI, Noto Sans Hebrew");
+                }
+
                 // Show white-out behind the edit box so original text is hidden
                 var whiteout = new Rectangle
                 {
