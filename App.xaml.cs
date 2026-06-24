@@ -184,6 +184,25 @@ namespace Scalpel
                     }
                 }
                 catch { /* skip if the Hebrew font resource is missing */ }
+                foreach (var (file, family) in new[]
+                {
+                    ("NotoSansArabic-Regular.ttf", "Noto Sans Arabic"),
+                    ("NotoSans-Regular.ttf",       "Noto Sans"),
+                })
+                {
+                    try
+                    {
+                        var uri = new Uri($"pack://application:,,,/Resources/Fonts/{file}");
+                        var info = GetResourceStream(uri);
+                        if (info?.Stream is null) continue;
+                        using var src = info.Stream;
+                        using var ms = new System.IO.MemoryStream();
+                        src.CopyTo(ms);
+                        Scalpel.Services.PdfFontResolver.Instance
+                            .RegisterBundledFont(family, ms.ToArray(), bold: false, italic: false);
+                    }
+                    catch { /* skip a missing/locked font resource */ }
+                }
                 PdfSharpCore.Fonts.GlobalFontSettings.FontResolver =
                     Scalpel.Services.PdfFontResolver.Instance;
             }

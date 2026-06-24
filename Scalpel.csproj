@@ -59,6 +59,10 @@
     <Resource Include="Resources\Fonts\tabler-icons.ttf" />
     <Resource Include="Resources\Fonts\NotoSansHebrew-Regular.ttf" />
     <None Include="Resources\Fonts\NotoSansHebrew-OFL.txt" />
+    <Resource Include="Resources\Fonts\NotoSansArabic-Regular.ttf" />
+    <None Include="Resources\Fonts\NotoSansArabic-OFL.txt" />
+    <Resource Include="Resources\Fonts\NotoSans-Regular.ttf" />
+    <None Include="Resources\Fonts\NotoSans-OFL.txt" />
   </ItemGroup>
 
   <!-- GPL3 source bundle: produces <AppName>-<Version>-src.zip in the publish folder every time you Publish. -->

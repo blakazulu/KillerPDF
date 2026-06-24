@@ -166,6 +166,63 @@ namespace Scalpel.Tests
             finally { if (File.Exists(path)) File.Delete(path); }
         }
 
+        [Fact]
+        public void NotoArabic_FromRepo_CoversBeh_AndEmbeds()
+        {
+            EnsureResolver();
+            string noto = Path.Combine(RepoRoot(), "Resources", "Fonts", "NotoSansArabic-Regular.ttf");
+            Assert.True(File.Exists(noto), $"expected bundled Arabic font at {noto}");
+            byte[] bytes = File.ReadAllBytes(noto);
+            Assert.True(Scalpel.Services.TrueTypeCmap.CoversCodepoint(bytes, 0x0628),
+                "Noto Sans Arabic must cover BEH");
+
+            const string fam = "ScalpelArabicTestFont";
+            PdfFontResolver.Instance.RegisterBundledFont(fam, bytes, false, false);
+            string path = Path.Combine(Path.GetTempPath(), $"scalpel_embed_ar_{Guid.NewGuid():N}.pdf");
+            try
+            {
+                using (var doc = new PdfDocument())
+                {
+                    var page = doc.AddPage();
+                    using var gfx = XGraphics.FromPdfPage(page);
+                    // presentation forms BEH initial+medial (what the shaper emits)
+                    gfx.DrawString("ﺑﺒ", new XFont(fam, 14), XBrushes.Black, new XPoint(50, 50));
+                    doc.Save(path);
+                }
+                Assert.True(HasEmbeddedFontProgram(path), "Arabic font should embed");
+            }
+            finally { if (File.Exists(path)) File.Delete(path); }
+        }
+
+        [Fact]
+        public void NotoSans_FromRepo_CoversCyrillic_AndEmbeds()
+        {
+            EnsureResolver();
+            string noto = Path.Combine(RepoRoot(), "Resources", "Fonts", "NotoSans-Regular.ttf");
+            Assert.True(File.Exists(noto), $"expected bundled Noto Sans at {noto}");
+            byte[] bytes = File.ReadAllBytes(noto);
+            Assert.True(Scalpel.Services.TrueTypeCmap.CoversCodepoint(bytes, 0x0410),
+                "Noto Sans must cover Cyrillic capital A");
+
+            const string fam = "ScalpelCyrillicTestFont";
+            PdfFontResolver.Instance.RegisterBundledFont(fam, bytes, false, false);
+            string path = Path.Combine(Path.GetTempPath(), $"scalpel_embed_ru_{Guid.NewGuid():N}.pdf");
+            try
+            {
+                using (var doc = new PdfDocument())
+                {
+                    var page = doc.AddPage();
+                    using var gfx = XGraphics.FromPdfPage(page);
+                    // Privet (U+041F U+0440 U+0438 U+0432 U+0435 U+0442)
+                    gfx.DrawString("Привет", new XFont(fam, 14), XBrushes.Black,
+                        new XPoint(50, 50));
+                    doc.Save(path);
+                }
+                Assert.True(HasEmbeddedFontProgram(path), "Cyrillic font should embed");
+            }
+            finally { if (File.Exists(path)) File.Delete(path); }
+        }
+
         private static string RepoRoot()
         {
             var dir = new DirectoryInfo(AppContext.BaseDirectory);
