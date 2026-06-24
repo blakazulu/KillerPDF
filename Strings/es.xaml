@@ -207,6 +207,7 @@ Puede desinstalarla en cualquier momento desde Agregar o quitar programas.</sys:
 
     <!-- ── Diagnostics / logging ─────────────────────────────────────── -->
     <sys:String x:Key="Str_Settings_Diagnostics">Diagnóstico</sys:String>
+    <sys:String x:Key="Str_Log_Description">Un registro de actividad solo local que ayuda a diagnosticar problemas. No se envía nada; permanece en este dispositivo.</sys:String>
     <sys:String x:Key="Str_Log_Enable">Activar registro</sys:String>
     <sys:String x:Key="Str_Log_OpenFolder">Abrir carpeta de registros</sys:String>
     <sys:String x:Key="Str_Log_Clear">Borrar registros</sys:String>

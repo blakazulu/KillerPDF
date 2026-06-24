@@ -207,6 +207,7 @@
 
     <!-- ── Diagnostics / logging ─────────────────────────────────────── -->
     <sys:String x:Key="Str_Settings_Diagnostics">אבחון</sys:String>
+    <sys:String x:Key="Str_Log_Description">יומן פעילות מקומי בלבד שמסייע באבחון תקלות. שום דבר אינו נשלח לשום מקום; הוא נשאר במכשיר הזה.</sys:String>
     <sys:String x:Key="Str_Log_Enable">הפעלת רישום יומן</sys:String>
     <sys:String x:Key="Str_Log_OpenFolder">פתיחת תיקיית היומנים</sys:String>
     <sys:String x:Key="Str_Log_Clear">ניקוי יומנים</sys:String>

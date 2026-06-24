@@ -207,6 +207,7 @@
 
     <!-- ── Diagnostics / logging ─────────────────────────────────────── -->
     <sys:String x:Key="Str_Settings_Diagnostics">ডায়াগনস্টিকস</sys:String>
+    <sys:String x:Key="Str_Log_Description">সমস্যা নির্ণয়ে সহায়তা করে এমন কেবল-স্থানীয় কার্যকলাপ লগ। কিছুই কোথাও পাঠানো হয় না; এটি এই ডিভাইসেই থাকে।</sys:String>
     <sys:String x:Key="Str_Log_Enable">লগিং সক্রিয় করুন</sys:String>
     <sys:String x:Key="Str_Log_OpenFolder">লগ ফোল্ডার খুলুন</sys:String>
     <sys:String x:Key="Str_Log_Clear">লগ মুছুন</sys:String>

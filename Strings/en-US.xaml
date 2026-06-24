@@ -207,6 +207,7 @@ You can uninstall via Add/Remove Programs at any time.</sys:String>
 
     <!-- ── Diagnostics / logging ─────────────────────────────────────── -->
     <sys:String x:Key="Str_Settings_Diagnostics">Diagnostics</sys:String>
+    <sys:String x:Key="Str_Log_Description">A local-only activity log that helps diagnose problems. Nothing is sent anywhere; it stays on this device.</sys:String>
     <sys:String x:Key="Str_Log_Enable">Enable logging</sys:String>
     <sys:String x:Key="Str_Log_OpenFolder">Open logs folder</sys:String>
     <sys:String x:Key="Str_Log_Clear">Clear logs</sys:String>

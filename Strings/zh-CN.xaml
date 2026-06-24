@@ -207,6 +207,7 @@
 
     <!-- ── Diagnostics / logging ─────────────────────────────────────── -->
     <sys:String x:Key="Str_Settings_Diagnostics">诊断</sys:String>
+    <sys:String x:Key="Str_Log_Description">仅保存在本机的活动日志，可帮助诊断问题。不会发送任何数据，全部保留在此设备上。</sys:String>
     <sys:String x:Key="Str_Log_Enable">启用日志</sys:String>
     <sys:String x:Key="Str_Log_OpenFolder">打开日志文件夹</sys:String>
     <sys:String x:Key="Str_Log_Clear">清除日志</sys:String>

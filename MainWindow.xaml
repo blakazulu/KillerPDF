@@ -541,8 +541,13 @@
               </Button>
             </StackPanel>
 
-            <!-- Mode panels (only one visible at a time) -->
-            <Grid Margin="10,0,0,0" VerticalAlignment="Center">
+            <!-- Mode panels (only one visible at a time). Wrapped in a horizontal ScrollViewer
+                 so that on a narrow window the mode buttons can be scrolled into view rather
+                 than being clipped by the File (left) / Zoom (right) groups. -->
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled"
+                          VerticalAlignment="Center" Margin="10,0,0,0"
+                          Focusable="False">
+            <Grid VerticalAlignment="Center">
               <!-- View panel: view-mode toggles + Fit + Rotate -->
               <StackPanel x:Name="ModePanelView" Orientation="Horizontal" Visibility="Visible">
                 <ToggleButton x:Name="ViewSingleBtn" Style="{StaticResource StudioToolToggle}" Click="ViewSingle_Click" ToolTip="{DynamicResource Str_View_Single}">
@@ -627,6 +632,7 @@
                 </Button>
               </StackPanel>
             </Grid>
+            </ScrollViewer>
 
           </DockPanel>
         </Border>
@@ -954,15 +960,20 @@
               Visibility="Collapsed"
               Background="Transparent"
               MouseLeftButtonDown="SettingsOverlay_MouseLeftButtonDown">
+            <!-- Bounds grid: stretches within the overlay minus margins so the card's MaxHeight
+                 can bind to it (no converter needed) and the card scrolls on short screens. -->
+            <Grid x:Name="SettingsBounds"
+                  HorizontalAlignment="Left" VerticalAlignment="Stretch"
+                  Margin="8,48,0,36">
             <Border Style="{StaticResource StudioOverlayCard}"
                     Padding="20,16,20,20"
-                    HorizontalAlignment="Left"
                     VerticalAlignment="Bottom"
-                    Margin="8,0,0,36"
                     MinWidth="220"
+                    MaxHeight="{Binding ActualHeight, ElementName=SettingsBounds}"
                     MouseLeftButtonDown="SettingsOverlayCard_MouseLeftButtonDown">
-                <StackPanel>
-                    <Grid Margin="0,0,0,12">
+                <DockPanel>
+                    <!-- Sticky title: stays put while the settings list scrolls below it. -->
+                    <Grid DockPanel.Dock="Top" Margin="0,0,0,12">
                         <TextBlock Text="{DynamicResource Str_Settings}"
                                    FontFamily="{DynamicResource FontUI}" FontSize="{DynamicResource FsDialogTitle}" FontWeight="SemiBold"
                                    Foreground="{DynamicResource TextPrimary}"
@@ -973,6 +984,8 @@
                                 FocusVisualStyle="{x:Null}"
                                 Content="{StaticResource Ico_WinClose}"/>
                     </Grid>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                      <StackPanel>
                     <TextBlock Text="{DynamicResource Str_Theme}" Foreground="{DynamicResource Accent}"
                                FontFamily="{DynamicResource FontUI}" FontSize="{DynamicResource FsLabel}"
                                FontWeight="SemiBold" Margin="0,0,0,8"/>
@@ -1066,7 +1079,12 @@
 
                     <TextBlock Text="{DynamicResource Str_Settings_Diagnostics}" Foreground="{DynamicResource Accent}"
                                FontFamily="{DynamicResource FontUI}" FontSize="11" FontWeight="SemiBold"
-                               Margin="0,12,0,8"/>
+                               Margin="0,12,0,4"/>
+                    <TextBlock Text="{DynamicResource Str_Log_Description}"
+                               Foreground="{DynamicResource TextSecondary}"
+                               FontFamily="{DynamicResource FontUI}" FontSize="11"
+                               TextWrapping="Wrap" MaxWidth="240"
+                               HorizontalAlignment="Left" Margin="0,0,0,8"/>
                     <CheckBox x:Name="LogEnabledCheck"
                               Content="{DynamicResource Str_Log_Enable}"
                               Foreground="{DynamicResource TextPrimary}"
@@ -1085,8 +1103,11 @@
                                 Style="{StaticResource StudioToolButton}"
                                 Click="ClearLogsBtn_Click"/>
                     </StackPanel>
-                </StackPanel>
+                      </StackPanel>
+                    </ScrollViewer>
+                </DockPanel>
             </Border>
+            </Grid>
         </Grid>
 
         <!-- Keyboard shortcut overlay — neutral dark dim regardless of theme -->

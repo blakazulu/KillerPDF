@@ -209,6 +209,7 @@
 
     <!-- ── Diagnostics / logging ─────────────────────────────────────── -->
     <sys:String x:Key="Str_Settings_Diagnostics">診斷</sys:String>
+    <sys:String x:Key="Str_Log_Description">僅儲存在本機的活動記錄，可協助診斷問題。不會傳送任何資料，全部保留在這部裝置上。</sys:String>
     <sys:String x:Key="Str_Log_Enable">啟用記錄</sys:String>
     <sys:String x:Key="Str_Log_OpenFolder">開啟記錄資料夾</sys:String>
     <sys:String x:Key="Str_Log_Clear">清除記錄</sys:String>

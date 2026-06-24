@@ -207,6 +207,7 @@
 
     <!-- ── Diagnostics / logging ─────────────────────────────────────── -->
     <sys:String x:Key="Str_Settings_Diagnostics">Диагностика</sys:String>
+    <sys:String x:Key="Str_Log_Description">Локальный журнал активности, который помогает диагностировать проблемы. Ничего никуда не отправляется; он остаётся на этом устройстве.</sys:String>
     <sys:String x:Key="Str_Log_Enable">Включить ведение журнала</sys:String>
     <sys:String x:Key="Str_Log_OpenFolder">Открыть папку журналов</sys:String>
     <sys:String x:Key="Str_Log_Clear">Очистить журналы</sys:String>

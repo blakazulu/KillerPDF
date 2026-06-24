@@ -207,6 +207,7 @@
 
     <!-- ── Diagnostics / logging ─────────────────────────────────────── -->
     <sys:String x:Key="Str_Settings_Diagnostics">التشخيص</sys:String>
+    <sys:String x:Key="Str_Log_Description">سجل نشاط محلي فقط يساعد في تشخيص المشكلات. لا يُرسَل أي شيء إلى أي مكان؛ يبقى على هذا الجهاز.</sys:String>
     <sys:String x:Key="Str_Log_Enable">تمكين التسجيل</sys:String>
     <sys:String x:Key="Str_Log_OpenFolder">فتح مجلد السجلات</sys:String>
     <sys:String x:Key="Str_Log_Clear">مسح السجلات</sys:String>
