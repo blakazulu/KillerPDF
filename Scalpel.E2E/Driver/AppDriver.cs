@@ -221,6 +221,9 @@ public sealed class AppDriver : IDisposable
     {
         try { _app.Close(); _app.Dispose(); } catch { }
         var psi = new ProcessStartInfo(_exePath, $"\"{openWithPath}\"") { UseShellExecute = false };
+        // Preserve this instance's private log dir across relaunches, otherwise the new
+        // session would log to the shared default dir and collide with sibling instances.
+        if (!string.IsNullOrEmpty(_logDir)) psi.Environment["SCALPEL_LOG_DIR"] = _logDir;
         _app = Application.Launch(psi);
         WaitForMainWindow();
     }

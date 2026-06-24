@@ -28,11 +28,7 @@ internal static class Program
         string hebrewPath = corpus.FirstOrDefault(c => c.Key == "hebrew-1p")?.Path ?? "";
         string missingFontPath = corpus.FirstOrDefault(c => c.Key == "missingfont-1p")?.Path ?? "";
 
-        // 2. Launch ONE app session and locate its log. We keep a single session
-        // (rather than relaunching per suite) because Windows foreground-lock stops
-        // a freshly launched process from reliably taking foreground, and physical
-        // clicks need the window foregrounded. The first launch wins foreground; we
-        // reset app state between suites instead.
+        // 2. Decide which suites to run.
         bool all = suite == "all";
         var selected = new[] { "singles", "journeys", "pairwise", "monkey", "fonts" }
             .Where(s => all || suite == s).ToList();
@@ -42,19 +38,45 @@ internal static class Program
             return 2;
         }
 
+        // 2/3. Run the selected suites. Parallel mode (default for a full run, or --parallel)
+        // spreads the suites across a pool of isolated app instances; only physical clicks/typing
+        // take the shared foreground (AppDriver.ForegroundGate). --sequential forces the classic
+        // one-instance path; a single-suite run is inherently sequential (nothing to spread).
+        bool sequential = args.Contains("--sequential");
+        bool parallelFlag = args.Contains("--parallel");
+        bool useParallel = !sequential && (parallelFlag || suite == "all") && selected.Count > 1;
+        int instances = int.TryParse(ArgVal(args, "--instances"), out var iv) && iv > 0
+            ? iv : ParallelOrchestrator.DefaultInstances(selected.Count);
+
+        RunReport report = useParallel
+            ? ParallelOrchestrator.Run(appPath, selected, seed, instances)
+            : RunSequential(appPath, openWith, hebrewPath, missingFontPath, selected, seed);
+
+        // 4. Report.
+        var (md, json) = Reporter.Write(report, reportDir, stamp);
+        Console.WriteLine(Reporter.ToMarkdown(report));
+        Console.WriteLine($"\nReport written:\n  {md}\n  {json}");
+
+        // 5. Exit code: fail the run on any failure or any uncatalogued control.
+        return (report.Failed() == 0 && report.UntestedControls.Count == 0) ? 0 : 1;
+    }
+
+    // Classic one-instance, one-after-another path. Used for single-suite runs, --sequential,
+    // and as the debugging fallback. Mirrors the original harness behaviour exactly.
+    private static RunReport RunSequential(string appPath, string openWith, string hebrewPath,
+        string missingFontPath, IReadOnlyList<string> selected, int seed)
+    {
         using var driver = AppDriver.Launch(appPath, openWith);
         System.Threading.Thread.Sleep(800); // let app.start + open.success flush
-        string? logPath = LogReader.FindLatestLog(LogReader.DefaultLogDir());
+        string? logPath = driver.ResolveLogPath();
         if (logPath == null)
         {
             Console.Error.WriteLine("No session log found — is logging enabled?");
-            return 3;
+            return new RunReport();
         }
         var runner = new ActionRunner(driver, new LogReader(logPath), openWith);
         var report = new RunReport();
 
-        // 3. Run each requested suite, resetting to a base state in between so one
-        // suite's end-state (open overlay, non-View mode) can't break the next.
         foreach (var suiteName in selected)
         {
             Console.WriteLine($"[suite] {suiteName}...");
@@ -68,14 +90,7 @@ internal static class Program
                 case "fonts":    FontHebrewSuite.Run(driver, runner, report, openWith, hebrewPath, missingFontPath); break;
             }
         }
-
-        // 4. Report.
-        var (md, json) = Reporter.Write(report, reportDir, stamp);
-        Console.WriteLine(Reporter.ToMarkdown(report));
-        Console.WriteLine($"\nReport written:\n  {md}\n  {json}");
-
-        // 5. Exit code: fail the run on any failure or any uncatalogued control.
-        return (report.Failed() == 0 && report.UntestedControls.Count == 0) ? 0 : 1;
+        return report;
     }
 
     private static string? ArgVal(string[] args, string name)

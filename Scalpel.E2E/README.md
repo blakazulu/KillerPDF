@@ -37,35 +37,47 @@ result models) are unit-tested via the main `Scalpel.Tests` project (`dotnet tes
 
 ## Run
 
-**Recommended — one fresh process per suite (most reliable):**
+**Recommended — the full set in parallel:**
 
 ```powershell
 pwsh -File Scalpel.E2E\run-all-suites.ps1
 ```
 
-Single suite:
+This runs `--suite all --parallel`: the suites are spread across a pool of isolated app
+instances and run concurrently (see "Parallelism + foreground" below).
+
+Single suite (sequential, one instance):
 
 ```powershell
 dotnet run --project Scalpel.E2E -- --suite singles `
   --app bin\Release\net48\publish\Scalpel.exe --report-dir e2e-reports --stamp run1
 ```
 
-Flags: `--suite singles|journeys|pairwise|monkey|all`, `--app <Scalpel.exe>`,
-`--report-dir <dir>`, `--seed <int>` (monkey), `--stamp <id>` (names the report
-files; scripts can't use the wall clock). Exit code is non-zero on any failure or
-any uncatalogued control. Drop real PDFs into `..\tests\fixtures\` to fold them in.
+Flags: `--suite singles|journeys|pairwise|monkey|fonts|all`, `--parallel` (default for
+`all`), `--sequential` (force the classic one-instance path), `--instances <K>` (cap
+concurrency; default `min(jobCount, max(2, cores/2))`), `--app <Scalpel.exe>`,
+`--report-dir <dir>`, `--seed <int>` (monkey), `--stamp <id>` (names the report files;
+scripts can't use the wall clock). Exit code is non-zero on any failure or any
+uncatalogued control. Drop real PDFs into `..\tests\fixtures\` to fold them in.
 
-## Important: run each suite as its own process
+## Parallelism + foreground
 
-Use `--suite all` only for a quick look. The suites mutate app state and rely on
-**physical clicks** for the controls that are `ToggleButton`/`RadioButton`/`CheckBox`
-(WPF raises `Click` for those only on a real click, which the app's logger hooks —
-the UIA `Invoke` pattern doesn't apply to them). Physical clicks require the Scalpel
-window to be **foregrounded**, and Windows' foreground-lock makes that unreliable to
-hold across a long multi-suite run in one process: the first suite is solid, later
-ones degrade. A **fresh process per suite** (what `run-all-suites.ps1` does) sidesteps
-this — each process's launch wins foreground. Plain `Button`s use `Invoke` and are
-unaffected.
+The harness drives controls two ways. **Plain `Button`s** use the UIA `Invoke` pattern —
+it works on a **background** window and never touches the cursor, so it is parallel-safe.
+**`ToggleButton`/`RadioButton`/`CheckBox`** (and canvas mouse/keyboard input) need a
+**physical** click: WPF raises the `Click` the app's logger hooks only on a real click,
+which lands on whatever window is foreground.
+
+So the foreground + physical cursor/keyboard is modelled as a single machine-wide
+1-permit gate (`AppDriver.ForegroundGate`). Physical actions acquire it (foreground →
+act → release); Invoke clicks and all UIA/log/PdfPig verification never touch it. The
+runner does this on **one machine, no VMs**: a pool of isolated app instances (each with
+its own process, corpus copy, private log dir via `SCALPEL_LOG_DIR`, and result bucket)
+runs the suites concurrently; only the genuine physical-input fraction serializes on the
+gate, while everything else overlaps. Wall-clock approaches the total physical-input time
+plus the slowest single suite, rather than the sum of all suites.
+
+`--instances 1` (or `--sequential`) reproduces the classic serial behaviour for debugging.
 
 ## Known limitations / intentional exclusions
 

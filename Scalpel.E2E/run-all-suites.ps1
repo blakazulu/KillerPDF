@@ -1,22 +1,25 @@
 <#
 .SYNOPSIS
-  Run every Scalpel E2E suite, each in its OWN fresh harness process.
+  Run every Scalpel E2E suite in ONE parallel harness process.
 
 .DESCRIPTION
-  A fresh process per suite is the reliable way to run the full set: each launch
-  wins the foreground that physical clicks need (see README "run each suite as its
-  own process"). Running --suite all in one process degrades after the first suite.
+  The harness now spreads the suites across a pool of isolated app instances and runs
+  them concurrently; only physical clicks/typing take the shared foreground (the global
+  AppDriver.ForegroundGate), so UIA Invoke clicks and all verification overlap freely.
+  This replaces the old "fresh process per suite, serial" approach.
 
-  Publishes Scalpel.exe if it is missing, then runs singles/journeys/pairwise/monkey,
-  writing per-suite reports to e2e-reports/ and printing a combined pass/fail summary.
+  Publishes Scalpel.exe if it is missing, then runs --suite all --parallel, writing the
+  combined report to e2e-reports/ and printing the pass/fail summary.
 
 .EXAMPLE
   pwsh -File Scalpel.E2E\run-all-suites.ps1 -Seed 1234
+  pwsh -File Scalpel.E2E\run-all-suites.ps1 -Instances 3   # cap concurrency
 #>
 param(
     [string]$App = "bin\Release\net48\publish\Scalpel.exe",
     [string]$ReportDir = "e2e-reports",
-    [int]$Seed = 1234
+    [int]$Seed = 1234,
+    [int]$Instances = 0   # 0 = auto (min(jobCount, max(2, cores/2)))
 )
 
 $ErrorActionPreference = "Stop"
@@ -33,26 +36,23 @@ if (-not (Test-Path $App)) {
 }
 
 New-Item -ItemType Directory -Force -Path $ReportDir | Out-Null
+Get-Process Scalpel -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+Start-Sleep -Seconds 1
 
-$suites = @("singles", "journeys", "pairwise", "monkey")
-$results = @()
+$extra = @()
+if ($Instances -gt 0) { $extra += @("--instances", "$Instances") }
 
-foreach ($suite in $suites) {
-    Get-Process Scalpel -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
-    Start-Sleep -Seconds 1
-    Write-Host "=== $suite ===" -ForegroundColor Cyan
-    $stamp = "all-$suite"
-    & $dotnet run --project "$repo\Scalpel.E2E" -- `
-        --suite $suite --app $App --report-dir $ReportDir --stamp $stamp --seed $Seed
-    $json = Join-Path $ReportDir "test-report-$stamp.json"
-    if (Test-Path $json) {
-        $r = Get-Content $json -Raw | ConvertFrom-Json
-        $results += [pscustomobject]@{ Suite = $suite; Total = $r.total; Passed = $r.passed; Failed = $r.failed }
-    }
-    Get-Process Scalpel -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+Write-Host "=== all suites (parallel) ===" -ForegroundColor Cyan
+& $dotnet run --project "$repo\Scalpel.E2E" -- `
+    --suite all --parallel --app $App --report-dir $ReportDir --stamp "all" --seed $Seed @extra
+$exit = $LASTEXITCODE
+
+Get-Process Scalpel -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+
+$json = Join-Path $ReportDir "test-report-all.json"
+if (Test-Path $json) {
+    $r = Get-Content $json -Raw | ConvertFrom-Json
+    Write-Host "`n===== Summary =====" -ForegroundColor Green
+    [pscustomobject]@{ Total = $r.total; Passed = $r.passed; Failed = $r.failed } | Format-Table -AutoSize
 }
-
-Write-Host "`n===== Combined summary =====" -ForegroundColor Green
-$results | Format-Table -AutoSize
-$totalFailed = ($results | Measure-Object -Property Failed -Sum).Sum
-exit ([int]($totalFailed -gt 0))
+exit $exit
