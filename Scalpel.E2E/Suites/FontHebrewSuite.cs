@@ -9,6 +9,12 @@ public static class FontHebrewSuite
     // Hebrew word "shalom": U+05E9 U+05DC U+05D5 U+05DD
     private const string HebrewShalom = "\u05E9\u05DC\u05D5\u05DD";
 
+    // Arabic word "salam": U+0633 U+0644 U+0627 U+0645 (seen lam alef meem)
+    private const string ArabicSalam = "\u0633\u0644\u0627\u0645";
+
+    // Russian word "Privet": U+041F U+0440 U+0438 U+0432 U+0435 U+0442
+    private const string RussianPrivet = "\u041F\u0440\u0438\u0432\u0435\u0442";
+
     // Extra Hebrew suffix to append during "edit existing" so text changes from original.
     // Space + "Tov" (good): U+0020 U+05D8 U+05D5 U+05D1
     private const string HebrewSuffix = " \u05D8\u05D5\u05D1";
@@ -78,6 +84,23 @@ public static class FontHebrewSuite
         // Step 8: Final assertion — inspect the saved PDF with PdfPig and verify
         // at least one Hebrew-block character (U+0590–U+05FF) was burned in.
         report.Results.Add(AssertHebrewInPdf(Suite, openWithPath, "assert:hebrew-in-pdf"));
+
+        // ─── Scenario D: place NEW Arabic text annotation ────────────────────────
+        // Same place→type→commit→save flow, with Arabic. Exercises ArabicShaper
+        // (cursive joining), BidiReorder (Arabic ranges), and PickFace → Noto Sans Arabic.
+        // Assert (PdfPig) a char in an Arabic block burned in: base (U+0600–06FF) or
+        // presentation forms A/B (U+FB50–FDFF, U+FE70–FEFF, what the shaper emits).
+        PlaceNewTextScenario(driver, runner, report, Suite, "D", ArabicSalam);
+        report.Results.Add(AssertScriptInPdf(Suite, openWithPath, "D:assert:arabic-in-pdf", "Arabic",
+            new[] { ('؀', 'ۿ'), ('ﭐ', '﷿'), ('ﹰ', '﻿') }));
+
+        // ─── Scenario E: place NEW Russian (Cyrillic) text annotation ────────────
+        // LTR but the candidate "Geist" lacks Cyrillic; PickFace must fall back to
+        // Noto Sans so it renders glyphs, not .notdef boxes. Assert a Cyrillic-block
+        // char (U+0400–04FF) is present (proves real glyphs were drawn).
+        PlaceNewTextScenario(driver, runner, report, Suite, "E", RussianPrivet);
+        report.Results.Add(AssertScriptInPdf(Suite, openWithPath, "E:assert:cyrillic-in-pdf", "Cyrillic",
+            new[] { ('Ѐ', 'ӿ') }));
 
         // ─── Scenario B: edit EXISTING Hebrew text ───────────────────────────────
         // Relaunch the app with the hebrew-1p fixture (has "shalom" drawn near center).
@@ -294,6 +317,83 @@ public static class FontHebrewSuite
         {
             report.Results.Add(new ActionResult(suite, "C:exception", Outcome.Fail,
                 $"Scenario C threw: {ex.Message}", emptyLogs));
+        }
+    }
+
+    // Shared place\u2192type\u2192commit\u2192save flow for a NEW text annotation (mirrors Scenario A).
+    // Activates the Text tool, clicks the canvas, types, commits by re-clicking the tool,
+    // then saves in place via Ctrl+S. Each step is its own logged action.
+    private static void PlaceNewTextScenario(AppDriver driver, ActionRunner runner,
+        RunReport report, string suite, string label, string text)
+    {
+        report.Results.Add(runner.RunRaw(suite, $"{label}:tool:text",
+            () => driver.Click("ToolTextBtn"), null, null));
+
+        report.Results.Add(runner.RunRaw(suite, $"{label}:canvas:place-type-commit",
+            () =>
+            {
+                driver.ClickCanvas();
+                System.Threading.Thread.Sleep(600);
+                var annTb = driver.FindAnyTextBox();
+                annTb?.Click();
+                System.Threading.Thread.Sleep(150);
+                driver.TypeText(text);
+                System.Threading.Thread.Sleep(200);
+                driver.Click("ToolTextBtn"); // re-click commits the active TextBox
+                System.Threading.Thread.Sleep(300);
+            }, null, null));
+
+        System.Threading.Thread.Sleep(400);
+
+        report.Results.Add(runner.RunRaw(suite, $"{label}:save:ctrl-s",
+            () =>
+            {
+                driver.FocusMainWindow();
+                System.Threading.Thread.Sleep(200);
+                using (Keyboard.Pressing(VirtualKeyShort.CONTROL))
+                    Keyboard.Press(VirtualKeyShort.KEY_S);
+            }, null, null));
+
+        System.Threading.Thread.Sleep(2000);
+    }
+
+    // Generic "a char in one of these Unicode ranges was burned into the saved PDF" assertion.
+    private static ActionResult AssertScriptInPdf(string suite, string pdfPath, string actionName,
+        string scriptLabel, (char lo, char hi)[] ranges)
+    {
+        var emptyLogs = Array.Empty<LogEntry>();
+        try
+        {
+            if (!File.Exists(pdfPath))
+                return new ActionResult(suite, actionName, Outcome.Fail,
+                    $"PDF not found at {pdfPath}", emptyLogs);
+
+            using var doc = PdfDocument.Open(pdfPath);
+            var allText = new System.Text.StringBuilder();
+            int pageCount = 0;
+            foreach (var page in doc.GetPages())
+            {
+                pageCount++;
+                string text = page.Text ?? string.Empty;
+                allText.Append(text);
+                foreach (char c in text)
+                    foreach (var (lo, hi) in ranges)
+                        if (c >= lo && c <= hi)
+                            return new ActionResult(suite, actionName, Outcome.Pass, null, emptyLogs);
+            }
+
+            string extracted = allText.ToString();
+            string preview = extracted.Length > 120 ? extracted.Substring(0, 120) : extracted;
+            return new ActionResult(suite, actionName, Outcome.Fail,
+                $"No {scriptLabel} character found in saved PDF (pages={pageCount}, " +
+                $"text-len={extracted.Length}, preview='{preview}'). Annotation may not have " +
+                "committed, typing may not have landed, or font lacks a ToUnicode CMap.",
+                emptyLogs);
+        }
+        catch (Exception ex)
+        {
+            return new ActionResult(suite, actionName, Outcome.Fail,
+                $"Exception inspecting saved PDF: {ex.Message}", emptyLogs);
         }
     }
 
