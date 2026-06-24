@@ -137,6 +137,35 @@ namespace Scalpel.Tests
             finally { if (File.Exists(path)) File.Delete(path); }
         }
 
+        [Fact]
+        public void NotoHebrew_FromRepo_Bold_StillEmbeds()
+        {
+            EnsureResolver();
+            string noto = Path.Combine(RepoRoot(), "Resources", "Fonts", "NotoSansHebrew-Regular.ttf");
+            Assert.True(File.Exists(noto), $"expected bundled Hebrew font at {noto}");
+            byte[] bytes = File.ReadAllBytes(noto);
+
+            // Register under a unique name with no bold face — PdfFontResolver will simulate bold
+            // from the regular face; the saved PDF must still embed the font program.
+            const string fam = "ScalpelHebrewBoldTestFont";
+            PdfFontResolver.Instance.RegisterBundledFont(fam, bytes, false, false);
+            string path = Path.Combine(Path.GetTempPath(), $"scalpel_embed_he_bold_{Guid.NewGuid():N}.pdf");
+            try
+            {
+                using (var doc = new PdfDocument())
+                {
+                    var page = doc.AddPage();
+                    using var gfx = XGraphics.FromPdfPage(page);
+                    // visual order is irrelevant to embedding; draw bold Hebrew glyphs
+                    gfx.DrawString("םולש", new XFont(fam, 14, XFontStyle.Bold), XBrushes.Black,
+                        new XPoint(50, 50));
+                    doc.Save(path);
+                }
+                Assert.True(HasEmbeddedFontProgram(path), "bold Hebrew font should embed (simulated-bold from regular face)");
+            }
+            finally { if (File.Exists(path)) File.Delete(path); }
+        }
+
         private static string RepoRoot()
         {
             var dir = new DirectoryInfo(AppContext.BaseDirectory);

@@ -6696,7 +6696,7 @@ namespace Scalpel
                 Foreground = new SolidColorBrush(_textColor),
                 BorderBrush = (SolidColorBrush)FindResource("Accent"), SelectionBrush = AccentBrush(),
                 BorderThickness = new Thickness(1),
-                FontFamily = (FontFamily)FindResource("FontUI"),
+                FontFamily = new FontFamily("Segoe UI, Noto Sans Hebrew"),
                 FontSize = fontCanvas,
                 MinWidth = 120,
                 MinHeight = 24,
@@ -6708,6 +6708,12 @@ namespace Scalpel
             Canvas.SetTop(tb, pos.Y);
             _activeCanvas.Children.Add(tb);
             _activeTextBox = tb;
+            tb.TextChanged += (s, e) =>
+            {
+                tb.FlowDirection = Scalpel.Services.BidiReorder.ContainsRtl(tb.Text)
+                    ? FlowDirection.RightToLeft
+                    : FlowDirection.LeftToRight;
+            };
             tb.KeyDown += TextBox_KeyDown;
             // Defer focus until the TextBox is actually rendered
             tb.Loaded += (s, e) =>
@@ -6985,6 +6991,11 @@ namespace Scalpel
                 FontSize = ta.FontSize,
                 Padding = new Thickness(2)
             };
+            if (Scalpel.Services.BidiReorder.ContainsRtl(ta.Content))
+            {
+                tb.FontFamily = new FontFamily("Segoe UI, Noto Sans Hebrew");
+                tb.FlowDirection = FlowDirection.RightToLeft;
+            }
             Canvas.SetLeft(tb, ta.Position.X);
             Canvas.SetTop(tb, ta.Position.Y);
             _activeCanvas.Children.Add(tb);

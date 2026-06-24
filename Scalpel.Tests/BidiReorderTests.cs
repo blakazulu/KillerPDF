@@ -47,5 +47,24 @@ namespace Scalpel.Tests
         [Fact]
         public void ToVisual_Empty_ReturnsEmpty()
             => Assert.Equal("", BidiReorder.ToVisual(""));
+
+        [Fact]
+        public void ToVisual_HebrewWithPunctuation_ContainsExpectedSubstrings()
+        {
+            // "\u05E9\u05DC\u05D5\u05DD, world." -- base RTL: Hebrew run reversed, Latin forward;
+            // neutral punctuation (comma, period) resolves to RTL and may separate from Latin run;
+            // assert robust invariants: Latin word present, reversed shalom present, total length preserved
+            var result = BidiReorder.ToVisual(Shalom + ", world.");
+            Assert.Contains("world", result); // Latin run appears intact (trailing . reorders as neutral)
+            Assert.Contains(ShalomVisual, result); // reversed shalom: \u05DD\u05D5\u05DC\u05E9
+            Assert.Equal((Shalom + ", world.").Length, result.Length);
+        }
+
+        [Fact]
+        public void ToVisual_HebrewWithTrailingDigits_ReversedWithDigitsLeading()
+        {
+            // "\u05E9\u05DC\u05D5\u05DD 42" -> "42 \u05DD\u05D5\u05DC\u05E9"
+            Assert.Equal("42 " + ShalomVisual, BidiReorder.ToVisual(Shalom + " 42"));
+        }
     }
 }

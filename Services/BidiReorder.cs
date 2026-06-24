@@ -89,7 +89,7 @@ namespace Scalpel.Services
             return '\0';
         }
 
-        // Hebrew block U+0590-U+05FF; Hebrew presentation forms U+FB1D-U+FB4F
+        // U+0590\u2013U+05FF Hebrew; U+FB1D\u2013U+FB4F Hebrew presentation forms (FB4F = alef-lamed ligature, last Hebrew cp before Arabic at FB50)
         private static bool IsRtl(char c)
             => (c >= '\u0590' && c <= '\u05FF') || (c >= '\uFB1D' && c <= '\uFB4F');
     }
