@@ -290,6 +290,12 @@ namespace Scalpel
                 if (App.IsPortable())
                     _portableBadge.Visibility = Visibility.Visible;
             };
+
+            Loaded += async (_, _) =>
+            {
+                EnsureUpdateOptIn();
+                await CheckForUpdatesAsync();
+            };
         }
 
         // ============================================================
