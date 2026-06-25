@@ -133,7 +133,7 @@ export default {
 
   'getit.eyebrow': 'השיגו את Scalpel',
   'getit.title': 'שלוש דרכים להתקנה. אותה אפליקציה של 6MB.',
-  'getit.lead': 'בחרו את מה שמתאים לאופן העבודה שלכם - כולן אותה גרסת Scalpel חתומה וזהה.',
+  'getit.lead': 'בחרו את מה שמתאים לאופן העבודה שלכם - כולן אותה גרסת Scalpel.',
 
   'option.portable.tag': 'בלי התקנה',
   'option.portable.title': 'נייד',

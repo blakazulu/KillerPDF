@@ -133,7 +133,7 @@ export default {
 
   'getit.eyebrow': 'Get Scalpel',
   'getit.title': 'Three ways to install. Same 6 MB app.',
-  'getit.lead': 'Pick whichever fits how you work - they\'re all the identical, signed Scalpel build.',
+  'getit.lead': 'Pick whichever fits how you work - they\'re all the same Scalpel build.',
 
   'option.portable.tag': 'No install',
   'option.portable.title': 'Portable',
