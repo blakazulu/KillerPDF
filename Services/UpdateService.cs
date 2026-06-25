@@ -64,7 +64,7 @@ namespace Scalpel.Services
                 var root = doc.RootElement;
                 if (!root.TryGetProperty("version", out var v) || v.ValueKind != JsonValueKind.String)
                     return null;
-                string version = v.GetString() ?? "";
+                string version = (v.GetString() ?? "").Trim();
                 if (version.Length == 0) return null;
 
                 string site = StringProp(root, "siteUrl");
@@ -99,7 +99,6 @@ namespace Scalpel.Services
             version = new Version(0, 0, 0);
             if (string.IsNullOrWhiteSpace(s)) return false;
             var parts = s.Split('.');
-            if (parts.Length == 0) return false;
             int Get(int i) => i < parts.Length && int.TryParse(parts[i], out var n) && n >= 0 ? n : 0;
             // Require at least the major to be a real number.
             if (!int.TryParse(parts[0], out _)) return false;

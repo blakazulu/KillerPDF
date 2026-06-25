@@ -84,5 +84,13 @@ namespace Scalpel.Tests
             Assert.False(UpdateService.ShouldCheckNow(true, now.AddHours(-1), now));   // too soon
             Assert.True(UpdateService.ShouldCheckNow(true, now.AddHours(-25), now));   // due
         }
+
+        [Fact]
+        public void TryParse_trims_whitespace_around_version()
+        {
+            var info = UpdateService.TryParse("{\"version\":\"  1.7.0\\n\"}");
+            Assert.NotNull(info);
+            Assert.Equal("1.7.0", info!.Version);
+        }
     }
 }
