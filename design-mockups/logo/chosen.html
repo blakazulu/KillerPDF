@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0c0e13;width:1180px;padding:40px;font-family:'JetBrains Mono',monospace;color:#8990a0}
+h1{color:#e8eaef;font-size:22px;margin-bottom:6px}
+.sub{font-size:13px;margin-bottom:28px}
+.stage{display:flex;gap:34px;align-items:flex-end;margin-bottom:30px}
+.cell{display:flex;flex-direction:column;align-items:center;gap:10px}
+.cap{font-size:11px}
+.bars{display:flex;gap:0;border-radius:12px;overflow:hidden;border:1px solid #262b35;width:max-content}
+.bar{padding:22px 26px;display:flex;align-items:center;gap:18px}
+.lite{background:#ECEEF1}.drk{background:#14161A}.win{background:#0a4b8c}
+svg{display:block}
+.lbl{font-size:11px;margin-top:8px}
+.lite .lbl{color:#566070}.drk .lbl,.win .lbl{color:#aeb9c7}
+</style>
+</head>
+<body>
+<h1>Scalpel icon — Concept A, in a tile</h1>
+<div class="sub">page + steel scalpel + surgical-red cutting edge, inside a Fluent steel squircle</div>
+
+<svg width="0" height="0" style="position:absolute"><defs>
+  <linearGradient id="tileg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#39495F"/><stop offset="1" stop-color="#1A2430"/></linearGradient>
+  <symbol id="ico" viewBox="0 0 256 256">
+    <rect x="6" y="6" width="244" height="244" rx="56" fill="url(#tileg)"/>
+    <g transform="rotate(-7 128 128)">
+      <rect x="76" y="54" width="104" height="150" rx="11" fill="#FFFFFF"/>
+      <rect x="92" y="76" width="52" height="6" rx="3" fill="#D2D9E0"/>
+      <rect x="92" y="91" width="68" height="6" rx="3" fill="#D2D9E0"/>
+    </g>
+    <g transform="rotate(-41 128 130)">
+      <rect x="60" y="151" width="100" height="15" rx="7.5" fill="#243140"/>
+      <rect x="65" y="154" width="48" height="3.2" rx="1.6" fill="#48596E"/>
+      <circle cx="158" cy="158.5" r="3.4" fill="#1A2330"/>
+      <path d="M160 144 L220 158 Q197 174 160 169 Z" fill="#AEBAC7"/>
+      <path d="M160 144 L220 158 L160 165 Z" fill="#D0D9E2"/>
+      <path d="M220 158 Q197 174 160 169" fill="none" stroke="#E11D38" stroke-width="6.5" stroke-linecap="round"/>
+    </g>
+  </symbol>
+</defs></svg>
+
+<div class="stage">
+  <div class="cell"><svg width="240" height="240"><use href="#ico"/></svg><div class="cap">256</div></div>
+  <div class="cell"><svg width="128" height="128"><use href="#ico"/></svg><div class="cap">128</div></div>
+  <div class="cell"><svg width="96" height="96"><use href="#ico"/></svg><div class="cap">96</div></div>
+</div>
+
+<div class="bars">
+  <div class="bar lite"><svg width="48" height="48"><use href="#ico"/></svg><svg width="32" height="32"><use href="#ico"/></svg><svg width="24" height="24"><use href="#ico"/></svg><svg width="16" height="16"><use href="#ico"/></svg><div class="lbl">light · 48/32/24/16</div></div>
+  <div class="bar drk"><svg width="48" height="48"><use href="#ico"/></svg><svg width="32" height="32"><use href="#ico"/></svg><svg width="24" height="24"><use href="#ico"/></svg><svg width="16" height="16"><use href="#ico"/></svg><div class="lbl">dark</div></div>
+  <div class="bar win"><svg width="48" height="48"><use href="#ico"/></svg><svg width="32" height="32"><use href="#ico"/></svg><div class="lbl">taskbar</div></div>
+</div>
+</body>
+</html>

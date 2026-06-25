@@ -19,6 +19,7 @@ namespace Scalpel.Services
                 "Refreshed look: a clean, clinical light theme with a precise red accent is now the default, with a smooth animated transition when you switch tabs.",
                 "Zoom moved to the bottom-right of the status bar, where you'd expect it.",
                 "The new design carries across every theme — Light, Dark, and High Contrast — and all accent colors.",
+                "Refreshed app icon and Store artwork to match — a steel tile with the scalpel's surgical-red cutting edge.",
             }),
             new Release("1.6.0", "June 2026", new[]
             {

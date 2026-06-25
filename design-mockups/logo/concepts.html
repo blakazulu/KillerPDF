@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#0c0e13;color:#e8eaef;width:1500px;padding:40px 44px 56px;-webkit-font-smoothing:antialiased}
+.head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+h1{font-size:30px;font-weight:800;letter-spacing:-.02em}
+.sub{color:#8990a0;font-size:14px}
+.mono{font-family:'JetBrains Mono',monospace}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:30px}
+.card{background:#15181e;border:1px solid #262b35;border-radius:16px;overflow:hidden}
+.tag{font-family:'JetBrains Mono';font-size:12px;letter-spacing:.12em;text-transform:uppercase;padding:14px 18px 0;color:#f04458}
+.c2 .tag{color:#7c8b9b}.c3 .tag{color:#4fd1e0}
+.name{font-size:21px;font-weight:700;padding:2px 18px 0}
+.desc{font-size:13px;color:#8990a0;line-height:1.55;padding:8px 18px 16px}
+.hero{height:300px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,#1c2029,#101319)}
+.sizes{display:flex;gap:0;border-top:1px solid #262b35}
+.sizes .col{flex:1;padding:18px 10px 14px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.sizes .light{background:#ECEEF1}
+.sizes .dark{background:#14161A}
+.row{display:flex;align-items:flex-end;gap:16px}
+.cap{font-family:'JetBrains Mono';font-size:11px}
+.light .cap{color:#566070}.dark .cap{color:#7c818c}
+svg{display:block}
+.note{margin-top:34px;font-size:13px;color:#5c6270;line-height:1.7;border-top:1px solid #262b35;padding-top:20px;max-width:1100px}
+.note b{color:#8990a0}
+</style>
+</head>
+<body>
+<div class="head"><h1>Scalpel — logo concepts</h1><span class="sub">flat · steel #2C3A4C + surgical red #E11D38 · judged at real sizes</span></div>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="tileg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#37485F"/><stop offset="1" stop-color="#1A2430"/></linearGradient>
+    <linearGradient id="bladeg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C"/></linearGradient>
+
+    <!-- A · Incision: a steel scalpel laid across a page, its cutting edge is the surgical-red incision -->
+    <symbol id="iconA" viewBox="0 0 256 256">
+      <rect x="60" y="40" width="118" height="176" rx="13" fill="#FFFFFF" stroke="#D2D8DF" stroke-width="3"/>
+      <rect x="80" y="70" width="64" height="7" rx="3.5" fill="#D7DCE3"/>
+      <rect x="80" y="88" width="78" height="7" rx="3.5" fill="#D7DCE3"/>
+      <g transform="rotate(42 128 140)">
+        <rect x="34" y="150" width="118" height="16" rx="8" fill="#2C3A4C"/>
+        <rect x="40" y="153" width="58" height="3.5" rx="1.75" fill="#4C5E73"/>
+        <path d="M150 142 L224 158 Q196 178 150 173 Z" fill="#A7B4C1"/>
+        <path d="M150 142 L224 158 L150 165 Z" fill="#CAD4DE"/>
+        <path d="M224 158 Q196 178 150 173" fill="none" stroke="#E11D38" stroke-width="7" stroke-linecap="round"/>
+      </g>
+    </symbol>
+
+    <!-- B · Blade: the instrument alone, bold silhouette, red cutting edge -->
+    <symbol id="iconB" viewBox="0 0 256 256">
+      <g transform="rotate(-38 128 128)">
+        <rect x="26" y="118" width="138" height="20" rx="10" fill="#2C3A4C"/>
+        <rect x="33" y="122" width="70" height="4.5" rx="2.25" fill="#4C5E73"/>
+        <circle cx="150" cy="128" r="4" fill="#1B2632"/>
+        <path d="M162 112 L236 136 Q198 166 162 159 Z" fill="#A7B4C1"/>
+        <path d="M162 112 L236 136 L162 150 Z" fill="#CAD4DE"/>
+        <path d="M236 136 Q198 166 162 159" fill="none" stroke="#E11D38" stroke-width="8" stroke-linecap="round"/>
+      </g>
+    </symbol>
+
+    <!-- C · Tile: Windows-11-style steel squircle, white page + red incision inside -->
+    <symbol id="iconC" viewBox="0 0 256 256">
+      <rect x="14" y="14" width="228" height="228" rx="54" fill="url(#tileg)"/>
+      <g transform="rotate(8 128 128)">
+        <rect x="92" y="64" width="92" height="128" rx="9" fill="#FFFFFF"/>
+        <rect x="106" y="86" width="48" height="6" rx="3" fill="#CDD4DC"/>
+        <rect x="106" y="100" width="60" height="6" rx="3" fill="#CDD4DC"/>
+      </g>
+      <path d="M96 188 L182 78" fill="none" stroke="#E11D38" stroke-width="11" stroke-linecap="round"/>
+      <circle cx="182" cy="78" r="9" fill="#E11D38"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="grid">
+  <div class="card c1">
+    <div class="hero"><svg width="190" height="190"><use href="#iconA"/></svg></div>
+    <div class="tag">Concept A</div>
+    <div class="name">Incision</div>
+    <div class="desc">A steel scalpel laid across a document — its cutting edge glows surgical-red. Keeps the original "blade + paper" idea, but flat and precise. Most literal to the name.</div>
+    <div class="sizes">
+      <div class="col light"><div class="row"><svg width="64" height="64"><use href="#iconA"/></svg><svg width="32" height="32"><use href="#iconA"/></svg><svg width="16" height="16"><use href="#iconA"/></svg></div><div class="cap">64 · 32 · 16 on light</div></div>
+      <div class="col dark"><div class="row"><svg width="64" height="64"><use href="#iconA"/></svg><svg width="32" height="32"><use href="#iconA"/></svg><svg width="16" height="16"><use href="#iconA"/></svg></div><div class="cap">on dark</div></div>
+    </div>
+  </div>
+
+  <div class="card c2">
+    <div class="hero"><svg width="190" height="190"><use href="#iconB"/></svg></div>
+    <div class="tag">Concept B</div>
+    <div class="name">Blade</div>
+    <div class="desc">The instrument alone — a confident geometric scalpel with a red cutting edge. Strongest, simplest silhouette; reads cleanly even at 16px. Tool-forward, no document.</div>
+    <div class="sizes">
+      <div class="col light"><div class="row"><svg width="64" height="64"><use href="#iconB"/></svg><svg width="32" height="32"><use href="#iconB"/></svg><svg width="16" height="16"><use href="#iconB"/></svg></div><div class="cap">64 · 32 · 16 on light</div></div>
+      <div class="col dark"><div class="row"><svg width="64" height="64"><use href="#iconB"/></svg><svg width="32" height="32"><use href="#iconB"/></svg><svg width="16" height="16"><use href="#iconB"/></svg></div><div class="cap">on dark</div></div>
+    </div>
+  </div>
+
+  <div class="card c3">
+    <div class="hero"><svg width="190" height="190"><use href="#iconC"/></svg></div>
+    <div class="tag">Concept C</div>
+    <div class="name">Tile</div>
+    <div class="desc">A Windows-11-style steel squircle holding a white page with one clean red incision. Matches Fluent app-tile conventions and the Store grid; self-contained on any background.</div>
+    <div class="sizes">
+      <div class="col light"><div class="row"><svg width="64" height="64"><use href="#iconC"/></svg><svg width="32" height="32"><use href="#iconC"/></svg><svg width="16" height="16"><use href="#iconC"/></svg></div><div class="cap">64 · 32 · 16 on light</div></div>
+      <div class="col dark"><div class="row"><svg width="64" height="64"><use href="#iconC"/></svg><svg width="32" height="32"><use href="#iconC"/></svg><svg width="16" height="16"><use href="#iconC"/></svg></div><div class="cap">on dark</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="note"><b>All three</b> share the new palette (steel + surgical red + paper) and a flat, geometric build that survives down to 16px. <b>A</b> keeps the most continuity with today's icon; <b>B</b> is the boldest, most reductive mark; <b>C</b> is the most "native Windows app". Pick one (or a hybrid — e.g. Concept B's blade inside Concept C's tile) and I'll produce the final multi-resolution <span class="mono">.ico</span> + 300×300 store PNG.</div>
+</body>
+</html>
