@@ -26,6 +26,18 @@
     <SolidColorBrush x:Key="BgDragHandle"  Color="#C4CAD2" po:Freeze="True"/>
     <SolidColorBrush x:Key="BgScrollThumb" Color="#66C07F12" po:Freeze="True"/>
     <SolidColorBrush x:Key="BgOverlay"     Color="#66000000" po:Freeze="True"/>
+
+    <!-- Ribbon / Clinical redesign tokens — steel chrome over a light operating field -->
+    <SolidColorBrush x:Key="ChromeBg"        Color="#2C3A4C" po:Freeze="True"/>
+    <SolidColorBrush x:Key="ChromeText"      Color="#FFFFFF" po:Freeze="True"/>
+    <SolidColorBrush x:Key="ChromeTextDim"   Color="#AEB9C7" po:Freeze="True"/>
+    <SolidColorBrush x:Key="ChromeHover"     Color="#3C4C60" po:Freeze="True"/>
+    <SolidColorBrush x:Key="RibbonBg"        Color="#FFFFFF" po:Freeze="True"/>
+    <SolidColorBrush x:Key="RibbonBand"      Color="#F2F5F8" po:Freeze="True"/>
+    <SolidColorBrush x:Key="RibbonGroupLabel" Color="#8A93A0" po:Freeze="True"/>
+    <SolidColorBrush x:Key="RibbonBtnHover"  Color="#E9EDF1" po:Freeze="True"/>
+    <SolidColorBrush x:Key="ZoomTrack"       Color="#46566B" po:Freeze="True"/>
+
     <sys:Double x:Key="GrainOpacity">0.05</sys:Double>
 
     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}"                      Color="#FBEAD0" po:Freeze="True"/>

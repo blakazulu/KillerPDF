@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scalpel — Clinical + Ribbon</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.7.0/dist/tabler-icons.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --app:#E7EAEE;--field:#D3D8DF;--chrome:#FFFFFF;--surface:#F1F4F7;--surface-2:#E9EDF1;
+  --band:#F2F5F8;--border:#D2D8DF;--border-2:#C2CAD3;
+  --ink:#161B22;--ink-2:#566070;--ink-3:#8A93A0;
+  --steel:#2C3A4C;--steel-2:#46566B;
+  --accent:#E11D38;--accent-wash:#FDEAEC;--ok:#0E8C6A;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Inter',-apple-system,'Segoe UI',sans-serif;background:#aab2bd;color:var(--ink);
+  display:flex;align-items:center;justify-content:center;padding:28px;font-size:13px;-webkit-font-smoothing:antialiased}
+.mono{font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums}
+.disp{font-family:'Archivo',sans-serif}
+
+.window{width:1180px;height:760px;border-radius:12px;overflow:hidden;background:var(--app);
+  border:1px solid #b9c1cc;box-shadow:0 40px 110px -30px rgba(20,30,45,.55);
+  display:grid;grid-template-rows:44px auto 1fr 30px}
+
+/* ---- title bar + Quick Access Toolbar ---- */
+.titlebar{background:var(--steel);display:flex;align-items:center;gap:8px;padding:0 8px 0 16px;color:#fff}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Archivo';font-weight:800;letter-spacing:.02em;font-size:15px}
+.brand .blade{display:inline-block;width:14px;height:14px;background:var(--accent);clip-path:polygon(0 50%,100% 0,100% 100%);border-radius:1px}
+.brand .pdf{color:#fff;background:var(--accent);padding:1px 7px;border-radius:4px;font-size:11px;letter-spacing:.08em}
+.qat{display:flex;align-items:center;gap:1px;margin-left:6px;padding-left:11px;border-left:1px solid #46566B}
+.qat button{width:30px;height:30px;border:none;background:transparent;color:#aeb9c7;border-radius:6px;cursor:pointer;font-size:16px}
+.qat button:hover{background:rgba(255,255,255,.13);color:#fff}
+.qat .sep{width:1px;height:17px;background:#46566B;margin:0 5px}
+.title-file{flex:1;text-align:center;color:#aeb9c7;font-family:'JetBrains Mono';font-size:11.5px}
+.title-right{display:flex;align-items:center;gap:1px}
+.title-right .tbtn{height:30px;padding:0 11px;display:flex;align-items:center;gap:7px;border:none;background:transparent;color:#aeb9c7;border-radius:6px;cursor:pointer;font-family:'Inter';font-size:12px}
+.title-right .tbtn i{font-size:16px}
+.title-right .tbtn:hover{background:rgba(255,255,255,.13);color:#fff}
+.chrome{display:flex;gap:1px;margin-left:6px}
+.chrome button{width:40px;height:30px;border:none;background:transparent;color:#aab4c1;border-radius:6px;cursor:pointer;font-size:15px}
+.chrome button:hover{background:rgba(255,255,255,.12);color:#fff}
+.chrome .close:hover{background:var(--accent);color:#fff}
+
+/* ---- ribbon (tabs + grouped band as one surface) ---- */
+.ribbon{background:var(--chrome);border-bottom:1px solid var(--border)}
+.ribbon-tabs{display:flex;align-items:flex-end;gap:3px;padding:0 14px;height:38px;border-bottom:1px solid var(--border);position:relative}
+.rtab{height:34px;padding:0 22px;border:none;background:transparent;color:var(--ink-2);
+  font-family:'Archivo';font-size:13px;font-weight:600;letter-spacing:.01em;cursor:pointer;border-radius:8px 8px 0 0;position:relative;transition:color .28s ease,background .2s ease}
+.rtab:hover{color:var(--ink);background:var(--band)}
+.rtab.active{color:var(--ink);background:var(--band)}
+.tab-indicator{position:absolute;top:0;left:18px;width:60px;height:3px;background:var(--accent);border-radius:2px;
+  box-shadow:0 0 10px rgba(225,29,56,.55);transition:left .4s cubic-bezier(.34,1.34,.4,1),width .4s cubic-bezier(.34,1.34,.4,1)}
+
+.ribbon-band{background:var(--band);display:flex;align-items:stretch;padding:10px 14px 6px;min-height:104px;overflow-x:auto;position:relative}
+.rgroup{display:none;flex-direction:column;align-items:center;padding:0 14px;border-right:1px solid var(--border)}
+.rgroup.show{display:flex}
+@keyframes btnReveal{0%{opacity:0;transform:translateY(14px) scale(.9);filter:blur(3px)}55%{filter:blur(0)}100%{opacity:1;transform:none;filter:blur(0)}}
+@media (prefers-reduced-motion:reduce){.tab-indicator{transition:none}.rbtn,.rzoom{animation:none!important}}
+.rgroup-tools{display:flex;align-items:flex-start;gap:4px;flex:1}
+.rlabel{font-family:'Archivo';font-size:10.5px;font-weight:600;letter-spacing:.06em;color:var(--ink-3);text-align:center;padding-top:6px;white-space:nowrap;text-transform:uppercase}
+
+/* wider command buttons */
+.rbtn{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px;
+  min-width:84px;padding:11px 16px 9px;border:1px solid transparent;background:transparent;color:var(--ink);
+  font-family:'Inter';font-size:11.5px;font-weight:500;border-radius:9px;cursor:pointer;transition:.12s;text-align:center;line-height:1.2;white-space:nowrap}
+.rbtn i{font-size:25px;color:var(--steel-2);line-height:1}
+.rbtn:hover{background:var(--surface-2)}
+.rbtn.active{background:var(--accent-wash);border-color:var(--accent);color:var(--accent)}
+.rbtn.active i{color:var(--accent)}
+.rbtn.danger:hover{background:var(--accent-wash)}
+.rbtn.danger i{color:var(--accent)}
+.rbtn.danger{color:#b51228}
+
+.rstack{display:flex;flex-direction:column;gap:3px;justify-content:center}
+.rsbtn{display:flex;align-items:center;gap:9px;height:29px;padding:0 14px 0 9px;border:1px solid transparent;
+  background:transparent;color:var(--ink);font-family:'Inter';font-size:12.5px;border-radius:7px;cursor:pointer;white-space:nowrap}
+.rsbtn i{font-size:18px;color:var(--steel-2);width:19px;text-align:center}
+.rsbtn:hover{background:var(--surface-2)}
+.rsbtn.danger i{color:var(--accent)}.rsbtn.danger{color:#b51228}
+
+.rzoom{display:flex;align-items:center;gap:5px}
+.rzoom button{width:32px;height:32px;border:none;background:var(--chrome);border:1px solid var(--border-2);color:var(--steel);border-radius:8px;cursor:pointer;font-size:16px}
+.rzoom button:hover{border-color:var(--steel-2)}
+.rzoom .lvl{min-width:52px;text-align:center;font-family:'JetBrains Mono';font-weight:700;font-size:12.5px}
+
+/* ---- main ---- */
+.main{display:grid;grid-template-columns:216px 1fr;overflow:hidden}
+.sidebar{background:var(--chrome);border-right:1px solid var(--border);display:flex;flex-direction:column}
+.side-head{display:flex;gap:4px;padding:14px 14px 10px}
+.side-head button{flex:1;height:30px;border:none;background:transparent;color:var(--ink-3);
+  font-family:'Archivo';font-size:11px;font-weight:700;letter-spacing:.1em;border-radius:6px;cursor:pointer}
+.side-head button.on{color:var(--accent);background:var(--accent-wash)}
+.side-jump{display:flex;align-items:center;gap:8px;padding:0 16px 12px;color:var(--ink-3);font-family:'JetBrains Mono';font-size:12px}
+.side-jump input{width:44px;height:28px;background:var(--surface);border:1px solid var(--border-2);border-radius:6px;color:var(--ink);text-align:center;font-family:'JetBrains Mono';font-size:12px;font-weight:600}
+.thumbs{flex:1;overflow:auto;padding:4px 14px 16px;display:flex;flex-direction:column;gap:14px}
+.thumb{cursor:pointer}
+.thumb .sheet{aspect-ratio:8.5/11;background:#fff;border-radius:3px;border:1px solid var(--border-2);
+  box-shadow:0 3px 10px rgba(20,30,45,.12);overflow:hidden;position:relative;outline:2px solid transparent;outline-offset:2px;transition:.12s}
+.thumb .sheet::before{content:"";position:absolute;inset:10% 13%;background:repeating-linear-gradient(#cdd3da 0 1.5px,transparent 1.5px 7px);opacity:.7}
+.thumb.sel .sheet{outline-color:var(--accent)}
+.thumb .lbl{text-align:center;margin-top:7px;font-family:'JetBrains Mono';font-size:11px;color:var(--ink-3);font-weight:600}
+.thumb.sel .lbl{color:var(--accent)}
+.thumb:hover .sheet{border-color:var(--steel-2)}
+
+.canvas{background:var(--field);overflow:auto;display:flex;justify-content:center;padding:44px 0;position:relative}
+.canvas::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 36%,rgba(255,255,255,.55),transparent 70%);pointer-events:none}
+.page{width:600px;min-height:776px;background:#fff;color:#1a1a1a;border-radius:2px;
+  box-shadow:0 24px 60px -12px rgba(20,30,45,.4),0 0 0 1px rgba(20,30,45,.05);padding:64px 70px;position:relative;height:fit-content;z-index:1}
+.page h1{font-family:'Archivo';font-weight:800;font-size:27px;letter-spacing:-.01em;margin-bottom:8px;color:#11161d}
+.page .doc-meta{font-family:'JetBrains Mono';font-size:11px;color:#9aa0a8;margin-bottom:30px;letter-spacing:.02em}
+.page h2{font-family:'Archivo';font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:26px 0 11px;display:flex;align-items:center;gap:10px}
+.page h2::before{content:"";width:18px;height:2px;background:var(--accent)}
+.page p{font-size:13.5px;line-height:1.78;color:#3a4049;margin-bottom:14px}
+.page .hl{background:#fff2b8;padding:1px 3px;box-shadow:0 0 0 1px #f0d877}
+.page .sig{margin-top:42px;padding-top:18px;border-top:1px solid #e6e8eb;display:flex;justify-content:space-between;align-items:flex-end}
+.page .sig .name{font-family:'JetBrains Mono';font-size:11px;color:#9aa0a8}
+.page .sig .ink{font-size:30px;color:#11233f;font-weight:600;font-style:italic;transform:rotate(-3deg)}
+.telemetry{position:absolute;top:16px;right:16px;background:var(--steel);color:#cdd6e0;font-family:'JetBrains Mono';font-size:10.5px;border-radius:7px;padding:7px 11px;display:flex;gap:14px;z-index:2;box-shadow:0 6px 18px rgba(20,30,45,.25)}
+.telemetry b{color:#fff;font-weight:600}.telemetry .k{color:#7e8b9c}
+
+/* ---- status bar + zoom slider ---- */
+.status{background:var(--steel);color:#aeb9c7;display:flex;align-items:center;padding:0 16px;gap:16px;font-family:'JetBrains Mono';font-size:11px}
+.status .ready{display:flex;align-items:center;gap:7px;color:#d4dbe4}
+.status .ready .led{width:7px;height:7px;border-radius:50%;background:#37d39b;box-shadow:0 0 7px #37d39b}
+.status .flex{flex:1}
+.status .badge{font-family:'Archivo';border:1px solid #56657a;color:#cdd6e0;border-radius:5px;padding:2px 8px;font-size:9.5px;font-weight:700;letter-spacing:.08em}
+.zoomslider{display:flex;align-items:center;gap:9px}
+.zoomslider button{width:22px;height:22px;border:none;background:transparent;color:#aeb9c7;border-radius:5px;cursor:pointer;font-size:15px}
+.zoomslider button:hover{background:rgba(255,255,255,.12);color:#fff}
+.zoomslider .track{width:110px;height:4px;background:#46566B;border-radius:3px;position:relative}
+.zoomslider .track::before{content:"";position:absolute;left:0;top:0;bottom:0;width:52%;background:var(--accent);border-radius:3px}
+.zoomslider .knob{position:absolute;left:52%;top:50%;transform:translate(-50%,-50%);width:12px;height:12px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.zoomslider .pct{min-width:38px;text-align:right;color:#d4dbe4;font-weight:600}
+
+/* settings */
+.scrim{position:absolute;inset:0;background:rgba(30,40,55,.4);display:none;z-index:50;backdrop-filter:blur(2px)}
+.scrim.show{display:block}
+.settings{position:absolute;left:0;top:0;bottom:0;width:350px;background:var(--chrome);border-right:1px solid var(--border);
+  transform:translateX(-100%);transition:transform .22s cubic-bezier(.2,.8,.2,1);padding:24px;display:flex;flex-direction:column;gap:22px}
+.scrim.show .settings{transform:none}
+.settings h3{font-family:'Archivo';font-size:17px;font-weight:800;display:flex;align-items:center;gap:10px}
+.settings h3 i{color:var(--accent)}
+.set-group label{display:block;font-family:'Archivo';font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--ink-3);margin-bottom:10px}
+.swatches{display:flex;gap:9px}
+.swatch{width:32px;height:32px;border-radius:8px;cursor:pointer;border:2px solid #fff;box-shadow:0 0 0 1px var(--border-2)}
+.swatch.on{box-shadow:0 0 0 2px var(--ink)}
+.seg{display:flex;background:var(--surface);border:1px solid var(--border-2);border-radius:8px;padding:3px;gap:3px}
+.seg button{flex:1;height:32px;border:none;background:transparent;color:var(--ink-2);border-radius:6px;font-family:'Inter';font-size:12px;font-weight:500;cursor:pointer}
+.seg button.on{background:var(--steel);color:#fff}
+.tag{position:fixed;left:28px;bottom:8px;font-size:11px;color:#5a6470;font-family:'JetBrains Mono'}
+</style>
+</head>
+<body>
+<div class="window">
+  <!-- title + QAT -->
+  <div class="titlebar">
+    <div class="brand"><span class="blade"></span>SCALPEL<span class="pdf">PDF</span></div>
+    <div class="qat">
+      <button title="Open"><i class="ti ti-folder"></i></button>
+      <button title="Save"><i class="ti ti-device-floppy"></i></button>
+      <button title="Print"><i class="ti ti-printer"></i></button>
+      <span class="sep"></span>
+      <button title="Undo"><i class="ti ti-arrow-back-up"></i></button>
+      <button title="Redo"><i class="ti ti-arrow-forward-up"></i></button>
+    </div>
+    <div class="title-file">Acquisition-Agreement.pdf</div>
+    <div class="title-right">
+      <button class="tbtn"><i class="ti ti-search"></i>Search</button>
+      <button class="tbtn" id="setBtn"><i class="ti ti-settings"></i>Settings</button>
+    </div>
+    <div class="chrome">
+      <button><i class="ti ti-minus"></i></button>
+      <button><i class="ti ti-square"></i></button>
+      <button class="close"><i class="ti ti-x"></i></button>
+    </div>
+  </div>
+
+  <!-- ribbon -->
+  <div class="ribbon">
+    <div class="ribbon-tabs">
+      <button class="rtab active" data-mode="view">View</button>
+      <button class="rtab" data-mode="edit">Edit</button>
+      <button class="rtab" data-mode="pages">Pages</button>
+      <button class="rtab" data-mode="sign">Sign</button>
+      <span class="tab-indicator"></span>
+    </div>
+    <div class="ribbon-band">
+      <!-- VIEW -->
+      <div class="rgroup show" data-mode="view">
+        <div class="rgroup-tools">
+          <button class="rbtn active"><i class="ti ti-file"></i>Single</button>
+          <button class="rbtn"><i class="ti ti-layout-rows"></i>Continuous</button>
+          <button class="rbtn"><i class="ti ti-columns"></i>Two-page</button>
+          <button class="rbtn"><i class="ti ti-layout-grid"></i>Grid</button>
+        </div>
+        <div class="rlabel">Layout</div>
+      </div>
+      <div class="rgroup show" data-mode="view">
+        <div class="rgroup-tools" style="align-items:center">
+          <button class="rbtn"><i class="ti ti-arrows-maximize"></i>Fit page</button>
+          <div class="rzoom">
+            <button><i class="ti ti-minus"></i></button>
+            <span class="lvl">100%</span>
+            <button><i class="ti ti-plus"></i></button>
+          </div>
+        </div>
+        <div class="rlabel">Zoom</div>
+      </div>
+      <div class="rgroup show" data-mode="view">
+        <div class="rgroup-tools">
+          <button class="rbtn"><i class="ti ti-rotate-clockwise"></i>Rotate</button>
+        </div>
+        <div class="rlabel">Page</div>
+      </div>
+
+      <!-- EDIT -->
+      <div class="rgroup" data-mode="edit">
+        <div class="rgroup-tools">
+          <button class="rbtn active"><i class="ti ti-pointer"></i>Select</button>
+          <button class="rbtn"><i class="ti ti-typography"></i>Text</button>
+          <button class="rbtn"><i class="ti ti-highlight"></i>Highlight</button>
+          <button class="rbtn"><i class="ti ti-pencil"></i>Draw</button>
+          <button class="rbtn"><i class="ti ti-photo"></i>Image</button>
+          <button class="rbtn"><i class="ti ti-crop"></i>Crop</button>
+        </div>
+        <div class="rlabel">Tools</div>
+      </div>
+      <div class="rgroup" data-mode="edit">
+        <div class="rgroup-tools">
+          <button class="rbtn"><i class="ti ti-arrow-back-up"></i>Undo</button>
+          <button class="rbtn"><i class="ti ti-arrow-forward-up"></i>Redo</button>
+          <button class="rbtn danger"><i class="ti ti-eraser"></i>Clear all</button>
+        </div>
+        <div class="rlabel">History</div>
+      </div>
+
+      <!-- PAGES -->
+      <div class="rgroup" data-mode="pages">
+        <div class="rgroup-tools">
+          <button class="rbtn"><i class="ti ti-arrows-join"></i>Merge</button>
+          <button class="rbtn"><i class="ti ti-file-export"></i>Extract</button>
+          <button class="rbtn"><i class="ti ti-file-plus"></i>Insert</button>
+          <button class="rbtn danger"><i class="ti ti-trash"></i>Delete</button>
+        </div>
+        <div class="rlabel">Organize</div>
+      </div>
+      <div class="rgroup" data-mode="pages">
+        <div class="rgroup-tools">
+          <button class="rbtn"><i class="ti ti-arrow-up"></i>Move up</button>
+          <button class="rbtn"><i class="ti ti-arrow-down"></i>Move down</button>
+          <button class="rbtn"><i class="ti ti-rotate-clockwise"></i>Rotate</button>
+        </div>
+        <div class="rlabel">Arrange</div>
+      </div>
+
+      <!-- SIGN -->
+      <div class="rgroup" data-mode="sign">
+        <div class="rgroup-tools">
+          <button class="rbtn active"><i class="ti ti-signature"></i>Place signature</button>
+        </div>
+        <div class="rlabel">Signature</div>
+      </div>
+      <div class="rgroup" data-mode="sign">
+        <div class="rgroup-tools">
+          <button class="rbtn"><i class="ti ti-forms"></i>Fill form</button>
+        </div>
+        <div class="rlabel">Forms</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- main -->
+  <div class="main">
+    <div class="sidebar">
+      <div class="side-head"><button class="on">PAGES</button><button>OUTLINE</button></div>
+      <div class="side-jump"><span>PAGE</span><input value="01"><span>/ 12</span></div>
+      <div class="thumbs">
+        <div class="thumb sel"><div class="sheet"></div><div class="lbl">01</div></div>
+        <div class="thumb"><div class="sheet"></div><div class="lbl">02</div></div>
+        <div class="thumb"><div class="sheet"></div><div class="lbl">03</div></div>
+        <div class="thumb"><div class="sheet"></div><div class="lbl">04</div></div>
+      </div>
+    </div>
+    <div class="canvas">
+      <div class="page">
+        <div class="telemetry"><span><span class="k">ZOOM</span> <b>100%</b></span><span><span class="k">PG</span> <b>01/12</b></span><span><span class="k">A4</span></span></div>
+        <h1>Asset Acquisition Agreement</h1>
+        <div class="doc-meta">DOC-2026-0418 · EXECUTION COPY · 12 PP</div>
+        <p>This Agreement is entered into as of the Effective Date by and between the parties identified below, who agree to the terms set forth herein with respect to the acquisition of the assets described in <span class="hl">Schedule A</span>.</p>
+        <h2>Definitions</h2>
+        <p>For purposes of this Agreement, capitalized terms have the meanings given to them in this Section. "Closing" means the consummation of the transactions contemplated by this Agreement.</p>
+        <p>"Purchased Assets" means all right, title, and interest in the assets, properties, and rights set forth on the attached schedules, free and clear of all encumbrances.</p>
+        <h2>Purchase &amp; Sale</h2>
+        <p>Subject to the terms and conditions of this Agreement, at the Closing the Seller shall sell and the Buyer shall purchase the Purchased Assets for the consideration described herein.</p>
+        <div class="sig"><div class="name">AUTHORIZED SIGNATURE</div><div class="ink">A. Whitfield</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- status -->
+  <div class="status">
+    <span class="ready"><span class="led"></span>READY</span>
+    <span>12 PAGES · 1.4 MB</span>
+    <div class="flex"></div>
+    <span class="badge">PORTABLE</span>
+    <span>v1.5.1</span>
+    <div class="zoomslider">
+      <button><i class="ti ti-minus"></i></button>
+      <div class="track"><span class="knob"></span></div>
+      <button><i class="ti ti-plus"></i></button>
+      <span class="pct">100%</span>
+    </div>
+  </div>
+
+  <!-- settings -->
+  <div class="scrim" id="scrim">
+    <div class="settings">
+      <h3><i class="ti ti-settings"></i>Settings</h3>
+      <div class="set-group"><label>ACCENT</label>
+        <div class="swatches">
+          <span class="swatch on" style="background:#E11D38"></span>
+          <span class="swatch" style="background:#2C3A4C"></span>
+          <span class="swatch" style="background:#0E8C6A"></span>
+          <span class="swatch" style="background:#1E73C8"></span>
+        </div></div>
+      <div class="set-group"><label>THEME</label>
+        <div class="seg"><button class="on">Light</button><button>Dark</button><button>Contrast</button></div></div>
+      <div class="set-group"><label>LANGUAGE</label>
+        <div class="seg"><button class="on">English</button><button>עברית</button><button>العربية</button></div></div>
+    </div>
+  </div>
+</div>
+<div class="tag">Clinical + Ribbon · wider buttons · click View / Edit / Pages / Sign</div>
+
+<script>
+const tabs=document.querySelectorAll('.rtab'),groups=document.querySelectorAll('.rgroup');
+const indicator=document.querySelector('.tab-indicator');
+function placeIndicator(t,animate){
+  if(!animate)indicator.style.transition='none';
+  indicator.style.left=(t.offsetLeft+18)+'px';
+  indicator.style.width=(t.offsetWidth-36)+'px';
+  if(!animate){void indicator.offsetWidth;indicator.style.transition='';}
+}
+function cascade(mode){
+  let i=0;
+  document.querySelectorAll('.rgroup[data-mode="'+mode+'"]').forEach(g=>{
+    g.querySelectorAll('.rbtn,.rzoom').forEach(b=>{
+      b.style.animation='none';void b.offsetWidth;
+      b.style.animation='btnReveal .46s cubic-bezier(.22,1.12,.36,1) '+(i*48)+'ms both';
+      i++;
+    });
+  });
+}
+function activate(t){
+  tabs.forEach(x=>x.classList.remove('active'));t.classList.add('active');
+  groups.forEach(g=>g.classList.toggle('show',g.dataset.mode===t.dataset.mode));
+  placeIndicator(t,true);
+  cascade(t.dataset.mode);
+}
+tabs.forEach(t=>t.onclick=()=>activate(t));
+window.addEventListener('load',()=>{const a=document.querySelector('.rtab.active');if(a){placeIndicator(a,false);cascade(a.dataset.mode);}});
+document.querySelectorAll('.rbtn').forEach(b=>b.onclick=()=>{
+  if(b.classList.contains('danger'))return;
+  const band=b.closest('.ribbon-band');
+  band.querySelectorAll('.rgroup.show .rbtn').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+});
+document.querySelectorAll('.thumb').forEach(t=>t.onclick=()=>{document.querySelectorAll('.thumb').forEach(x=>x.classList.remove('sel'));t.classList.add('sel');});
+const scrim=document.getElementById('scrim');
+document.getElementById('setBtn').onclick=()=>scrim.classList.add('show');
+scrim.onclick=e=>{if(e.target===scrim)scrim.classList.remove('show')};
+document.querySelectorAll('.swatch').forEach(s=>s.onclick=()=>{document.querySelectorAll('.swatch').forEach(x=>x.classList.remove('on'));s.classList.add('on');});
+document.querySelectorAll('.seg').forEach(seg=>seg.querySelectorAll('button').forEach(b=>b.onclick=()=>{seg.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');}));
+</script>
+</body>
+</html>

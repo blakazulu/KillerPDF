@@ -61,6 +61,16 @@
     <sys:String x:Key="Ico_X">&#xeb55;</sys:String>          <!-- x -->
     <sys:String x:Key="Ico_WinClose">&#xeb55;</sys:String>   <!-- x -->
 
+    <!-- Ribbon group captions (non-localized for now; see docs/system-design.md) -->
+    <sys:String x:Key="Grp_Layout">LAYOUT</sys:String>
+    <sys:String x:Key="Grp_Display">DISPLAY</sys:String>
+    <sys:String x:Key="Grp_Tools">TOOLS</sys:String>
+    <sys:String x:Key="Grp_History">HISTORY</sys:String>
+    <sys:String x:Key="Grp_Organize">ORGANIZE</sys:String>
+    <sys:String x:Key="Grp_Arrange">ARRANGE</sys:String>
+    <sys:String x:Key="Grp_Signature">SIGNATURE</sys:String>
+    <sys:String x:Key="Grp_Forms">FORMS</sys:String>
+
     <!-- ============================================================ -->
     <!-- Studio control styles                                        -->
     <!-- ============================================================ -->
@@ -322,6 +332,143 @@
         <Setter Property="Effect">
             <Setter.Value>
                 <DropShadowEffect Color="Black" BlurRadius="24" ShadowDepth="4" Opacity="0.4" Direction="270"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ============================================================ -->
+    <!-- Ribbon (Office-style) control styles                         -->
+    <!-- ============================================================ -->
+
+    <!-- QatButton: icon-only Quick-Access button living on the chrome (title bar) -->
+    <Style x:Key="QatButton" TargetType="Button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource ChromeText}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource FontIcon}"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="Width" Value="30"/>
+        <Setter Property="Height" Value="30"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="6"
+                            ToolTip="{TemplateBinding ToolTip}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource ChromeHover}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.4"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- RibbonTab: mode tab that visually connects into the band (top accent bar when active) -->
+    <Style x:Key="RibbonTab" TargetType="ToggleButton">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondary}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource FontUI}"/>
+        <Setter Property="FontSize" Value="{DynamicResource FsTab}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Height" Value="34"/>
+        <Setter Property="Padding" Value="20,0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Grid>
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="8,8,0,0"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <Border x:Name="TopBar" Height="2.5" VerticalAlignment="Top" CornerRadius="2"
+                                Background="Transparent" Margin="14,0"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource RibbonBand}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource RibbonBand}"/>
+                            <Setter TargetName="TopBar" Property="Background" Value="{DynamicResource Accent}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource AccentText}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- RibbonButton: vertical icon-over-label command button. Background/Foreground are
+         template-bound so SetTool's SetResourceReference highlight recolors icon + label. -->
+    <Style x:Key="RibbonButton" TargetType="Button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource FontUI}"/>
+        <Setter Property="FontSize" Value="{DynamicResource FsContext}"/>
+        <Setter Property="MinWidth" Value="80"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="8"
+                            BorderBrush="Transparent" BorderThickness="1"
+                            Padding="8,9" ToolTip="{TemplateBinding ToolTip}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                          TextElement.Foreground="{TemplateBinding Foreground}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource RibbonBtnHover}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.4"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- RibbonToggle: vertical command toggle (view modes); IsChecked = accent state -->
+    <Style x:Key="RibbonToggle" TargetType="ToggleButton">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+        <Setter Property="FontFamily" Value="{DynamicResource FontUI}"/>
+        <Setter Property="FontSize" Value="{DynamicResource FsContext}"/>
+        <Setter Property="MinWidth" Value="80"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="8"
+                            BorderBrush="Transparent" BorderThickness="1"
+                            Padding="8,9" ToolTip="{TemplateBinding ToolTip}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                          TextElement.Foreground="{TemplateBinding Foreground}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource RibbonBtnHover}"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource AccentDim}"/>
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource AccentBorder}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource AccentText}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.4"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>

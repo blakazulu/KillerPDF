@@ -23,7 +23,8 @@ namespace Scalpel.Services
                 "Greed"        => (Theme.Dark,         Accent.Green),
                 "Cyanotic"     => (Theme.Dark,         Accent.Cyan),
                 "Dark"         => (Theme.Dark,         Accent.Amber),
-                _              => (Theme.Dark,         Accent.Amber),
+                // Fresh install (no/unknown setting) opens in the Clinical look: Light + surgical Red.
+                _              => (Theme.Light,        Accent.Red),
             };
 
             // An explicit, valid Accent setting always wins over the legacy derivation.

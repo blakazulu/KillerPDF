@@ -12,6 +12,14 @@ namespace Scalpel.Services
 
         public static IReadOnlyList<Release> Releases { get; } = new[]
         {
+            new Release("1.7.0", "June 2026", new[]
+            {
+                "Brand-new ribbon interface: the toolbar is now organized like familiar office apps — the View, Edit, Pages, and Sign tabs open clearly labeled groups of tools.",
+                "A Quick Access toolbar in the title bar keeps Open, Save, Print, and Undo one click away from anywhere.",
+                "Refreshed look: a clean, clinical light theme with a precise red accent is now the default, with a smooth animated transition when you switch tabs.",
+                "Zoom moved to the bottom-right of the status bar, where you'd expect it.",
+                "The new design carries across every theme — Light, Dark, and High Contrast — and all accent colors.",
+            }),
             new Release("1.6.0", "June 2026", new[]
             {
                 "New Tools menu with five local-only power features — no subscription, no uploads.",

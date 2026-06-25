@@ -102,7 +102,7 @@
 
         <Style x:Key="ChromeButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="Foreground" Value="{DynamicResource ChromeText}"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Width" Value="46"/>
             <Setter Property="Height" Value="36"/>
@@ -117,7 +117,7 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource BgHover}"/>
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource ChromeHover}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -435,23 +435,46 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="36"/>
+            <RowDefinition Height="40"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="28"/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
 
-        <!-- Title bar -->
-        <Border Grid.Row="0" Background="{DynamicResource BgSidebar}" BorderBrush="{DynamicResource BorderDim}" BorderThickness="0,0,0,1"
+        <!-- Title bar + Quick Access Toolbar -->
+        <Border Grid.Row="0" Background="{DynamicResource ChromeBg}" BorderBrush="{DynamicResource BorderDim}" BorderThickness="0,0,0,1"
                 MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
             <Grid>
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0,0,0">
-                    <TextBlock Text="Scalpel" FontFamily="{DynamicResource FontUI}" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource TextPrimary}"/>
-                    <TextBlock Text="PDF" FontFamily="{DynamicResource FontUI}" FontWeight="Bold" FontSize="16" Foreground="{DynamicResource AccentLogo}"/>
-                    <TextBlock Text="" x:Name="FileNameLabel" VerticalAlignment="Center" Margin="16,0,0,0"
-                               Foreground="{DynamicResource TextSecondary}" FontFamily="{DynamicResource FontUI}" FontSize="{DynamicResource FsBody}"/>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="14,0,0,0">
+                    <TextBlock Text="Scalpel" FontFamily="{DynamicResource FontUI}" FontWeight="Bold" FontSize="15" Foreground="{DynamicResource ChromeText}" VerticalAlignment="Center"/>
+                    <TextBlock Text="PDF" FontFamily="{DynamicResource FontUI}" FontWeight="Bold" FontSize="15" Foreground="{DynamicResource AccentLogo}" VerticalAlignment="Center"/>
+                    <!-- QAT divider -->
+                    <Border Width="1" Height="18" Background="{DynamicResource BorderDim}" Margin="12,0,8,0"/>
+                    <!-- Quick Access Toolbar: persistent file actions (right-click Open/Save for more) -->
+                    <Button Style="{StaticResource QatButton}" Click="Open_Click" Content="{StaticResource Ico_Open}" ToolTip="{DynamicResource Str_TT_Open}">
+                        <Button.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="{DynamicResource Str_Lbl_Open}" Click="Open_Click"/>
+                                <MenuItem Header="{DynamicResource Str_Lbl_New}" Click="New_Click"/>
+                                <MenuItem x:Name="CloseFileMenuItem" Header="{DynamicResource Str_Lbl_CloseFile}" Click="CloseFile_Click" IsEnabled="False"/>
+                            </ContextMenu>
+                        </Button.ContextMenu>
+                    </Button>
+                    <Button x:Name="SaveAsBtn" Style="{StaticResource QatButton}" Click="Save_Click" Content="{StaticResource Ico_Save}" ToolTip="{DynamicResource Str_TT_Save}" Margin="1,0,0,0">
+                        <Button.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="{DynamicResource Str_Lbl_SaveAs}" Click="SaveAs_Click"/>
+                                <MenuItem Header="{DynamicResource Str_Lbl_SaveFlattened}" Click="SaveFlattened_Click"/>
+                            </ContextMenu>
+                        </Button.ContextMenu>
+                    </Button>
+                    <Button Style="{StaticResource QatButton}" Click="Print_Click" Content="{StaticResource Ico_Print}" ToolTip="{DynamicResource Str_TT_Print}" Margin="1,0,0,0"/>
+                    <Button Style="{StaticResource QatButton}" Click="Undo_Click" Content="{StaticResource Ico_Undo}" ToolTip="{DynamicResource Str_TT_UndoLast}" Margin="1,0,0,0"/>
                 </StackPanel>
+                <TextBlock Text="" x:Name="FileNameLabel" HorizontalAlignment="Center" VerticalAlignment="Center"
+                           Foreground="{DynamicResource ChromeTextDim}" FontFamily="{DynamicResource FontUI}" FontSize="{DynamicResource FsBody}"
+                           Typography.NumeralAlignment="Tabular"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Content="{StaticResource Ico_Min}" Click="MinimizeBtn_Click" Style="{StaticResource ChromeButton}"/>
                     <Button Content="{StaticResource Ico_Max}" Click="MaximizeBtn_Click" Style="{StaticResource ChromeButton}"/>
@@ -460,202 +483,171 @@
             </Grid>
         </Border>
 
-        <!-- Mode tab strip -->
-        <Border Grid.Row="1" Background="{DynamicResource BgSidebar}" BorderBrush="{DynamicResource BorderDim}" BorderThickness="0,0,0,1">
-            <DockPanel LastChildFill="False" Margin="8,4">
-                <!-- RadioButtons (grouped) so clicking the active tab can't deselect it; StudioModeTab targets ToggleButton (RadioButton's base). -->
-                <RadioButton x:Name="ModeViewTab"  GroupName="AppModeTabs" Style="{StaticResource StudioModeTab}" Content="{DynamicResource Str_Mode_View}"  Checked="ModeTab_Checked" Tag="View"/>
-                <RadioButton x:Name="ModeEditTab"  GroupName="AppModeTabs" Style="{StaticResource StudioModeTab}" Content="{DynamicResource Str_Mode_Edit}"  Checked="ModeTab_Checked" Tag="Edit"  Margin="2,0,0,0"/>
-                <RadioButton x:Name="ModePagesTab" GroupName="AppModeTabs" Style="{StaticResource StudioModeTab}" Content="{DynamicResource Str_Mode_Pages}" Checked="ModeTab_Checked" Tag="Pages" Margin="2,0,0,0"/>
-                <RadioButton x:Name="ModeSignTab"  GroupName="AppModeTabs" Style="{StaticResource StudioModeTab}" Content="{DynamicResource Str_Mode_Sign}"  Checked="ModeTab_Checked" Tag="Sign"  Margin="2,0,0,0"/>
-                <Button x:Name="ModeAboutTab" Style="{StaticResource StudioModeTabButton}"
-                        Content="{DynamicResource Str_Mode_About}" Click="AboutTab_Click" Margin="2,0,0,0"/>
-                <Button x:Name="ModeWhatsNewTab" Style="{StaticResource StudioModeTabButton}"
-                        Content="{DynamicResource Str_Mode_WhatsNew}" Click="WhatsNewTab_Click" Margin="2,0,0,0"/>
+        <!-- Ribbon tab strip — mode tabs (left) connect into the band below; utilities (right) -->
+        <Border Grid.Row="1" Background="{DynamicResource RibbonBg}" BorderBrush="{DynamicResource BorderDim}" BorderThickness="0,0,0,1">
+            <DockPanel LastChildFill="False" Margin="12,4,12,0">
+                <!-- RadioButtons (grouped) so clicking the active tab can't deselect it; RibbonTab targets ToggleButton (RadioButton's base). -->
+                <RadioButton x:Name="ModeViewTab"  GroupName="AppModeTabs" Style="{StaticResource RibbonTab}" Content="{DynamicResource Str_Mode_View}"  Checked="ModeTab_Checked" Tag="View"/>
+                <RadioButton x:Name="ModeEditTab"  GroupName="AppModeTabs" Style="{StaticResource RibbonTab}" Content="{DynamicResource Str_Mode_Edit}"  Checked="ModeTab_Checked" Tag="Edit"  Margin="2,0,0,0"/>
+                <RadioButton x:Name="ModePagesTab" GroupName="AppModeTabs" Style="{StaticResource RibbonTab}" Content="{DynamicResource Str_Mode_Pages}" Checked="ModeTab_Checked" Tag="Pages" Margin="2,0,0,0"/>
+                <RadioButton x:Name="ModeSignTab"  GroupName="AppModeTabs" Style="{StaticResource RibbonTab}" Content="{DynamicResource Str_Mode_Sign}"  Checked="ModeTab_Checked" Tag="Sign"  Margin="2,0,0,0"/>
+
+                <!-- Right-aligned utilities -->
                 <Button DockPanel.Dock="Right" Style="{StaticResource StudioIconButton}" Click="SettingsBtn_Click"
-                        Content="{StaticResource Ico_Settings}" FontFamily="{DynamicResource FontIcon}" ToolTip="{DynamicResource Str_TT_Settings}"/>
+                        Content="{StaticResource Ico_Settings}" FontFamily="{DynamicResource FontIcon}" ToolTip="{DynamicResource Str_TT_Settings}" Margin="0,2,0,2"/>
                 <Button DockPanel.Dock="Right" Style="{StaticResource StudioIconButton}" Click="OpenSearch_Click"
-                        Content="{StaticResource Ico_Search}" FontFamily="{DynamicResource FontIcon}" ToolTip="{DynamicResource Str_TT_Search}" Margin="0,0,4,0"/>
+                        Content="{StaticResource Ico_Search}" FontFamily="{DynamicResource FontIcon}" ToolTip="{DynamicResource Str_TT_Search}" Margin="0,2,4,2"/>
+                <Button x:Name="ModeWhatsNewTab" DockPanel.Dock="Right" Style="{StaticResource StudioModeTabButton}"
+                        Content="{DynamicResource Str_Mode_WhatsNew}" Click="WhatsNewTab_Click" Margin="0,2,2,2"/>
+                <Button x:Name="ModeAboutTab" DockPanel.Dock="Right" Style="{StaticResource StudioModeTabButton}"
+                        Content="{DynamicResource Str_Mode_About}" Click="AboutTab_Click" Margin="0,2,2,2"/>
+                <!-- Tools menu (document-level operations) -->
+                <Button x:Name="ToolsMenuBtn" DockPanel.Dock="Right" Style="{StaticResource StudioModeTabButton}" Click="FileMenu_Click" ToolTip="{DynamicResource Str_TT_Tools}" Margin="0,2,2,2">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="16" Text="{StaticResource Ico_Settings}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock Text="{DynamicResource Str_Lbl_Tools}" VerticalAlignment="Center"/>
+                        <TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="13" Text="{StaticResource Ico_Chevron}" VerticalAlignment="Center" Margin="6,0,0,0"/>
+                    </StackPanel>
+                    <Button.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="{DynamicResource Str_Tool_Numbering}" Click="ToolsNumbering_Click"/>
+                            <MenuItem Header="{DynamicResource Str_Tool_Compress}" Click="ToolsCompress_Click"/>
+                            <MenuItem Header="{DynamicResource Str_Tool_Ocr}" Click="ToolsOcr_Click"/>
+                            <Separator/>
+                            <MenuItem Header="{DynamicResource Str_Tool_Redact}" Click="ToolsRedact_Click"/>
+                            <MenuItem Header="{DynamicResource Str_Tool_Protect}" Click="ToolsProtect_Click"/>
+                            <MenuItem Header="{DynamicResource Str_Tool_Sanitize}" Click="ToolsSanitize_Click"/>
+                        </ContextMenu>
+                    </Button.ContextMenu>
+                </Button>
             </DockPanel>
         </Border>
 
-        <!-- Toolbar -->
-        <Border Grid.Row="2" Background="{DynamicResource BgPanel}" BorderBrush="{DynamicResource BorderDim}" BorderThickness="0,0,0,1" Padding="8,6">
-          <DockPanel LastChildFill="True">
-
-            <!-- Persistent: File group (left) -->
-            <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
-              <!-- Open split button: Open + chevron dropdown (Open / New / Close) -->
-              <Button Style="{StaticResource StudioToolButton}" Click="Open_Click" ToolTip="{DynamicResource Str_TT_Open}">
-                <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Open}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_Open}" VerticalAlignment="Center"/></StackPanel>
-              </Button>
-              <Button x:Name="OpenMenuBtn" Style="{StaticResource StudioIconButton}" Click="FileMenu_Click" Width="22" ToolTip="{DynamicResource Str_TT_FileMenu}" Margin="1,0,0,0">
-                <TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Chevron}"/>
-                <Button.ContextMenu>
-                  <ContextMenu>
-                    <MenuItem Header="{DynamicResource Str_Lbl_Open}" Click="Open_Click"/>
-                    <MenuItem Header="{DynamicResource Str_Lbl_New}" Click="New_Click"/>
-                    <MenuItem x:Name="CloseFileMenuItem" Header="{DynamicResource Str_Lbl_CloseFile}" Click="CloseFile_Click" IsEnabled="False"/>
-                  </ContextMenu>
-                </Button.ContextMenu>
-              </Button>
-              <!-- Save split button: primary Save + chevron dropdown (Save As / Save Flattened) -->
-              <Button x:Name="SaveAsBtn" Style="{StaticResource StudioPrimaryButton}" Click="Save_Click" ToolTip="{DynamicResource Str_TT_Save}" Margin="6,0,0,0">
-                <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Save}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_Save}" VerticalAlignment="Center"/></StackPanel>
-              </Button>
-              <Button x:Name="SaveMenuBtn" Style="{StaticResource StudioPrimaryButton}" Click="SaveMenu_Click" Padding="6,0" ToolTip="{DynamicResource Str_TT_SaveAs}" Margin="1,0,0,0">
-                <TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Chevron}"/>
-                <Button.ContextMenu>
-                  <ContextMenu>
-                    <MenuItem Header="{DynamicResource Str_Lbl_SaveAs}" Click="SaveAs_Click"/>
-                    <MenuItem Header="{DynamicResource Str_Lbl_SaveFlattened}" Click="SaveFlattened_Click"/>
-                  </ContextMenu>
-                </Button.ContextMenu>
-              </Button>
-              <!-- Print: plain button, opens the print preview directly -->
-              <Button Style="{StaticResource StudioToolButton}" Click="Print_Click" ToolTip="{DynamicResource Str_TT_Print}" Margin="6,0,0,0">
-                <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Print}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_Print}" VerticalAlignment="Center"/></StackPanel>
-              </Button>
-              <!-- Tools: page numbering / Bates, compress, OCR, protect, sanitize -->
-              <Button x:Name="ToolsMenuBtn" Style="{StaticResource StudioToolButton}" Click="FileMenu_Click" ToolTip="{DynamicResource Str_TT_Tools}" Margin="6,0,0,0">
-                <StackPanel Orientation="Horizontal">
-                  <TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Settings}" Margin="0,0,7,0"/>
-                  <TextBlock Text="{DynamicResource Str_Lbl_Tools}" VerticalAlignment="Center"/>
-                  <TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="14" Text="{StaticResource Ico_Chevron}" Margin="6,0,0,0"/>
-                </StackPanel>
-                <Button.ContextMenu>
-                  <ContextMenu>
-                    <MenuItem Header="{DynamicResource Str_Tool_Numbering}" Click="ToolsNumbering_Click"/>
-                    <MenuItem Header="{DynamicResource Str_Tool_Compress}" Click="ToolsCompress_Click"/>
-                    <MenuItem Header="{DynamicResource Str_Tool_Ocr}" Click="ToolsOcr_Click"/>
-                    <Separator/>
-                    <MenuItem Header="{DynamicResource Str_Tool_Redact}" Click="ToolsRedact_Click"/>
-                    <MenuItem Header="{DynamicResource Str_Tool_Protect}" Click="ToolsProtect_Click"/>
-                    <MenuItem Header="{DynamicResource Str_Tool_Sanitize}" Click="ToolsSanitize_Click"/>
-                  </ContextMenu>
-                </Button.ContextMenu>
-              </Button>
-              <Border Width="1" Background="{DynamicResource BorderDim}" Margin="10,3"/>
-            </StackPanel>
-
-            <!-- Persistent: Zoom group (right) -->
-            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
-              <Button x:Name="ZoomOutBtn" Style="{StaticResource StudioIconButton}" Click="ZoomOut_Click" ToolTip="{DynamicResource Str_TT_ZoomOut}">
-                <TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_ZoomOut}"/>
-              </Button>
-              <ComboBox x:Name="ZoomBox" Width="96" Height="24" VerticalAlignment="Center"
-                        Margin="2,0"
-                        IsEditable="True" IsReadOnly="True"
-                        Style="{StaticResource DarkComboBox}"
-                        SelectionChanged="ZoomBox_SelectionChanged" ToolTip="{DynamicResource Str_TT_ZoomLevel}">
-                <ComboBoxItem Tag="fitpage" Content="{DynamicResource Str_Zoom_FitPage}"/>
-                <ComboBoxItem Tag="fitwidth" Content="{DynamicResource Str_Zoom_FitWidth}"/>
-                <ComboBoxItem Tag="0.5">50%</ComboBoxItem>
-                <ComboBoxItem Tag="0.75">75%</ComboBoxItem>
-                <ComboBoxItem Tag="1.0" IsSelected="True">100%</ComboBoxItem>
-                <ComboBoxItem Tag="1.25">125%</ComboBoxItem>
-                <ComboBoxItem Tag="1.5">150%</ComboBoxItem>
-                <ComboBoxItem Tag="2.0">200%</ComboBoxItem>
-              </ComboBox>
-              <Button x:Name="ZoomInBtn" Style="{StaticResource StudioIconButton}" Click="ZoomIn_Click" ToolTip="{DynamicResource Str_TT_ZoomIn}">
-                <TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_ZoomIn}"/>
-              </Button>
-            </StackPanel>
-
-            <!-- Mode panels (only one visible at a time). Wrapped in a horizontal ScrollViewer
-                 so that on a narrow window the mode buttons can be scrolled into view rather
-                 than being clipped by the File (left) / Zoom (right) groups. -->
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled"
-                          VerticalAlignment="Center" Margin="10,0,0,0"
-                          Focusable="False">
-            <Grid VerticalAlignment="Center">
-              <!-- View panel: view-mode toggles + Fit + Rotate -->
+        <!-- Ribbon band (contextual command groups; one mode panel visible at a time) -->
+        <Border Grid.Row="2" Background="{DynamicResource RibbonBand}" BorderBrush="{DynamicResource BorderDim}" BorderThickness="0,0,0,1" Padding="10,8,10,6">
+          <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Focusable="False">
+            <Grid HorizontalAlignment="Left">
+              <!-- View panel: Layout group + Display group -->
               <StackPanel x:Name="ModePanelView" Orientation="Horizontal" Visibility="Visible">
-                <ToggleButton x:Name="ViewSingleBtn" Style="{StaticResource StudioToolToggle}" Click="ViewSingle_Click" ToolTip="{DynamicResource Str_View_Single}">
-                  <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Single}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_View_Single}" VerticalAlignment="Center"/></StackPanel>
-                </ToggleButton>
-                <ToggleButton x:Name="ViewContinuousBtn" Style="{StaticResource StudioToolToggle}" Click="ViewContinuous_Click" ToolTip="{DynamicResource Str_View_Continuous}" Margin="4,0,0,0">
-                  <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Continuous}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_View_Continuous}" VerticalAlignment="Center"/></StackPanel>
-                </ToggleButton>
-                <ToggleButton x:Name="ViewTwoPageBtn" Style="{StaticResource StudioToolToggle}" Click="ViewTwoPage_Click" ToolTip="{DynamicResource Str_View_TwoPage}" Margin="4,0,0,0">
-                  <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_TwoPage}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_View_TwoPage}" VerticalAlignment="Center"/></StackPanel>
-                </ToggleButton>
-                <ToggleButton x:Name="ViewGridBtn" Style="{StaticResource StudioToolToggle}" Click="ViewGrid_Click" ToolTip="{DynamicResource Str_View_Grid}" Margin="4,0,0,0">
-                  <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Grid}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_View_Grid}" VerticalAlignment="Center"/></StackPanel>
-                </ToggleButton>
-                <Button x:Name="ViewFitBtn" Style="{StaticResource StudioToolButton}" Click="ViewFit_Click" ToolTip="{DynamicResource Str_Lbl_Fit}" Margin="4,0,0,0">
-                  <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Fit}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_Fit}" VerticalAlignment="Center"/></StackPanel>
-                </Button>
-                <Button Style="{StaticResource StudioToolButton}" Click="RotatePagesToolbar_Click" ToolTip="{DynamicResource Str_TT_Rotate}" Margin="4,0,0,0">
-                  <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Rotate}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_Rotate}" VerticalAlignment="Center"/></StackPanel>
-                </Button>
+                <StackPanel Margin="2,0">
+                  <StackPanel Orientation="Horizontal">
+                    <ToggleButton x:Name="ViewSingleBtn" Style="{StaticResource RibbonToggle}" Click="ViewSingle_Click" ToolTip="{DynamicResource Str_View_Single}">
+                      <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_Single}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_View_Single}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
+                    </ToggleButton>
+                    <ToggleButton x:Name="ViewContinuousBtn" Style="{StaticResource RibbonToggle}" Click="ViewContinuous_Click" ToolTip="{DynamicResource Str_View_Continuous}">
+                      <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_Continuous}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_View_Continuous}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
+                    </ToggleButton>
+                    <ToggleButton x:Name="ViewTwoPageBtn" Style="{StaticResource RibbonToggle}" Click="ViewTwoPage_Click" ToolTip="{DynamicResource Str_View_TwoPage}">
+                      <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_TwoPage}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_View_TwoPage}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
+                    </ToggleButton>
+                    <ToggleButton x:Name="ViewGridBtn" Style="{StaticResource RibbonToggle}" Click="ViewGrid_Click" ToolTip="{DynamicResource Str_View_Grid}">
+                      <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_Grid}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_View_Grid}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
+                    </ToggleButton>
+                  </StackPanel>
+                  <TextBlock Text="{StaticResource Grp_Layout}" FontFamily="{DynamicResource FontUI}" FontSize="{DynamicResource FsSidebarLabel}" FontWeight="SemiBold" Foreground="{DynamicResource RibbonGroupLabel}" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                </StackPanel>
+                <Border Width="1" Background="{DynamicResource BorderDim}" Margin="6,4,6,4"/>
+                <StackPanel Margin="2,0">
+                  <StackPanel Orientation="Horizontal">
+                    <Button x:Name="ViewFitBtn" Style="{StaticResource RibbonButton}" Click="ViewFit_Click" ToolTip="{DynamicResource Str_Lbl_Fit}">
+                      <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_Fit}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_Lbl_Fit}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource RibbonButton}" Click="RotatePagesToolbar_Click" ToolTip="{DynamicResource Str_TT_Rotate}">
+                      <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_Rotate}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_Lbl_Rotate}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
+                    </Button>
+                  </StackPanel>
+                  <TextBlock Text="{StaticResource Grp_Display}" FontFamily="{DynamicResource FontUI}" FontSize="{DynamicResource FsSidebarLabel}" FontWeight="SemiBold" Foreground="{DynamicResource RibbonGroupLabel}" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                </StackPanel>
               </StackPanel>
 
-              <!-- Edit panel: tool buttons + Undo + Clear -->
+              <!-- Edit panel: Tools group + History group -->
               <StackPanel x:Name="ModePanelEdit" Orientation="Horizontal" Visibility="Collapsed">
-                <Button x:Name="ToolSelectBtn" Style="{StaticResource StudioToolButton}" Click="ToolSelect_Click" ToolTip="{DynamicResource Str_TT_SelectTool}">
-                  <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Select}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_Select}" VerticalAlignment="Center"/></StackPanel>
-                </Button>
-                <Button x:Name="ToolTextBtn" Style="{StaticResource StudioToolButton}" Click="ToolText_Click" ToolTip="{DynamicResource Str_TT_TextTool}" Margin="4,0,0,0">
-                  <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Text}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_Text}" VerticalAlignment="Center"/></StackPanel>
-                </Button>
-                <Button x:Name="ToolHighlightBtn" Style="{StaticResource StudioToolButton}" Click="ToolHighlight_Click" ToolTip="{DynamicResource Str_TT_HighlightTool}" Margin="4,0,0,0">
-                  <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Highlight}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_Highlight}" VerticalAlignment="Center"/></StackPanel>
-                </Button>
-                <Button x:Name="ToolDrawBtn" Style="{StaticResource StudioToolButton}" Click="ToolDraw_Click" ToolTip="{DynamicResource Str_TT_DrawTool}" Margin="4,0,0,0">
-                  <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Draw}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_Draw}" VerticalAlignment="Center"/></StackPanel>
-                </Button>
-                <Button x:Name="ToolImageBtn" Style="{StaticResource StudioToolButton}" Click="ToolImage_Click" ToolTip="{DynamicResource Str_TT_ImageTool}" Margin="4,0,0,0">
-                  <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Image}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_Image}" VerticalAlignment="Center"/></StackPanel>
-                </Button>
-                <Button x:Name="ToolCropBtn" Style="{StaticResource StudioToolButton}" Click="ToolCrop_Click" ToolTip="{DynamicResource Str_TT_CropTool}" Margin="4,0,0,0">
-                  <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Crop}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_Crop}" VerticalAlignment="Center"/></StackPanel>
-                </Button>
-                <Border Width="1" Background="{DynamicResource BorderDim}" Margin="8,3"/>
-                <Button Style="{StaticResource StudioToolButton}" Click="Undo_Click" ToolTip="{DynamicResource Str_TT_UndoLast}" Margin="0,0,4,0">
-                  <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Undo}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_Undo}" VerticalAlignment="Center"/></StackPanel>
-                </Button>
-                <Button Style="{StaticResource StudioDangerButton}" Click="ClearAnnotations_Click" ToolTip="{DynamicResource Str_TT_ClearAnnotations}">
-                  <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Clear}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_Clear}" VerticalAlignment="Center"/></StackPanel>
-                </Button>
+                <StackPanel Margin="2,0">
+                  <StackPanel Orientation="Horizontal">
+                    <Button x:Name="ToolSelectBtn" Style="{StaticResource RibbonButton}" Click="ToolSelect_Click" ToolTip="{DynamicResource Str_TT_SelectTool}">
+                      <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_Select}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_Lbl_Select}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
+                    </Button>
+                    <Button x:Name="ToolTextBtn" Style="{StaticResource RibbonButton}" Click="ToolText_Click" ToolTip="{DynamicResource Str_TT_TextTool}">
+                      <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_Text}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_Lbl_Text}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
+                    </Button>
+                    <Button x:Name="ToolHighlightBtn" Style="{StaticResource RibbonButton}" Click="ToolHighlight_Click" ToolTip="{DynamicResource Str_TT_HighlightTool}">
+                      <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_Highlight}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_Lbl_Highlight}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
+                    </Button>
+                    <Button x:Name="ToolDrawBtn" Style="{StaticResource RibbonButton}" Click="ToolDraw_Click" ToolTip="{DynamicResource Str_TT_DrawTool}">
+                      <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_Draw}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_Lbl_Draw}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
+                    </Button>
+                    <Button x:Name="ToolImageBtn" Style="{StaticResource RibbonButton}" Click="ToolImage_Click" ToolTip="{DynamicResource Str_TT_ImageTool}">
+                      <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_Image}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_Lbl_Image}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
+                    </Button>
+                    <Button x:Name="ToolCropBtn" Style="{StaticResource RibbonButton}" Click="ToolCrop_Click" ToolTip="{DynamicResource Str_TT_CropTool}">
+                      <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_Crop}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_Lbl_Crop}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
+                    </Button>
+                  </StackPanel>
+                  <TextBlock Text="{StaticResource Grp_Tools}" FontFamily="{DynamicResource FontUI}" FontSize="{DynamicResource FsSidebarLabel}" FontWeight="SemiBold" Foreground="{DynamicResource RibbonGroupLabel}" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                </StackPanel>
+                <Border Width="1" Background="{DynamicResource BorderDim}" Margin="6,4,6,4"/>
+                <StackPanel Margin="2,0">
+                  <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource RibbonButton}" Click="Undo_Click" ToolTip="{DynamicResource Str_TT_UndoLast}">
+                      <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_Undo}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_Lbl_Undo}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource RibbonButton}" Foreground="{DynamicResource DangerRed}" Click="ClearAnnotations_Click" ToolTip="{DynamicResource Str_TT_ClearAnnotations}">
+                      <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_Clear}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_Lbl_Clear}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
+                    </Button>
+                  </StackPanel>
+                  <TextBlock Text="{StaticResource Grp_History}" FontFamily="{DynamicResource FontUI}" FontSize="{DynamicResource FsSidebarLabel}" FontWeight="SemiBold" Foreground="{DynamicResource RibbonGroupLabel}" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                </StackPanel>
               </StackPanel>
 
-              <!-- Pages panel: page operation buttons -->
+              <!-- Pages panel: Organize group + Arrange group -->
               <StackPanel x:Name="ModePanelPages" Orientation="Horizontal" Visibility="Collapsed">
-                <Button Style="{StaticResource StudioToolButton}" Click="Merge_Click" ToolTip="{DynamicResource Str_TT_MergePDFs}">
-                  <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Merge}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_Merge}" VerticalAlignment="Center"/></StackPanel>
-                </Button>
-                <Button Style="{StaticResource StudioToolButton}" Click="Split_Click" ToolTip="{DynamicResource Str_TT_ExtractPages}" Margin="4,0,0,0">
-                  <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Extract}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_Extract}" VerticalAlignment="Center"/></StackPanel>
-                </Button>
-                <Button Style="{StaticResource StudioToolButton}" Click="InsertBlankPage_Click" ToolTip="{DynamicResource Str_TT_InsertPage}" Margin="4,0,0,0">
-                  <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_InsertPage}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_InsertPage}" VerticalAlignment="Center"/></StackPanel>
-                </Button>
-                <Button Style="{StaticResource StudioDangerButton}" Click="Delete_Click" ToolTip="{DynamicResource Str_TT_DeletePages}" Margin="4,0,0,0">
-                  <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Delete}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_Delete}" VerticalAlignment="Center"/></StackPanel>
-                </Button>
-                <Border Width="1" Background="{DynamicResource BorderDim}" Margin="8,3"/>
-                <Button Style="{StaticResource StudioToolButton}" Click="MoveUp_Click" ToolTip="{DynamicResource Str_TT_MovePageUp}">
-                  <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_MoveUp}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_MoveUp}" VerticalAlignment="Center"/></StackPanel>
-                </Button>
-                <Button Style="{StaticResource StudioToolButton}" Click="MoveDown_Click" ToolTip="{DynamicResource Str_TT_MovePageDown}" Margin="4,0,0,0">
-                  <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_MoveDown}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_MoveDown}" VerticalAlignment="Center"/></StackPanel>
-                </Button>
-                <Button Style="{StaticResource StudioToolButton}" Click="RotatePagesToolbar_Click" ToolTip="{DynamicResource Str_TT_Rotate}" Margin="4,0,0,0">
-                  <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Rotate}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_Rotate}" VerticalAlignment="Center"/></StackPanel>
-                </Button>
+                <StackPanel Margin="2,0">
+                  <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource RibbonButton}" Click="Merge_Click" ToolTip="{DynamicResource Str_TT_MergePDFs}">
+                      <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_Merge}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_Lbl_Merge}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource RibbonButton}" Click="Split_Click" ToolTip="{DynamicResource Str_TT_ExtractPages}">
+                      <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_Extract}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_Lbl_Extract}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource RibbonButton}" Click="InsertBlankPage_Click" ToolTip="{DynamicResource Str_TT_InsertPage}">
+                      <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_InsertPage}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_Lbl_InsertPage}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource RibbonButton}" Foreground="{DynamicResource DangerRed}" Click="Delete_Click" ToolTip="{DynamicResource Str_TT_DeletePages}">
+                      <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_Delete}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_Lbl_Delete}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
+                    </Button>
+                  </StackPanel>
+                  <TextBlock Text="{StaticResource Grp_Organize}" FontFamily="{DynamicResource FontUI}" FontSize="{DynamicResource FsSidebarLabel}" FontWeight="SemiBold" Foreground="{DynamicResource RibbonGroupLabel}" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                </StackPanel>
+                <Border Width="1" Background="{DynamicResource BorderDim}" Margin="6,4,6,4"/>
+                <StackPanel Margin="2,0">
+                  <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource RibbonButton}" Click="MoveUp_Click" ToolTip="{DynamicResource Str_TT_MovePageUp}">
+                      <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_MoveUp}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_Lbl_MoveUp}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource RibbonButton}" Click="MoveDown_Click" ToolTip="{DynamicResource Str_TT_MovePageDown}">
+                      <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_MoveDown}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_Lbl_MoveDown}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource RibbonButton}" Click="RotatePagesToolbar_Click" ToolTip="{DynamicResource Str_TT_Rotate}">
+                      <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_Rotate}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_Lbl_Rotate}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
+                    </Button>
+                  </StackPanel>
+                  <TextBlock Text="{StaticResource Grp_Arrange}" FontFamily="{DynamicResource FontUI}" FontSize="{DynamicResource FsSidebarLabel}" FontWeight="SemiBold" Foreground="{DynamicResource RibbonGroupLabel}" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                </StackPanel>
               </StackPanel>
 
-              <!-- Sign panel: Signature button only -->
+              <!-- Sign panel: Signature group -->
               <StackPanel x:Name="ModePanelSign" Orientation="Horizontal" Visibility="Collapsed">
-                <Button x:Name="ToolSignatureBtn" Style="{StaticResource StudioToolButton}" Click="ToolSignature_Click" ToolTip="{DynamicResource Str_TT_SignatureTool}">
-                  <StackPanel Orientation="Horizontal"><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="18" Text="{StaticResource Ico_Signature}" Margin="0,0,7,0"/><TextBlock Text="{DynamicResource Str_Lbl_Signature}" VerticalAlignment="Center"/></StackPanel>
-                </Button>
+                <StackPanel Margin="2,0">
+                  <StackPanel Orientation="Horizontal">
+                    <Button x:Name="ToolSignatureBtn" Style="{StaticResource RibbonButton}" Click="ToolSignature_Click" ToolTip="{DynamicResource Str_TT_SignatureTool}">
+                      <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_Signature}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_Lbl_Signature}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
+                    </Button>
+                  </StackPanel>
+                  <TextBlock Text="{StaticResource Grp_Signature}" FontFamily="{DynamicResource FontUI}" FontSize="{DynamicResource FsSidebarLabel}" FontWeight="SemiBold" Foreground="{DynamicResource RibbonGroupLabel}" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                </StackPanel>
               </StackPanel>
             </Grid>
-            </ScrollViewer>
-
-          </DockPanel>
+          </ScrollViewer>
         </Border>
 
         <!-- Main content -->
@@ -919,10 +911,10 @@
         </Grid>
 
         <!-- Status bar -->
-        <Border Grid.Row="4" Background="{DynamicResource BgSidebar}" BorderBrush="{DynamicResource BorderDim}" BorderThickness="0,1,0,0">
-            <Grid Margin="16,0">
+        <Border Grid.Row="4" Background="{DynamicResource ChromeBg}" BorderBrush="{DynamicResource BorderDim}" BorderThickness="0,1,0,0">
+            <Grid Margin="14,0">
                 <TextBlock x:Name="StatusText" Text="{DynamicResource Str_Ready}"
-                           Foreground="{DynamicResource TextSecondary}"
+                           Foreground="{DynamicResource ChromeTextDim}"
                            FontFamily="{DynamicResource FontUI}" FontSize="{DynamicResource FsStatus}"
                            Typography.NumeralAlignment="Tabular"
                            VerticalAlignment="Center"/>
@@ -930,7 +922,7 @@
                 <StackPanel x:Name="PortableBadge" Orientation="Horizontal"
                             HorizontalAlignment="Center" VerticalAlignment="Center"
                             Visibility="Collapsed">
-                    <TextBlock Text="{DynamicResource Str_Portable}" Foreground="{DynamicResource TextSecondary}"
+                    <TextBlock Text="{DynamicResource Str_Portable}" Foreground="{DynamicResource ChromeTextDim}"
                                FontFamily="{DynamicResource FontUI}" FontSize="{DynamicResource FsStatus}"
                                VerticalAlignment="Center" Margin="0,0,8,0"/>
                     <Button x:Name="InstallBtn" Content="{DynamicResource Str_InstallBtn}"
@@ -960,20 +952,37 @@
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                     <TextBlock x:Name="VersionLabel" Text="v1.5.1"
-                               Foreground="{DynamicResource TextFooter}" FontFamily="{DynamicResource FontUI}"
+                               Foreground="{DynamicResource ChromeTextDim}" FontFamily="{DynamicResource FontUI}"
                                FontSize="{DynamicResource FsStatus}" Typography.NumeralAlignment="Tabular"
                                VerticalAlignment="Center" Margin="0,0,12,0"
                                Cursor="Hand" ToolTip="{DynamicResource Str_TT_About}"
                                MouseLeftButtonDown="VersionLabel_MouseLeftButtonDown"/>
                     <TextBlock FontSize="{DynamicResource FsStatus}" VerticalAlignment="Center"
                                FontFamily="{DynamicResource FontUI}">
-                        <Run Text="&#x00A9; 2026 " Foreground="{DynamicResource TextFooter}"/>
+                        <Run Text="&#x00A9; 2026 " Foreground="{DynamicResource ChromeTextDim}"/>
                         <Hyperlink NavigateUri="https://github.com/blakazulu/ScalpelPDF"
                                    RequestNavigate="Hyperlink_RequestNavigate"
-                                   Foreground="{DynamicResource TextFooter}" TextDecorations="None">
+                                   Foreground="{DynamicResource ChromeTextDim}" TextDecorations="None">
                             <Run Text="Liraz Amir"/>
                         </Hyperlink>
                     </TextBlock>
+                    <!-- Zoom cluster (relocated from the old toolbar) -->
+                    <Border Width="1" Height="16" Background="{DynamicResource BorderDim}" Margin="14,0,12,0"/>
+                    <Button x:Name="ZoomOutBtn" Style="{StaticResource QatButton}" Width="26" Height="26" FontSize="15" Click="ZoomOut_Click" Content="{StaticResource Ico_ZoomOut}" ToolTip="{DynamicResource Str_TT_ZoomOut}"/>
+                    <ComboBox x:Name="ZoomBox" Width="92" Height="24" VerticalAlignment="Center" Margin="3,0"
+                              IsEditable="True" IsReadOnly="True"
+                              Style="{StaticResource DarkComboBox}"
+                              SelectionChanged="ZoomBox_SelectionChanged" ToolTip="{DynamicResource Str_TT_ZoomLevel}">
+                        <ComboBoxItem Tag="fitpage" Content="{DynamicResource Str_Zoom_FitPage}"/>
+                        <ComboBoxItem Tag="fitwidth" Content="{DynamicResource Str_Zoom_FitWidth}"/>
+                        <ComboBoxItem Tag="0.5">50%</ComboBoxItem>
+                        <ComboBoxItem Tag="0.75">75%</ComboBoxItem>
+                        <ComboBoxItem Tag="1.0" IsSelected="True">100%</ComboBoxItem>
+                        <ComboBoxItem Tag="1.25">125%</ComboBoxItem>
+                        <ComboBoxItem Tag="1.5">150%</ComboBoxItem>
+                        <ComboBoxItem Tag="2.0">200%</ComboBoxItem>
+                    </ComboBox>
+                    <Button x:Name="ZoomInBtn" Style="{StaticResource QatButton}" Width="26" Height="26" FontSize="15" Click="ZoomIn_Click" Content="{StaticResource Ico_ZoomIn}" ToolTip="{DynamicResource Str_TT_ZoomIn}"/>
                 </StackPanel>
             </Grid>
         </Border>

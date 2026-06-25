@@ -42,11 +42,12 @@ namespace Scalpel.Tests
         [InlineData(null)]
         [InlineData("")]
         [InlineData("garbage")]
-        public void Resolve_defaults_to_Dark_Amber_on_unknown_theme(string? themeRaw)
+        public void Resolve_defaults_to_Light_Red_on_unknown_theme(string? themeRaw)
         {
+            // Fresh install defaults to the Clinical look (Light + surgical Red).
             var (theme, accent) = ThemeMigration.Resolve(themeRaw, accentRaw: null);
-            Assert.Equal(Theme.Dark, theme);
-            Assert.Equal(Accent.Amber, accent);
+            Assert.Equal(Theme.Light, theme);
+            Assert.Equal(Accent.Red, accent);
         }
 
         [Fact]
