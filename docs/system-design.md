@@ -200,10 +200,52 @@ The ribbon is a pure **view** restructure. The following must keep their `x:Name
 
 ---
 
-## 6. Store assets
+## 6. Brand & assets — what lives where
 
-`store-assets/screenshots/*.png` — six 1920×1080 PNGs regenerated against the new design:
-`01-view` (Light/Clinical), `02-edit-dark`, `03-pages-light`, `04-sign-dark`, `05-highcontrast`,
-`06-grid-green`. Rendered from the design reference (`design-mockups/5-ribbon-clinical.html` and its
-theme variants); content kept in the top two-thirds, no added marketing text (per
-`docs/MS-STORE-REQUIREMENTS.md`). `StoreListingLogo_300x300.png` is unchanged.
+### Logo / icon
+
+The app icon was redesigned to match the Clinical language: a **steel Fluent squircle**
+holding a tilted white document, with a **scalpel whose cutting edge glows surgical-red**
+(steel `#2C3A4C` + red `#E11D38` + paper). A **simplified glyph** (steel tile + page + one
+bold diagonal — steel handle into a red edge) is substituted at small sizes (≤ 56px) so the
+mark stays legible in the taskbar / alt-tab.
+
+**Pipeline (`branding/` is the source of truth):**
+
+| File | Purpose |
+|------|---------|
+| `branding/scalpel-icon.svg` | Vector source — the full mark (used > 56px) |
+| `branding/scalpel-glyph.svg` | Vector source — the simplified small-size glyph (≤ 56px) |
+| `branding/scalpel-master-1024.png` | 1024 raster of the full mark (Pillow can't read SVG, so this is rendered from the SVG and committed) |
+| `branding/scalpel-glyph-master-1024.png` | 1024 raster of the glyph |
+| `branding/scalpel_logo.py` | Generator — slices both masters into every asset and (with `--export`) deploys them |
+| `branding/scalpel.ico`, `scalpel-1024.png`, `tiles/`, `preview_*.png` | Generated outputs / QA previews |
+
+**Regenerate:** edit a `.svg` → re-render its `*-master-1024.png` with headless Chrome
+(`--default-background-color=00000000 --window-size=1024,1024 --screenshot=…`, pointing at a
+1024 wrapper such as `design-mockups/logo/master.html` / `glyphmaster.html`) → run
+`python branding/scalpel_logo.py --export` from the repo root.
+
+**Deployed destinations (written by `--export`):**
+
+| Location | Asset(s) | Used by |
+|----------|----------|---------|
+| `Resources/scalpel.ico` | multi-res `.ico` (16/24/32/48 = glyph, 64/128/256 = full) | EXE icon (`<ApplicationIcon>` in `Scalpel.csproj`) + WPF window icon (`MainWindow.xaml` `Icon=`) |
+| `packaging/Assets/Square44x44Logo.png` … `Square310x310Logo.png`, `StoreLogo.png`, `Wide310x150Logo.png`, `SplashScreen.png` | MSIX tiles (44 / 50 use the glyph; 71+ use the full mark) | the MSIX/Store package (`packaging/AppxManifest.xml`) |
+| `store-assets/StoreListingLogo_300x300.png` | 300×300 Store listing logo | Microsoft Store listing |
+
+### Screenshots
+
+`store-assets/screenshots/*.png` — six **1920×1080** PNGs of the new design across themes:
+`01-view-light` (Clinical hero), `02-edit-dark`, `03-pages-light`, `04-sign-dark`,
+`05-highcontrast`, `06-grid-green`. Rendered with headless Chrome from the theme-parametrised
+`design-mockups/store/shot.html` (query params drive theme/accent/mode); content kept in the top
+two-thirds, no marketing text (per `docs/MS-STORE-REQUIREMENTS.md`).
+
+### Design references (`design-mockups/`)
+
+Non-shipping HTML references for the redesign (kept for comparison, not built into the app):
+- `5-ribbon-clinical.html` — the interactive ribbon UI reference (the approved direction).
+- `store/shot.html` — theme-parametrised screen used to render the store screenshots.
+- `logo/` — `concepts.html` (the 3 logo directions), `chosen.html`, `master.html`,
+  `glyph.html`, `glyphmaster.html`, `icon300.html` (icon render wrappers).

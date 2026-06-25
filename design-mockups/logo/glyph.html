@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>*{margin:0}body{background:#0c0e13;width:760px;padding:34px;font-family:'JetBrains Mono',monospace;color:#8990a0}
+h1{color:#e8eaef;font-size:18px;margin-bottom:18px}
+.row{display:flex;align-items:flex-end;gap:26px;margin-bottom:18px}
+.bar{display:flex;align-items:center;gap:18px;padding:18px 22px;border-radius:12px}
+.lite{background:#ECEEF1}.drk{background:#14161A}
+svg{display:block}.cap{font-size:11px}.drk .cap{color:#aeb9c7}.lite .cap{color:#566070}
+.lbl{font-size:12px;margin:14px 0 6px;color:#e8eaef}
+.cmp{display:flex;gap:30px;align-items:flex-end}
+.cell{display:flex;flex-direction:column;align-items:center;gap:8px}
+</style></head>
+<body>
+<h1>Scalpel — simplified glyph for tiny sizes</h1>
+
+<svg width="0" height="0" style="position:absolute"><defs>
+  <linearGradient id="tileg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#39495F"/><stop offset="1" stop-color="#1A2430"/></linearGradient>
+  <symbol id="glyph" viewBox="0 0 256 256">
+    <rect x="6" y="6" width="244" height="244" rx="56" fill="url(#tileg)"/>
+    <g transform="rotate(-6 128 128)">
+      <rect x="74" y="56" width="108" height="146" rx="13" fill="#FFFFFF"/>
+    </g>
+    <!-- scalpel reduced to a single thick diagonal: steel handle -> red cutting edge -->
+    <path d="M92 180 L142 122" fill="none" stroke="#2C3A4C" stroke-width="20" stroke-linecap="round"/>
+    <path d="M139 126 L178 80" fill="none" stroke="#E11D38" stroke-width="20" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="full" viewBox="0 0 256 256">
+    <rect x="6" y="6" width="244" height="244" rx="56" fill="url(#tileg)"/>
+    <g transform="rotate(-7 128 128)"><rect x="76" y="54" width="104" height="150" rx="11" fill="#FFFFFF"/><rect x="92" y="76" width="52" height="6" rx="3" fill="#D2D9E0"/><rect x="92" y="91" width="68" height="6" rx="3" fill="#D2D9E0"/></g>
+    <g transform="rotate(-41 128 130)"><rect x="60" y="151" width="100" height="15" rx="7.5" fill="#243140"/><rect x="65" y="154" width="48" height="3.2" rx="1.6" fill="#48596E"/><circle cx="158" cy="158.5" r="3.4" fill="#1A2330"/><path d="M160 144 L220 158 Q197 174 160 169 Z" fill="#AEBAC7"/><path d="M160 144 L220 158 L160 165 Z" fill="#D0D9E2"/><path d="M220 158 Q197 174 160 169" fill="none" stroke="#E11D38" stroke-width="6.5" stroke-linecap="round"/></g>
+  </symbol>
+</defs></svg>
+
+<div class="lbl">Simplified glyph at small sizes</div>
+<div class="row">
+  <div class="bar lite"><svg width="48" height="48"><use href="#glyph"/></svg><svg width="32" height="32"><use href="#glyph"/></svg><svg width="24" height="24"><use href="#glyph"/></svg><svg width="16" height="16"><use href="#glyph"/></svg><span class="cap">light 48/32/24/16</span></div>
+  <div class="bar drk"><svg width="48" height="48"><use href="#glyph"/></svg><svg width="32" height="32"><use href="#glyph"/></svg><svg width="24" height="24"><use href="#glyph"/></svg><svg width="16" height="16"><use href="#glyph"/></svg><span class="cap">dark</span></div>
+</div>
+
+<div class="lbl">Glyph (left) vs full icon (right), same sizes — the switchover</div>
+<div class="cmp">
+  <div class="cell"><svg width="96" height="96"><use href="#glyph"/></svg><span class="cap">glyph 96</span></div>
+  <div class="cell"><svg width="48" height="48"><use href="#glyph"/></svg><span class="cap">glyph 48</span></div>
+  <div class="cell"><svg width="32" height="32"><use href="#glyph"/></svg><span class="cap">glyph 32</span></div>
+  <div class="cell" style="margin-left:24px"><svg width="48" height="48"><use href="#full"/></svg><span class="cap">full 48</span></div>
+  <div class="cell"><svg width="32" height="32"><use href="#full"/></svg><span class="cap">full 32</span></div>
+  <div class="cell"><svg width="16" height="16"><use href="#full"/></svg><span class="cap">full 16</span></div>
+</div>
+</body></html>
