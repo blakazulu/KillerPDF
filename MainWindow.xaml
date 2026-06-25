@@ -1119,11 +1119,13 @@
                     </StackPanel>
 
                     <CheckBox x:Name="UpdateCheckToggle"
-                              Content="{DynamicResource Str_Settings_CheckUpdates}"
                               Foreground="{DynamicResource TextPrimary}"
-                              FontFamily="{DynamicResource FontUI}" FontSize="12"
                               Margin="0,8,0,0"
-                              Click="UpdateCheckToggle_Click"/>
+                              Click="UpdateCheckToggle_Click">
+                        <TextBlock Text="{DynamicResource Str_Settings_CheckUpdates}"
+                                   Foreground="{DynamicResource TextPrimary}"
+                                   FontFamily="{DynamicResource FontUI}" FontSize="12"/>
+                    </CheckBox>
 
                     <TextBlock Text="{DynamicResource Str_Settings_Diagnostics}" Foreground="{DynamicResource Accent}"
                                FontFamily="{DynamicResource FontUI}" FontSize="11" FontWeight="SemiBold"
@@ -1134,12 +1136,14 @@
                                TextWrapping="Wrap" MaxWidth="240"
                                HorizontalAlignment="Left" Margin="0,0,0,8"/>
                     <CheckBox x:Name="LogEnabledCheck"
-                              Content="{DynamicResource Str_Log_Enable}"
                               Foreground="{DynamicResource TextPrimary}"
-                              FontFamily="{DynamicResource FontUI}" FontSize="12"
                               Margin="0,0,0,8"
                               Checked="LogEnabledCheck_Changed"
-                              Unchecked="LogEnabledCheck_Changed"/>
+                              Unchecked="LogEnabledCheck_Changed">
+                        <TextBlock Text="{DynamicResource Str_Log_Enable}"
+                                   Foreground="{DynamicResource TextPrimary}"
+                                   FontFamily="{DynamicResource FontUI}" FontSize="12"/>
+                    </CheckBox>
                     <StackPanel Orientation="Horizontal">
                         <Button x:Name="OpenLogsBtn"
                                 Content="{DynamicResource Str_Log_OpenFolder}"

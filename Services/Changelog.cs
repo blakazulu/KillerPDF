@@ -16,6 +16,7 @@ namespace Scalpel.Services
             {
                 "Optional update notifications: Scalpel can now let you know when a new version is out. It's off until you turn it on, sends no information about you or your files, and you can toggle it anytime in Settings.",
                 "The notification links you straight to the right place to update — the Microsoft Store for Store installs, the website for portable and installed copies.",
+                "Fixed: the Settings checkboxes are now clearly legible in Dark and High Contrast themes.",
             }),
             new Release("1.7.0", "June 2026", new[]
             {
