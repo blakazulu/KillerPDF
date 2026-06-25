@@ -215,6 +215,16 @@
     <sys:String x:Key="Str_View_Grid">Сетка</sys:String>
     <sys:String x:Key="Str_Continuous_EditMsg">Переключитесь на «Одна страница», чтобы использовать инструменты редактирования</sys:String>
 
+    <!-- ── Update notification ─────────────────────────────────────── -->
+    <sys:String x:Key="Str_Update_OptIn_Title">Проверять наличие обновлений?</sys:String>
+    <sys:String x:Key="Str_Update_OptIn_Body">Scalpel может один раз в день проверять scalpel-pdf.netlify.app на наличие новой версии. Никакие сведения о вас или ваших файлах не передаются. Включить проверку обновлений?</sys:String>
+    <sys:String x:Key="Str_Update_Title">Доступно обновление</sys:String>
+    <sys:String x:Key="Str_Update_Body_Prefix">Scalpel </sys:String>
+    <sys:String x:Key="Str_Update_Body_Suffix"> доступен.</sys:String>
+    <sys:String x:Key="Str_Update_Get">Получить обновление</sys:String>
+    <sys:String x:Key="Str_Update_Later">Позже</sys:String>
+    <sys:String x:Key="Str_Settings_CheckUpdates">Проверить наличие обновлений</sys:String>
+
     <!-- ── Diagnostics / logging ─────────────────────────────────────── -->
     <sys:String x:Key="Str_Settings_Diagnostics">Диагностика</sys:String>
     <sys:String x:Key="Str_Log_Description">Локальный журнал активности, который помогает диагностировать проблемы. Ничего никуда не отправляется; он остаётся на этом устройстве.</sys:String>

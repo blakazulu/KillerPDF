@@ -215,6 +215,16 @@ Puede desinstalarla en cualquier momento desde Agregar o quitar programas.</sys:
     <sys:String x:Key="Str_WhatsNew_Title">Novedades</sys:String>
     <sys:String x:Key="Str_TT_Search">Buscar (Ctrl+F)</sys:String>
 
+    <!-- ── Update notification ─────────────────────────────────────── -->
+    <sys:String x:Key="Str_Update_OptIn_Title">¿Buscar actualizaciones?</sys:String>
+    <sys:String x:Key="Str_Update_OptIn_Body">Scalpel puede comprobar scalpel-pdf.netlify.app una vez al día si hay una nueva versión. No se envía ninguna información sobre usted ni sus archivos. ¿Activar las comprobaciones de actualizaciones?</sys:String>
+    <sys:String x:Key="Str_Update_Title">Actualización disponible</sys:String>
+    <sys:String x:Key="Str_Update_Body_Prefix">Scalpel </sys:String>
+    <sys:String x:Key="Str_Update_Body_Suffix"> está disponible.</sys:String>
+    <sys:String x:Key="Str_Update_Get">Obtener la actualización</sys:String>
+    <sys:String x:Key="Str_Update_Later">Más tarde</sys:String>
+    <sys:String x:Key="Str_Settings_CheckUpdates">Buscar actualizaciones</sys:String>
+
     <!-- ── Diagnostics / logging ─────────────────────────────────────── -->
     <sys:String x:Key="Str_Settings_Diagnostics">Diagnóstico</sys:String>
     <sys:String x:Key="Str_Log_Description">Un registro de actividad solo local que ayuda a diagnosticar problemas. No se envía nada; permanece en este dispositivo.</sys:String>

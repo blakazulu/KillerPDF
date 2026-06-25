@@ -215,6 +215,16 @@
     <sys:String x:Key="Str_WhatsNew_Title">新功能</sys:String>
     <sys:String x:Key="Str_TT_Search">搜索 (Ctrl+F)</sys:String>
 
+    <!-- ── Update notification ─────────────────────────────────────── -->
+    <sys:String x:Key="Str_Update_OptIn_Title">检查更新？</sys:String>
+    <sys:String x:Key="Str_Update_OptIn_Body">Scalpel 可每天在 scalpel-pdf.netlify.app 上检查是否有新版本。不会发送任何关于您或您的文件的信息。是否启用更新检查？</sys:String>
+    <sys:String x:Key="Str_Update_Title">有可用更新</sys:String>
+    <sys:String x:Key="Str_Update_Body_Prefix">Scalpel </sys:String>
+    <sys:String x:Key="Str_Update_Body_Suffix"> 已发布。</sys:String>
+    <sys:String x:Key="Str_Update_Get">获取更新</sys:String>
+    <sys:String x:Key="Str_Update_Later">稍后</sys:String>
+    <sys:String x:Key="Str_Settings_CheckUpdates">检查更新</sys:String>
+
     <!-- ── Diagnostics / logging ─────────────────────────────────────── -->
     <sys:String x:Key="Str_Settings_Diagnostics">诊断</sys:String>
     <sys:String x:Key="Str_Log_Description">仅保存在本机的活动日志，可帮助诊断问题。不会发送任何数据，全部保留在此设备上。</sys:String>

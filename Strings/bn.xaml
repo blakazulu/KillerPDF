@@ -215,6 +215,16 @@
     <sys:String x:Key="Str_WhatsNew_Title">নতুন কী আছে</sys:String>
     <sys:String x:Key="Str_TT_Search">অনুসন্ধান (Ctrl+F)</sys:String>
 
+    <!-- ── Update notification ─────────────────────────────────────── -->
+    <sys:String x:Key="Str_Update_OptIn_Title">আপডেট খুঁজবেন?</sys:String>
+    <sys:String x:Key="Str_Update_OptIn_Body">Scalpel প্রতিদিন একবার scalpel-pdf.netlify.app-এ নতুন সংস্করণ আছে কিনা পরীক্ষা করতে পারে। আপনার বা আপনার ফাইলের কোনো তথ্য পাঠানো হয় না। আপডেট পরীক্ষা চালু করবেন?</sys:String>
+    <sys:String x:Key="Str_Update_Title">আপডেট পাওয়া গেছে</sys:String>
+    <sys:String x:Key="Str_Update_Body_Prefix">Scalpel </sys:String>
+    <sys:String x:Key="Str_Update_Body_Suffix"> পাওয়া যাচ্ছে।</sys:String>
+    <sys:String x:Key="Str_Update_Get">আপডেট নিন</sys:String>
+    <sys:String x:Key="Str_Update_Later">পরে</sys:String>
+    <sys:String x:Key="Str_Settings_CheckUpdates">আপডেট খুঁজুন</sys:String>
+
     <!-- ── Diagnostics / logging ─────────────────────────────────────── -->
     <sys:String x:Key="Str_Settings_Diagnostics">ডায়াগনস্টিকস</sys:String>
     <sys:String x:Key="Str_Log_Description">সমস্যা নির্ণয়ে সহায়তা করে এমন কেবল-স্থানীয় কার্যকলাপ লগ। কিছুই কোথাও পাঠানো হয় না; এটি এই ডিভাইসেই থাকে।</sys:String>

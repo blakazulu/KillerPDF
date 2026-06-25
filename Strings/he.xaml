@@ -215,6 +215,16 @@
     <sys:String x:Key="Str_View_Grid">רשת</sys:String>
     <sys:String x:Key="Str_Continuous_EditMsg">עבור לעמוד יחיד כדי להשתמש בכלי העריכה</sys:String>
 
+    <!-- ── Update notification ─────────────────────────────────────── -->
+    <sys:String x:Key="Str_Update_OptIn_Title">לבדוק עדכונים?</sys:String>
+    <sys:String x:Key="Str_Update_OptIn_Body">Scalpel יכול לבדוק פעם ביום ב-scalpel-pdf.netlify.app אם יש גרסה חדשה. שום מידע עליך או על הקבצים שלך לא נשלח. להפעיל בדיקת עדכונים?</sys:String>
+    <sys:String x:Key="Str_Update_Title">עדכון זמין</sys:String>
+    <sys:String x:Key="Str_Update_Body_Prefix">Scalpel </sys:String>
+    <sys:String x:Key="Str_Update_Body_Suffix"> זמין.</sys:String>
+    <sys:String x:Key="Str_Update_Get">קבלת העדכון</sys:String>
+    <sys:String x:Key="Str_Update_Later">אחר כך</sys:String>
+    <sys:String x:Key="Str_Settings_CheckUpdates">בדיקת עדכונים</sys:String>
+
     <!-- ── Diagnostics / logging ─────────────────────────────────────── -->
     <sys:String x:Key="Str_Settings_Diagnostics">אבחון</sys:String>
     <sys:String x:Key="Str_Log_Description">יומן פעילות מקומי בלבד שמסייע באבחון תקלות. שום דבר אינו נשלח לשום מקום; הוא נשאר במכשיר הזה.</sys:String>

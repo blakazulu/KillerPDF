@@ -215,6 +215,16 @@ Bu işlem uygulamayı %LocalAppData%\Scalpel konumuna kopyalar ve bir Başlat Me
     <sys:String x:Key="Str_WhatsNew_Title">Yenilikler</sys:String>
     <sys:String x:Key="Str_TT_Search">Ara (Ctrl+F)</sys:String>
 
+    <!-- ── Update notification ─────────────────────────────────────── -->
+    <sys:String x:Key="Str_Update_OptIn_Title">Güncellemeler kontrol edilsin mi?</sys:String>
+    <sys:String x:Key="Str_Update_OptIn_Body">Scalpel, günde bir kez scalpel-pdf.netlify.app adresinden yeni sürüm olup olmadığını kontrol edebilir. Siz veya dosyalarınız hakkında hiçbir bilgi gönderilmez. Güncelleme kontrolü etkinleştirilsin mi?</sys:String>
+    <sys:String x:Key="Str_Update_Title">Güncelleme mevcut</sys:String>
+    <sys:String x:Key="Str_Update_Body_Prefix">Scalpel </sys:String>
+    <sys:String x:Key="Str_Update_Body_Suffix"> mevcut.</sys:String>
+    <sys:String x:Key="Str_Update_Get">Güncellemeyi al</sys:String>
+    <sys:String x:Key="Str_Update_Later">Sonra</sys:String>
+    <sys:String x:Key="Str_Settings_CheckUpdates">Güncellemeleri kontrol et</sys:String>
+
     <!-- ── Diagnostics / logging ─────────────────────────────────────── -->
     <sys:String x:Key="Str_Settings_Diagnostics">Tanılama</sys:String>
     <sys:String x:Key="Str_Log_Description">Sorunları teşhis etmeye yardımcı olan yalnızca yerel bir etkinlik günlüğü. Hiçbir şey gönderilmez; bu cihazda kalır.</sys:String>

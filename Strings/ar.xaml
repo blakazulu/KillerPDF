@@ -215,6 +215,16 @@
     <sys:String x:Key="Str_View_Grid">شبكة</sys:String>
     <sys:String x:Key="Str_Continuous_EditMsg">انتقل إلى صفحة واحدة لاستخدام أدوات التحرير</sys:String>
 
+    <!-- ── Update notification ─────────────────────────────────────── -->
+    <sys:String x:Key="Str_Update_OptIn_Title">التحقق من التحديثات؟</sys:String>
+    <sys:String x:Key="Str_Update_OptIn_Body">يمكن لـ Scalpel التحقق مرة يومياً من scalpel-pdf.netlify.app بحثاً عن إصدار جديد. لا يُرسَل أي معلومات عنك أو عن ملفاتك. تفعيل التحقق من التحديثات؟</sys:String>
+    <sys:String x:Key="Str_Update_Title">تحديث متاح</sys:String>
+    <sys:String x:Key="Str_Update_Body_Prefix">Scalpel </sys:String>
+    <sys:String x:Key="Str_Update_Body_Suffix"> متاح.</sys:String>
+    <sys:String x:Key="Str_Update_Get">الحصول على التحديث</sys:String>
+    <sys:String x:Key="Str_Update_Later">لاحقاً</sys:String>
+    <sys:String x:Key="Str_Settings_CheckUpdates">التحقق من التحديثات</sys:String>
+
     <!-- ── Diagnostics / logging ─────────────────────────────────────── -->
     <sys:String x:Key="Str_Settings_Diagnostics">التشخيص</sys:String>
     <sys:String x:Key="Str_Log_Description">سجل نشاط محلي فقط يساعد في تشخيص المشكلات. لا يُرسَل أي شيء إلى أي مكان؛ يبقى على هذا الجهاز.</sys:String>

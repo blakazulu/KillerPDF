@@ -215,6 +215,16 @@ You can uninstall via Add/Remove Programs at any time.</sys:String>
     <sys:String x:Key="Str_View_Grid">Grid</sys:String>
     <sys:String x:Key="Str_Continuous_EditMsg">Switch to Single Page to use editing tools</sys:String>
 
+    <!-- ── Update notification ─────────────────────────────────────── -->
+    <sys:String x:Key="Str_Update_OptIn_Title">Check for updates?</sys:String>
+    <sys:String x:Key="Str_Update_OptIn_Body">Scalpel can check scalpel-pdf.netlify.app once a day for a new version. No information about you or your files is sent. Enable update checks?</sys:String>
+    <sys:String x:Key="Str_Update_Title">Update available</sys:String>
+    <sys:String x:Key="Str_Update_Body_Prefix">Scalpel </sys:String>
+    <sys:String x:Key="Str_Update_Body_Suffix"> is available.</sys:String>
+    <sys:String x:Key="Str_Update_Get">Get the update</sys:String>
+    <sys:String x:Key="Str_Update_Later">Later</sys:String>
+    <sys:String x:Key="Str_Settings_CheckUpdates">Check for updates</sys:String>
+
     <!-- ── Diagnostics / logging ─────────────────────────────────────── -->
     <sys:String x:Key="Str_Settings_Diagnostics">Diagnostics</sys:String>
     <sys:String x:Key="Str_Log_Description">A local-only activity log that helps diagnose problems. Nothing is sent anywhere; it stays on this device.</sys:String>
