@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Scalpel is a local-only, portable Windows PDF editor (view, annotate, merge/split, edit text, sign, fill forms, print, flatten). It ships as a single self-installing ~6 MB EXE with no runtime install and no telemetry. GPLv3.
+Scalpel is a local-only, portable Windows PDF editor (view, annotate, merge/split, edit text, sign, fill forms, print, flatten), plus a **Tools** menu of document operations: page/Bates numbering, compression, OCR, password protection, and metadata removal. It ships as a single self-installing ~6 MB EXE with no runtime install and no telemetry. GPLv3.
 
 ## Build / run / test
 
@@ -17,6 +17,7 @@ dotnet test --filter "FullyQualifiedName~SearchService"   # single test class
 
 - Targets **.NET Framework 4.8** (`net48`) but **requires the .NET 8 SDK or later to build**. Output is x64. `dotnet` may not be on PATH; a user-local SDK at `~/.dotnet/dotnet.exe` works.
 - Build gotcha: after a `dotnet publish` (which pins the `win-x64` RID), a later `dotnet build --no-restore` can fail `NETSDK1047` ("no target for net48/win7-x64"). Re-run **with** restore (drop `--no-restore`) to fix.
+- Build gotcha: a `dotnet build` copy failure on `pdfium.dll` (`MSB3027`/`MSB3021`) usually just means a running `Scalpel.exe` is locking it — close the app and rebuild; it is not a code error.
 - `dotnet publish` also runs `build/bundle-source.ps1` (the `BundleSource` MSBuild target) to produce a GPL3 `Scalpel-<version>-src.zip` alongside the EXE.
 - `release.ps1` is the full release pipeline (build → Authenticode sign → `signtool verify /pa` gate → SHA256 → write `BuildInfo.cs` → summary). Don't run it for ordinary dev work; it expects signing certs/SimplySign.
 
@@ -54,6 +55,12 @@ The open path in `MainWindow` has layered fallbacks (Modify → ReadOnly → Imp
 
 `Models/EditingTypes.cs` defines the annotation model (`TextAnnotation`, `InkAnnotation`, `HighlightAnnotation`, `TextEditAnnotation`, `SignatureAnnotation`, `ImageAnnotation`, all `PageAnnotation` subtypes; `EditTool` enum). Annotations are live WPF overlays while editing and are rasterized/drawn into the PDF only on save (text edits white-out the original bounds and redraw). `PageThumbnailVm.cs` backs the sidebar page list.
 
+### Document-operation tools (the Tools menu)
+
+The Tools dropdown (right of the ribbon tab strip; handlers `ToolsNumbering/Compress/Ocr/Redact/Protect/Sanitize_Click`) runs document-level operations through standalone, mostly WPF-free services rather than the `MainWindow` monolith: `BatesNumberingService` (page/Bates numbers + corner headers/footers), `PdfCompressionService` (image downsampling, Low/Med/High), `RedactionService`, `PdfEncryptionService` (password + permissions), `MetadataSanitizer`, and OCR (`OcrService` + `TesseractCliOcrEngine`, page rasterization via `PdfRasterTools` / `DocnetPageRasterizer`).
+
+- **OCR engine + language data location is resolved by `Services/OcrAssets.cs`:** an **installed** build is expected to ship `tesseract.exe` + `tessdata` in an `ocr` folder next to the EXE (`AppOcrDir = <AppDir>\ocr`); a **portable** build ships nothing OCR-related and downloads `tessdata` once into `%LOCALAPPDATA%\Scalpel\ocr` on first use. The engine is *located* (bundled → per-user → Program Files → PATH), never auto-downloaded/executed. **Gotcha:** make sure the release/installer pipeline actually stages that `ocr` folder for installed builds.
+
 ### Themes and localization are hot-swappable ResourceDictionaries
 
 - `Services/ThemeManager.cs` — themes are now a **two-axis model**: a base theme (`enum Theme { Dark, Light, HighContrast }`) plus an accent (`enum Accent { Amber, Red, Green, Cyan }`). Base theme files `Themes/Dark.xaml`, `Light.xaml`, `HighContrast.xaml` own all surface tokens and include Amber as the built-in default accent. Accent is applied as a thin overlay dictionary on top for Dark/Light + non-Amber accents only: `Themes/Accents/{Dark,Light}_{Red,Green,Cyan}.xaml` (6 files). Amber = no overlay; High Contrast = no overlay (HC keeps its own fixed amber/white accent and ignores the accent picker). **Index 0** of `Application.Current.Resources.MergedDictionaries` is still updated **in place per-key** on switch. The "every file must define the identical key set" rule now applies **per layer**: all 3 base files share the full key set; all 6 accent overlay files share the 11-key accent token set. The **Clinical redesign** added a block of semantic tokens to each base file — `ChromeBg`/`ChromeText`/`ChromeTextDim`/`ChromeHover` (title + status bar), `RibbonBg`/`RibbonBand`/`RibbonGroupLabel`/`RibbonBtnHover` (the ribbon), and `ZoomTrack`; in **Light** these give a steel chrome over a paper-white ribbon (the "Clinical" look). The **Red** accent was retuned to **surgical red** (`#E11D38` light / `#F04458` dark). `ThemeManager` exposes `CurrentTheme`/`CurrentAccent` and `ApplyTheme(Theme)`/`ApplyAccent(Accent)`. `Initialize()` calls `Services/ThemeMigration.cs` to migrate legacy persisted values (Blood→Dark+Red, Greed→Dark+Green, Cyanotic→Dark+Cyan) — and a **fresh install now defaults to Light + Red** (the Clinical look), not Dark + Amber. Persists `Theme` + a new `Accent` registry key (both under `HKCU\Software\Scalpel\Settings`). Also sets the DWM dark title bar via P/Invoke.
@@ -90,6 +97,7 @@ small frames use the glyph), `packaging/Assets/*` (MSIX/Store tiles), and
 - C# with `Nullable` enabled and `ImplicitUsings` enabled; `LangVersion=latest`. Collection expressions (`[]`), target-typed `new`, and `switch` expressions are used throughout — match that style.
 - I/O and parsing are wrapped in defensive `try { } catch { }` that swallow and fall back (PDFs are untrusted/malformed); follow this pattern rather than letting exceptions reach the user mid-edit.
 - Tests (`Scalpel.Tests`) are xUnit and **link the source files directly** (`<Compile Include="..\Services\...">`) rather than referencing the WinExe project. If you move a tested file, update the `.csproj` link paths.
+- **User-facing changes (feature / feature-update / bug-fix) must add an entry to the in-app "What's New" popup** — prepend/extend a `Release` in `Services/Changelog.cs` (newest first; keep entries short and user-friendly).
 
 ## Further docs
 
