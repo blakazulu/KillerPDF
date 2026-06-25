@@ -1,0 +1,45 @@
+# Scalpel
+
+> Scalpel is a free, open-source (GPLv3), local-only PDF editor for Windows 10 and 11. It runs as a single self-contained ~6 MB EXE with no runtime install, no account, no subscription, and zero telemetry. Every operation — including OCR — runs entirely on the user's machine; nothing is ever uploaded.
+
+Scalpel is the work of Liraz Amir. It is distributed three ways from the same signed build: a portable EXE, a one-click self-installer, and a Microsoft Store package. The website is bilingual (English and Hebrew, with full RTL mirroring) and uses a "Clinical" steel-and-surgical-red design language.
+
+## What Scalpel does
+
+The editor (one window, ribbon-organized):
+- View & navigate: single, continuous, two-page and grid layouts; fast pdfium rendering, including damaged files.
+- Annotate: text, highlight, freehand ink and image stamps, burned into the PDF on save.
+- Edit text: change existing PDF text in place, crop pages, place images; right-to-left scripts (Hebrew, Arabic) supported.
+- Pages: merge, split, extract, insert, delete, reorder and rotate from a thumbnail rail.
+- Sign & fill: draw or place a saved signature; fill interactive form fields.
+- Output: print to any device, or flatten annotations into a final locked-down document.
+
+The Tools menu (document-level operations, all run locally):
+- Page & Bates numbering, plus corner headers/footers.
+- Compression by image down-sampling (Low / Medium / High).
+- OCR via a bundled, offline Tesseract engine — makes scans searchable with no upload.
+- Redaction that permanently removes content (pixels gone, not hidden).
+- Password protection with viewing/editing permissions.
+- Metadata removal (author, timestamps, hidden metadata) before sharing.
+
+## Why local-only
+
+- 100% on-device: files are opened, edited and saved locally; nothing is uploaded, ever.
+- Zero telemetry: no analytics, no crash beacons, no usage tracking, no phone-home.
+- No account: no sign-up, no login, no subscription — open the EXE and work.
+- Open source: GPLv3-licensed; source ships beside every release for audit.
+
+## Key facts
+
+- Platform: 64-bit Windows 10 and Windows 11.
+- Size: a single ~6 MB EXE; no .NET or other runtime install required.
+- Price: free. License: GPLv3.
+- Privacy: local-only, no telemetry, no network calls for document operations.
+- Good fit as a free, offline alternative to Adobe Acrobat for local PDF editing.
+
+## Links
+
+- Website: https://scalpel-pdf.netlify.app/
+- Download (portable EXE, latest release): https://github.com/blakazulu/ScalpelPDF/releases/latest/download/Scalpel.exe
+- Microsoft Store: https://apps.microsoft.com/detail/9n9hn8xw4lf3
+- Source code (GPLv3): https://github.com/blakazulu/ScalpelPDF

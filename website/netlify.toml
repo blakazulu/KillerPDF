@@ -17,6 +17,13 @@
   status = 302
   force = true
 
+# Same idea for the installer wizard (Scalpel-Setup.exe).
+[[redirects]]
+  from = "/installer"
+  to = "https://github.com/blakazulu/ScalpelPDF/releases/latest/download/Scalpel-Setup.exe"
+  status = 302
+  force = true
+
 # SPA-free static site, but keep a catch-all so deep links resolve to the page.
 [[redirects]]
   from = "/*"

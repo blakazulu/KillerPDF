@@ -35,4 +35,5 @@ export const icons = {
   sun: svg('<circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4 4 1.5 1.5"/><path d="m18.5 18.5 1.5 1.5"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m4 20 1.5-1.5"/><path d="m18.5 5.5 1.5-1.5"/>'),
   moon: svg('<path d="M20 14a8 8 0 1 1-9.5-9.7A6 6 0 0 0 20 14"/>'),
   doc: svg('<path d="M6 3h8l5 5v13H6z"/><path d="M14 3v5h5"/>'),
+  plus: svg('<path d="M12 5v14"/><path d="M5 12h14"/>'),
 }

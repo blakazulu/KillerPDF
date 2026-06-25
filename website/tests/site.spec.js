@@ -99,6 +99,51 @@ test.describe('Scalpel marketing site', () => {
     )
   })
 
+  test('social + SEO meta and structured data are present', async ({ page }) => {
+    await page.goto('/')
+    // Open Graph image must be an absolute PNG (SVG og:images don't render on
+    // WhatsApp/LinkedIn/iMessage), with declared dimensions.
+    const ogImg = page.locator('meta[property="og:image"]')
+    await expect(ogImg).toHaveAttribute('content', /^https:\/\/.+\/og-image\.png$/)
+    await expect(page.locator('meta[property="og:image:width"]')).toHaveAttribute('content', '1200')
+    await expect(page.locator('meta[property="og:image:height"]')).toHaveAttribute('content', '630')
+    await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image')
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /scalpel-pdf\.netlify\.app/)
+    await expect(page.locator('link[rel="alternate"][hreflang="he"]')).toHaveCount(1)
+
+    // JSON-LD parses and declares the app + FAQ for SEO/AEO/GEO.
+    const ld = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent())
+    const types = ld['@graph'].map((n) => n['@type'])
+    expect(types).toContain('SoftwareApplication')
+    expect(types).toContain('FAQPage')
+    const faq = ld['@graph'].find((n) => n['@type'] === 'FAQPage')
+    expect(faq.mainEntity.length).toBeGreaterThanOrEqual(6)
+  })
+
+  test('FAQ section renders eight crawlable Q&A items', async ({ page }) => {
+    await page.goto('/')
+    await expect(page.locator('#faq')).toBeVisible()
+    await expect(page.locator('#faq .faqitem')).toHaveCount(8)
+    // Answers are in the DOM (crawlable) even while collapsed.
+    await expect(page.locator('#faq .faqitem p').first()).not.toBeEmpty()
+  })
+
+  test('SEO/GEO infra files are served', async ({ request }) => {
+    for (const [path, needle] of [
+      ['/robots.txt', 'Sitemap:'],
+      ['/sitemap.xml', '<loc>'],
+      ['/llms.txt', '# Scalpel'],
+      ['/site.webmanifest', 'Scalpel'],
+    ]) {
+      const res = await request.get(path)
+      expect(res.ok(), `${path} should be 200`).toBeTruthy()
+      expect(await res.text()).toContain(needle)
+    }
+    const og = await request.get('/og-image.png')
+    expect(og.ok()).toBeTruthy()
+    expect(og.headers()['content-type']).toContain('image/png')
+  })
+
   test('no console errors on load', async ({ page }) => {
     const errors = []
     page.on('console', (m) => m.type() === 'error' && errors.push(m.text()))

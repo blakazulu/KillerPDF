@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "og": "node scripts/make-og.mjs",
     "build": "vite build",
     "preview": "vite preview --port 4173",
     "test": "playwright test",

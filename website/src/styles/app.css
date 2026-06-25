@@ -500,6 +500,58 @@ html[dir='rtl'] .btn .arrow { rotate: 180deg; }
 }
 .footer__legal .mono { font-family: var(--font-mono); }
 
+/* ---------- FAQ accordion -------------------------------------------------
+   <details>/<summary> so the Q&A is crawlable and works without JS. */
+.faqlist {
+  max-width: 60rem;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+.faqitem {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-panel);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.faqitem > summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.05rem 1.3rem;
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  color: var(--text);
+}
+.faqitem > summary::-webkit-details-marker { display: none; }
+.faqitem > summary:hover { color: var(--accent-text); }
+.faqitem > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.faqitem__mark {
+  flex: 0 0 auto;
+  width: 1.4rem;
+  height: 1.4rem;
+  color: var(--accent-text);
+  transition: transform var(--dur) var(--ease-out);
+}
+.faqitem[open] .faqitem__mark { transform: rotate(45deg); }
+.faqitem > p {
+  margin: 0;
+  padding: 0 1.3rem 1.25rem;
+  color: var(--text-dim);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  max-width: 56ch;
+}
+@media (prefers-reduced-motion: reduce) {
+  .faqitem__mark { transition: none; }
+}
+
 /* ---------- Scroll reveal -------------------------------------------------
    Gated behind html.js so content is fully visible without (or before) JS —
    the reveal is pure enhancement, never a prerequisite for seeing the page. */

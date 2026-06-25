@@ -11,6 +11,11 @@ export const locales = [
 ]
 
 export function detectLang() {
+  // An explicit ?lang= wins (this is the hreflang target the sitemap points at).
+  try {
+    const q = new URLSearchParams(location.search).get('lang')
+    if (q && dicts[q]) return q
+  } catch {}
   const saved = localStorage.getItem(STORAGE_KEY)
   if (saved && dicts[saved]) return saved
   const nav = (navigator.language || 'en').slice(0, 2).toLowerCase()
@@ -32,6 +37,16 @@ export function applyLang(lang) {
 
   document.title = t(lang, 'meta.title')
   setMeta('description', t(lang, 'meta.desc'))
+
+  // Keep social-share + locale meta in step with the active language. Crawlers
+  // read the static English head, but JS-executing scrapers and in-app shares
+  // (and the Hebrew ?lang=he entry point) get the right title/description/locale.
+  setMetaProp('og:title', t(lang, 'meta.title'))
+  setMetaProp('og:description', t(lang, 'meta.desc'))
+  setMetaProp('og:locale', lang === 'he' ? 'he_IL' : 'en_US')
+  setMetaProp('og:locale:alternate', lang === 'he' ? 'en_US' : 'he_IL')
+  setMeta('twitter:title', t(lang, 'meta.title'))
+  setMeta('twitter:description', t(lang, 'meta.desc'))
 
   // Text content
   for (const el of document.querySelectorAll('[data-i18n]')) {
@@ -56,6 +71,16 @@ function setMeta(name, content) {
   if (!m) {
     m = document.createElement('meta')
     m.setAttribute('name', name)
+    document.head.appendChild(m)
+  }
+  m.setAttribute('content', content)
+}
+
+function setMetaProp(property, content) {
+  let m = document.querySelector(`meta[property="${property}"]`)
+  if (!m) {
+    m = document.createElement('meta')
+    m.setAttribute('property', property)
     document.head.appendChild(m)
   }
   m.setAttribute('content', content)

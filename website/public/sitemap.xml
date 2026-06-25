@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://scalpel-pdf.netlify.app/</loc>
+    <lastmod>2026-06-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://scalpel-pdf.netlify.app/"/>
+    <xhtml:link rel="alternate" hreflang="he" href="https://scalpel-pdf.netlify.app/?lang=he"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://scalpel-pdf.netlify.app/"/>
+    <image:image xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+      <image:loc>https://scalpel-pdf.netlify.app/og-image.png</image:loc>
+    </image:image>
+  </url>
+</urlset>

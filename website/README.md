@@ -20,6 +20,11 @@ Built with plain **Vite** (no framework) so it stays a fast, static bundle for N
   `lottie-web` (lazy-mounted on scroll, paused offscreen, skipped under `prefers-reduced-motion`).
 - **Accessible & resilient** — skip link, visible focus, reduced-motion support, and content that is
   fully visible without JS (the reveal animation is gated behind `html.js`).
+- **SEO / AEO / GEO + social sharing** — full Open Graph + Twitter Card meta with a **rendered 1200×630
+  `og-image.png`** (SVG og:images don't preview on WhatsApp/LinkedIn/iMessage, so a raster is required),
+  canonical + `hreflang` (en/he/x-default), JSON-LD (`SoftwareApplication`, `FAQPage`, `WebSite`,
+  `Organization`), a crawlable on-page **FAQ** accordion, `sitemap.xml`, an AI-crawler-friendly
+  `robots.txt`, and an `llms.txt` summary for answer/generative engines.
 
 ## Develop
 
@@ -56,6 +61,16 @@ no-console-errors gate.
 - **Hero animation** — `public/lottie/hero.json`. To re-author, edit the slotted source in the
   `text-to-lottie` player, then re-run the inline transform (resolves slot colors → literals and
   drops the transparent bg layer, which `lottie-web` can't express via color alpha).
+- **Social / icon images** — `npm run og` re-renders `public/og-image.png` (the share card) plus the
+  PNG app icons (`apple-touch-icon`, `icon-192`, `icon-512`) from `public/scalpel-icon.svg` via headless
+  Chromium (`scripts/make-og.mjs`). They're committed, so Netlify never runs it — only re-run when the
+  brand or share copy changes. After editing the share copy, also update the matching `og:`/`twitter:`
+  meta in `index.html`.
+- **SEO/GEO infra** — `public/{robots.txt,sitemap.xml,llms.txt,site.webmanifest}` and the JSON-LD +
+  meta block at the top of `index.html`. The canonical host is `https://scalpel-pdf.netlify.app`; if the
+  domain changes, update it in those files together.
+- **FAQ copy** — `faq.*` keys in `src/i18n/{en,he}.js` (visible accordion) **and** the `FAQPage`
+  JSON-LD in `index.html` (English; keep the two in sync so rich results match the page).
 
 ## Layout
 

@@ -3,14 +3,196 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#2C3A4C" />
+    <meta name="theme-color" content="#2C3A4C" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#F4F6F8" media="(prefers-color-scheme: light)" />
+    <meta name="color-scheme" content="light dark" />
+
+    <title>Scalpel - Local-only Windows PDF editor (free, portable, GPLv3)</title>
+    <meta name="description" content="Scalpel is a free, portable, local-only Windows PDF editor. View, annotate, edit text, merge, split, sign, fill forms, OCR, redact, compress and password-protect PDFs. One 6 MB EXE. No account, no subscription, no telemetry. Open source (GPLv3)." />
+    <meta name="keywords" content="PDF editor, free PDF editor, local PDF editor, offline PDF editor, portable PDF editor, Windows PDF editor, edit PDF, annotate PDF, sign PDF, OCR PDF, redact PDF, merge PDF, split PDF, no telemetry, open source PDF editor, Adobe Acrobat alternative" />
+    <meta name="author" content="Liraz Amir" />
+    <meta name="application-name" content="Scalpel" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="generator" content="Scalpel website" />
+
+    <!-- Canonical + language alternates -->
+    <link rel="canonical" href="https://scalpel-pdf.netlify.app/" />
+    <link rel="alternate" hreflang="en" href="https://scalpel-pdf.netlify.app/" />
+    <link rel="alternate" hreflang="he" href="https://scalpel-pdf.netlify.app/?lang=he" />
+    <link rel="alternate" hreflang="x-default" href="https://scalpel-pdf.netlify.app/" />
+
+    <!-- Icons + manifest -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>Scalpel - Local-only Windows PDF editor</title>
-    <meta name="description" content="Scalpel is a portable, local-only Windows PDF editor. View, annotate, edit, sign, OCR, redact. One 6 MB EXE. No account, no subscription, no telemetry. GPLv3." />
-    <meta property="og:title" content="Scalpel - Local-only Windows PDF editor" />
-    <meta property="og:description" content="Precise PDF editing. Nothing leaves your machine. One portable 6 MB EXE - no account, no telemetry, GPLv3." />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Open Graph (Facebook, LinkedIn, WhatsApp, iMessage, Slack, Telegram, Discord) -->
+    <meta property="og:site_name" content="Scalpel" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/scalpel-icon.svg" />
+    <meta property="og:url" content="https://scalpel-pdf.netlify.app/" />
+    <meta property="og:title" content="Scalpel - Local-only Windows PDF editor" />
+    <meta property="og:description" content="Precise PDF editing. Nothing leaves your machine. A free, portable 6 MB Windows PDF editor - view, annotate, edit, sign, OCR, redact. No account, no telemetry, GPLv3." />
+    <meta property="og:image" content="https://scalpel-pdf.netlify.app/og-image.png" />
+    <meta property="og:image:secure_url" content="https://scalpel-pdf.netlify.app/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Scalpel - a local-only Windows PDF editor. Precise PDF editing, nothing leaves your machine." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="he_IL" />
+
+    <!-- Twitter / X card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Scalpel - Local-only Windows PDF editor" />
+    <meta name="twitter:description" content="A free, portable 6 MB Windows PDF editor. View, annotate, edit, sign, OCR, redact - nothing leaves your machine. No account, no telemetry, GPLv3." />
+    <meta name="twitter:image" content="https://scalpel-pdf.netlify.app/og-image.png" />
+    <meta name="twitter:image:alt" content="Scalpel - a local-only Windows PDF editor. Precise PDF editing, nothing leaves your machine." />
+
+    <!-- Structured data: SoftwareApplication + FAQ + WebSite + Organization (SEO / AEO / GEO) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "SoftwareApplication",
+          "@id": "https://scalpel-pdf.netlify.app/#app",
+          "name": "Scalpel",
+          "alternateName": "ScalpelPDF",
+          "description": "Scalpel is a free, portable, local-only Windows PDF editor. View, annotate, edit text, merge, split, sign, fill forms, OCR, redact, compress and password-protect PDFs - entirely on-device, with no account and no telemetry.",
+          "url": "https://scalpel-pdf.netlify.app/",
+          "image": "https://scalpel-pdf.netlify.app/og-image.png",
+          "applicationCategory": "BusinessApplication",
+          "applicationSubCategory": "PDF Editor",
+          "operatingSystem": "Windows 10, Windows 11",
+          "processorRequirements": "x64",
+          "fileSize": "6 MB",
+          "softwareVersion": "1.8.0",
+          "downloadUrl": "https://github.com/blakazulu/ScalpelPDF/releases/latest/download/Scalpel.exe",
+          "installUrl": "https://apps.microsoft.com/detail/9n9hn8xw4lf3",
+          "license": "https://www.gnu.org/licenses/gpl-3.0.html",
+          "isAccessibleForFree": true,
+          "featureList": [
+            "View and navigate PDFs (single, continuous, two-page, grid)",
+            "Annotate: text, highlight, freehand ink, image stamps",
+            "Edit existing PDF text in place",
+            "Merge, split, extract, reorder and rotate pages",
+            "Sign documents and fill interactive form fields",
+            "OCR scanned documents offline (bundled Tesseract)",
+            "Redact content permanently",
+            "Compress PDFs by down-sampling images",
+            "Password-protect and set permissions",
+            "Add page and Bates numbering",
+            "Remove metadata before sharing",
+            "Print and flatten"
+          ],
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock"
+          },
+          "author": {
+            "@type": "Person",
+            "name": "Liraz Amir"
+          },
+          "publisher": { "@id": "https://scalpel-pdf.netlify.app/#org" }
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://scalpel-pdf.netlify.app/#org",
+          "name": "Scalpel",
+          "url": "https://scalpel-pdf.netlify.app/",
+          "logo": "https://scalpel-pdf.netlify.app/icon-512.png",
+          "founder": { "@type": "Person", "name": "Liraz Amir" },
+          "sameAs": [
+            "https://github.com/blakazulu/ScalpelPDF",
+            "https://apps.microsoft.com/detail/9n9hn8xw4lf3"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://scalpel-pdf.netlify.app/#website",
+          "name": "Scalpel - Local-only Windows PDF editor",
+          "url": "https://scalpel-pdf.netlify.app/",
+          "inLanguage": ["en", "he"],
+          "publisher": { "@id": "https://scalpel-pdf.netlify.app/#org" }
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://scalpel-pdf.netlify.app/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Is Scalpel free?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Scalpel is completely free and open source under the GPLv3 license. There is no subscription, no account, no trial, and no watermark - the full app is the 6 MB download."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does Scalpel upload my PDFs to the cloud?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Scalpel is local-only: every operation, including OCR, runs on your own Windows PC. Nothing is uploaded, there are no servers, and the app has zero telemetry - no analytics, crash beacons or usage tracking."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What can Scalpel do?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Scalpel can view, annotate, edit existing text, merge, split, reorder and rotate pages, sign, fill forms, OCR scans, redact, compress, password-protect, add page and Bates numbers, remove metadata, print and flatten PDFs - all in one window."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Which operating systems does Scalpel support?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Scalpel runs on 64-bit Windows 10 and Windows 11. No runtime install is required - it is a single self-contained EXE."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is Scalpel portable?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. The portable build is a single ~6 MB EXE you can run from a USB stick, desktop or network share. It leaves no trace on the host machine and can self-install later if you want a Start-menu shortcut."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does Scalpel do OCR offline?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. OCR uses a bundled Tesseract engine that runs entirely offline on your CPU, so scanned documents become searchable without any upload."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is Scalpel a good free alternative to Adobe Acrobat?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "For local PDF editing it is a strong free alternative: Scalpel edits text, annotates, signs, fills forms, OCRs, redacts, merges and protects PDFs with no subscription and no account. Unlike cloud editors, your documents never leave your machine."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How do I install Scalpel?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Three ways, all the same signed build: download the portable EXE and run it, use the one-click installer (adds a Start-menu shortcut and optional .pdf default), or get it from the Microsoft Store for sandboxed automatic updates."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
     <!-- Anti-FOUC: set theme + direction before first paint -->
     <script>
       (function () {
@@ -20,8 +202,9 @@
           if (t !== 'light' && t !== 'dark')
             t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
           document.documentElement.setAttribute('data-theme', t);
-          var l = localStorage.getItem('scalpel.lang');
-          if (!l) { var n = (navigator.language || 'en').slice(0, 2); l = n === 'he' ? 'he' : 'en'; }
+          var q = new URLSearchParams(location.search).get('lang');
+          var l = (q === 'he' || q === 'en') ? q : localStorage.getItem('scalpel.lang');
+          if (l !== 'he' && l !== 'en') { var n = (navigator.language || 'en').slice(0, 2); l = n === 'he' ? 'he' : 'en'; }
           document.documentElement.setAttribute('lang', l);
           document.documentElement.setAttribute('dir', l === 'he' ? 'rtl' : 'ltr');
         } catch (e) {}
@@ -43,6 +226,7 @@
           <a href="#features" data-i18n="nav.features">Features</a>
           <a href="#tools" data-i18n="nav.tools">Tools</a>
           <a href="#privacy" data-i18n="nav.privacy">Privacy</a>
+          <a href="#faq" data-i18n="nav.faq">FAQ</a>
           <a href="#get" data-i18n="nav.get">Get it</a>
         </nav>
 
@@ -88,7 +272,7 @@
                 </span>
               </a>
 
-              <a class="dl" href="/download" data-dl="installer">
+              <a class="dl" href="/installer" data-dl="installer">
                 <span class="dl__icon" data-icon="install" aria-hidden="true"></span>
                 <span class="dl__body">
                   <span class="dl__title" data-i18n="dl.installer.title">Installer</span>
@@ -263,6 +447,52 @@
         </div>
       </section>
 
+      <!-- ===================== FAQ (AEO / answer-engine fodder) ===================== -->
+      <section class="section faq" id="faq" aria-labelledby="faq-title">
+        <div class="wrap">
+          <div class="section-head">
+            <p class="eyebrow reveal" data-i18n="faq.eyebrow">FAQ</p>
+            <h2 class="reveal" data-delay="1" id="faq-title" data-i18n="faq.title">Questions, answered.</h2>
+            <p class="reveal" data-delay="2" data-i18n="faq.lead"></p>
+          </div>
+
+          <div class="faqlist reveal">
+            <details class="faqitem">
+              <summary><span data-i18n="faq.q1">Is Scalpel free?</span><span class="faqitem__mark" data-icon="plus" aria-hidden="true"></span></summary>
+              <p data-i18n="faq.a1"></p>
+            </details>
+            <details class="faqitem">
+              <summary><span data-i18n="faq.q2">Does Scalpel upload my PDFs?</span><span class="faqitem__mark" data-icon="plus" aria-hidden="true"></span></summary>
+              <p data-i18n="faq.a2"></p>
+            </details>
+            <details class="faqitem">
+              <summary><span data-i18n="faq.q3">What can Scalpel do?</span><span class="faqitem__mark" data-icon="plus" aria-hidden="true"></span></summary>
+              <p data-i18n="faq.a3"></p>
+            </details>
+            <details class="faqitem">
+              <summary><span data-i18n="faq.q4">Which Windows versions are supported?</span><span class="faqitem__mark" data-icon="plus" aria-hidden="true"></span></summary>
+              <p data-i18n="faq.a4"></p>
+            </details>
+            <details class="faqitem">
+              <summary><span data-i18n="faq.q5">Is it portable?</span><span class="faqitem__mark" data-icon="plus" aria-hidden="true"></span></summary>
+              <p data-i18n="faq.a5"></p>
+            </details>
+            <details class="faqitem">
+              <summary><span data-i18n="faq.q6">Does OCR work offline?</span><span class="faqitem__mark" data-icon="plus" aria-hidden="true"></span></summary>
+              <p data-i18n="faq.a6"></p>
+            </details>
+            <details class="faqitem">
+              <summary><span data-i18n="faq.q7">Is it an Adobe Acrobat alternative?</span><span class="faqitem__mark" data-icon="plus" aria-hidden="true"></span></summary>
+              <p data-i18n="faq.a7"></p>
+            </details>
+            <details class="faqitem">
+              <summary><span data-i18n="faq.q8">How do I install it?</span><span class="faqitem__mark" data-icon="plus" aria-hidden="true"></span></summary>
+              <p data-i18n="faq.a8"></p>
+            </details>
+          </div>
+        </div>
+      </section>
+
       <!-- ===================== Get it (final 3-option CTA) ===================== -->
       <section class="section" id="get" aria-labelledby="get-title">
         <div class="wrap">
@@ -296,7 +526,7 @@
                 <li><span data-icon="check" aria-hidden="true"></span><span data-i18n="option.installer.f2"></span></li>
                 <li><span data-icon="check" aria-hidden="true"></span><span data-i18n="option.installer.f3"></span></li>
               </ul>
-              <a class="btn btn--primary btn--block" href="/download">
+              <a class="btn btn--primary btn--block" href="/installer">
                 <span data-icon="download" aria-hidden="true"></span><span data-i18n="option.installer.btn">Download installer</span>
               </a>
             </article>
@@ -331,6 +561,7 @@
             <a href="#features" data-i18n="footer.l.features">Features</a>
             <a href="#tools" data-i18n="footer.l.tools">Tools</a>
             <a href="#privacy" data-i18n="footer.l.privacy">Privacy</a>
+            <a href="#faq" data-i18n="footer.l.faq">FAQ</a>
             <a href="https://github.com/blakazulu/ScalpelPDF" data-i18n="footer.l.source">Source (GPLv3)</a>
             <a href="https://apps.microsoft.com/detail/9n9hn8xw4lf3" data-i18n="footer.l.store">Microsoft Store</a>
           </nav>

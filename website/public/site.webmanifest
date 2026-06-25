@@ -1,0 +1,17 @@
+{
+  "name": "Scalpel - Local-only Windows PDF editor",
+  "short_name": "Scalpel",
+  "description": "A free, portable, local-only Windows PDF editor. View, annotate, edit, sign, OCR, redact - nothing leaves your machine.",
+  "lang": "en",
+  "start_url": "/",
+  "scope": "/",
+  "display": "browser",
+  "background_color": "#F4F6F8",
+  "theme_color": "#2C3A4C",
+  "categories": ["productivity", "utilities", "business"],
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
