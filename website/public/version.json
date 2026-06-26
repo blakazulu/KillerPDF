@@ -1,9 +1,10 @@
 {
-  "version": "1.8.0",
+  "version": "1.9.0",
   "siteUrl": "https://scalpel-pdf.netlify.app",
   "storeUrl": "https://apps.microsoft.com/detail/9n9hn8xw4lf3",
   "notes": [
-    "Optional update notifications — Scalpel can now tell you when a new version is out.",
-    "Fixes and polish across themes."
+    "Editing existing Hebrew text now keeps the correct word order (multi-word lines no longer come back reversed).",
+    "OCR (Make Searchable) now reliably produces selectable, searchable text.",
+    "Redact works on more PDFs (including damaged files), and the Tools show a clear message instead of closing on an error."
   ]
 }

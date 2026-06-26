@@ -12,13 +12,14 @@ namespace Scalpel.Services
 
         public static IReadOnlyList<Release> Releases { get; } = new[]
         {
-            new Release("1.8.1", "June 2026", new[]
+            new Release("1.9.0", "June 2026", new[]
             {
                 "Fixed: editing existing Hebrew (and other right-to-left) text now keeps the words in their correct order — a line with more than one Hebrew word used to come back reversed in the edit box.",
                 "Hebrew and Arabic edit boxes now read and align right-to-left while you type, so editing existing text feels natural.",
                 "Fixed: Redact now works on PDFs with damaged or unusual internal structure that previously failed with an \"Unexpected token 'xref'\" error — such files are now safely flattened and redacted instead.",
                 "Fixed: OCR (Make Searchable) now actually produces searchable text. Previously the recognized text could be silently dropped, leaving the saved PDF non-searchable; the page text is now selectable and searchable as intended.",
                 "The Tools operations (Redact, Compress, Make Searchable) are also more robust: if something goes wrong they now show a clear message instead of closing the app.",
+                "Compress now explains it works best on scanned or photo-heavy PDFs (mostly-text files may not shrink), and reuses an already-installed Tesseract for OCR instead of re-downloading language data.",
             }),
             new Release("1.8.0", "June 2026", new[]
             {

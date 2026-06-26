@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 
@@ -31,24 +32,34 @@ namespace Scalpel.Services
         public static string LanguageUrl(string lang) =>
             $"https://github.com/tesseract-ocr/tessdata_fast/raw/main/{lang}.traineddata";
 
-        private static string[] TessdataDirs => new[]
+        /// <summary>Candidate tessdata directories, in priority order: the bundled <c>ocr</c> folder
+        /// (installed build), the located engine's OWN sibling <c>tessdata</c> (a full Tesseract
+        /// install ships language data there — preferring it avoids re-downloading what's already
+        /// present), then the writable per-user download dir.</summary>
+        private static IEnumerable<string> TessdataDirs()
         {
-            Path.Combine(AppOcrDir, "tessdata"),
-            DownloadTessdataDir,
-        };
+            yield return Path.Combine(AppOcrDir, "tessdata");
+
+            string? exe = FindTesseractExe();
+            string? exeDir = string.IsNullOrEmpty(exe) ? null : Path.GetDirectoryName(exe);
+            if (!string.IsNullOrEmpty(exeDir))
+                yield return Path.Combine(exeDir!, "tessdata");
+
+            yield return DownloadTessdataDir;
+        }
 
         /// <summary>The tessdata directory that actually contains <paramref name="lang"/>, or the
         /// writable download dir if none yet. Pass this to the engine via <c>--tessdata-dir</c>.</summary>
         public static string ResolveTessdataDir(string lang)
         {
-            foreach (var dir in TessdataDirs)
+            foreach (var dir in TessdataDirs())
                 if (File.Exists(Path.Combine(dir, $"{lang}.traineddata"))) return dir;
             return DownloadTessdataDir;
         }
 
         public static bool HasLanguage(string lang)
         {
-            foreach (var dir in TessdataDirs)
+            foreach (var dir in TessdataDirs())
                 if (File.Exists(Path.Combine(dir, $"{lang}.traineddata"))) return true;
             return false;
         }

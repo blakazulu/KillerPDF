@@ -71,8 +71,9 @@ namespace Scalpel
         }
 
         /// <summary>Builds a small themed modal form from <paramref name="fields"/>; on OK, writes the
-        /// user's input back into each field and returns true.</summary>
-        private bool ShowToolForm(string title, IReadOnlyList<ToolField> fields, string okText)
+        /// user's input back into each field and returns true. An optional <paramref name="note"/>
+        /// renders as a wrapped hint above the fields.</summary>
+        private bool ShowToolForm(string title, IReadOnlyList<ToolField> fields, string okText, string? note = null)
         {
             var fontUI = (FontFamily)Application.Current.FindResource("FontUI");
             var bgModal = (Brush)Application.Current.FindResource("BgModal");
@@ -125,6 +126,14 @@ namespace Scalpel
             titleBar.Child = titleGrid;
 
             var sp = new StackPanel { Margin = new Thickness(20, 16, 20, 16) };
+            if (!string.IsNullOrEmpty(note))
+            {
+                sp.Children.Add(new TextBlock
+                {
+                    Text = note, Foreground = fgSec, FontFamily = fontUI, FontSize = fsBody,
+                    TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 0, 0, 14),
+                });
+            }
             var controls = new List<(ToolField field, FrameworkElement ctrl)>();
             foreach (var f in fields)
             {
@@ -327,7 +336,9 @@ namespace Scalpel
 
             var quality = new ToolField("Strength", ToolFieldKind.Combo,
                 options: new[] { "Low (best quality)", "Medium", "High (smallest file)" }, value: "Medium");
-            if (!ShowToolForm("Compress PDF", new[] { quality }, "Compress"))
+            if (!ShowToolForm("Compress PDF", new[] { quality }, "Compress",
+                    note: "Best for scanned or photo-heavy PDFs. Each page becomes an image, so a mostly-text " +
+                          "document may not shrink — and can even get larger."))
                 return;
 
             CompressionOptions opts = quality.Value switch
