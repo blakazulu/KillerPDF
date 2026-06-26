@@ -337,28 +337,30 @@ namespace Scalpel
                 _ => CompressionOptions.Medium,
             };
 
-            string src = BuildWorkingSourceFile();
-            long before = SafeLen(src);
+            // Whole flow inside one try so any managed failure (building the working copy, the
+            // native rasterization, or adopting the result) shows a dialog instead of crashing.
             string outPath = App.MakeTempFile("compressed");
             SetStatus("Compressing…");
             try
             {
+                string src = BuildWorkingSourceFile();
+                long before = SafeLen(src);
                 await Task.Run(() =>
                 {
                     using var rasterizer = new DocnetPageRasterizer(src, 2200);
                     PdfCompressionService.Compress(rasterizer, opts, outPath);
                 });
+                long after = SafeLen(outPath);
+                AdoptTransformedFile(outPath,
+                    $"Compressed {FmtSize(before)} → {FmtSize(after)} ({Pct(before, after)}). Text is now image-based.");
             }
             catch (Exception ex)
             {
+                Scalpel.Services.Logger.Error("Tools", "compress.fail", ex.Message, ex);
+                SetStatus("Compression failed");
                 ScalpelDialog.Show(this, $"Compression failed:\n{ex.Message}", "Scalpel",
                     MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
             }
-
-            long after = SafeLen(outPath);
-            AdoptTransformedFile(outPath,
-                $"Compressed {FmtSize(before)} → {FmtSize(after)} ({Pct(before, after)}). Text is now image-based.");
         }
 
         private async void ToolsOcr_Click(object sender, RoutedEventArgs e)
@@ -391,11 +393,13 @@ namespace Scalpel
                 }
             }
 
-            string src = BuildWorkingSourceFile();
+            // Whole flow inside one try so any managed failure (building the working copy, the
+            // native rasterization/OCR, or adopting the result) shows a dialog instead of crashing.
             string outPath = App.MakeTempFile("ocr");
             SetStatus("Running OCR — making text searchable…");
             try
             {
+                string src = BuildWorkingSourceFile();
                 string tessdata = OcrAssets.ResolveTessdataDir("eng");
                 await Task.Run(() =>
                 {
@@ -403,15 +407,15 @@ namespace Scalpel
                     var engine = new TesseractCliOcrEngine(exe, tessdata, "eng");
                     OcrService.MakeSearchable(rasterizer, engine, outPath);
                 });
+                AdoptTransformedFile(outPath, "OCR complete — the document text is now selectable and searchable.");
             }
             catch (Exception ex)
             {
+                Scalpel.Services.Logger.Error("Tools", "ocr.fail", ex.Message, ex);
+                SetStatus("OCR failed");
                 ScalpelDialog.Show(this, $"OCR failed:\n{ex.Message}", "Scalpel",
                     MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
             }
-
-            AdoptTransformedFile(outPath, "OCR complete — the document text is now selectable and searchable.");
         }
 
         private async void ToolsRedact_Click(object sender, RoutedEventArgs e)
