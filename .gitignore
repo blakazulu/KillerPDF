@@ -38,3 +38,6 @@ obj/
 
 # E2E harness output
 e2e-reports/
+
+# Upstream KillerPDF source dump (reference only, not part of this repo)
+docs/github-origin/
