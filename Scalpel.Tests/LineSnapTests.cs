@@ -54,7 +54,7 @@ namespace Scalpel.Tests
         [Fact]
         public void ExactDiagonalDown_PreservedOctant()
         {
-            // pointing down-left near 225 degrees stays down-left diagonal
+            // a drag up-and-left (dx<0, dy<0) snaps to the nearest diagonal, staying in that quadrant
             var e = LineSnap.SnapEndpoint(new Point(0, 0), new Point(-80, -70));
             Assert.True(e.X < 0 && e.Y < 0);
             Assert.Equal(System.Math.Abs(e.X), System.Math.Abs(e.Y), 3);
