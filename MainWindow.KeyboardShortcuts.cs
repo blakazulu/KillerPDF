@@ -151,8 +151,31 @@ namespace Scalpel
                 ShowDocumentInfo();
                 e.Handled = true;
             }
+            else if (e.Key == Key.F11) { ToggleFullScreen(); e.Handled = true; }
+            else if (e.Key == Key.F1)  { ShortcutOverlay.Visibility = ShortcutOverlay.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible; e.Handled = true; }
+            else if (e.Key == Key.F2)  { ShowAboutOverlay(); e.Handled = true; }
+            else if (e.Key == Key.F5)  { SetViewMode(ViewMode.Single);     e.Handled = true; }
+            else if (e.Key == Key.F6)  { SetViewMode(ViewMode.Continuous); e.Handled = true; }
+            else if (e.Key == Key.F7)  { SetViewMode(ViewMode.TwoPage);    e.Handled = true; }
+            else if (e.Key == Key.F8)  { SetViewMode(ViewMode.Grid);       e.Handled = true; }
+            else if (Keyboard.Modifiers == ModifierKeys.None &&
+                     (e.Key == Key.V || e.Key == Key.T || e.Key == Key.H || e.Key == Key.D || e.Key == Key.L || e.Key == Key.I))
+            {
+                SetMode(AppMode.Edit);
+                SetTool(e.Key switch
+                {
+                    Key.V => EditTool.Select,
+                    Key.T => EditTool.Text,
+                    Key.H => EditTool.Highlight,
+                    Key.D => EditTool.Draw,
+                    Key.L => EditTool.Line,
+                    _     => EditTool.Image,   // Key.I
+                });
+                e.Handled = true;
+            }
             else if (e.Key == Key.Escape)
             {
+                if (_fullScreen) { ApplyFullScreen(false); e.Handled = true; return; }
                 // No overlay active — ESC exits the app
                 Close();
                 e.Handled = true;
