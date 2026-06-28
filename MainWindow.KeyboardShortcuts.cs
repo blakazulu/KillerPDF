@@ -146,6 +146,11 @@ namespace Scalpel
                 SetZoom(1.0);
                 e.Handled = true;
             }
+            else if (e.Key == Key.F12)
+            {
+                ShowDocumentInfo();
+                e.Handled = true;
+            }
             else if (e.Key == Key.Escape)
             {
                 // No overlay active — ESC exits the app

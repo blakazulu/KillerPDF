@@ -513,6 +513,7 @@
                             <MenuItem Header="{DynamicResource Str_Tool_Numbering}" Click="ToolsNumbering_Click"/>
                             <MenuItem Header="{DynamicResource Str_Tool_Compress}" Click="ToolsCompress_Click"/>
                             <MenuItem Header="{DynamicResource Str_Tool_Ocr}" Click="ToolsOcr_Click"/>
+                            <MenuItem Header="{DynamicResource Str_Tool_DocInfo}" Click="ToolsDocumentInfo_Click"/>
                             <Separator/>
                             <MenuItem Header="{DynamicResource Str_Tool_Redact}" Click="ToolsRedact_Click"/>
                             <MenuItem Header="{DynamicResource Str_Tool_Protect}" Click="ToolsProtect_Click"/>
