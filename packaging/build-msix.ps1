@@ -52,7 +52,7 @@ param(
 if ($Store) {
     $IdentityName         = 'LirazShakaAmir.ScalpelPDF'
     $Publisher            = 'CN=8B3919EF-5B9D-4935-A322-FC9435A969F6'
-    $PublisherDisplayName = 'LirazShakaAmir'
+    $PublisherDisplayName = 'Liraz Shaka Amir'   # must match Partner Center > Product identity exactly
     $DisplayName          = 'Scalpel PDF'
 }
 
