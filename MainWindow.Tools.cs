@@ -420,9 +420,10 @@ namespace Scalpel
             }
         }
 
-        private async void ToolsOcr_Click(object sender, RoutedEventArgs e)
+        private async Task<(string exe, string tessdata, string lang)?> EnsureOcrReady()
         {
-            if (!RequireOpenDoc()) return;
+            string lang = App.GetSetting("OcrLanguage") ?? "eng";
+            bool best = App.GetSetting("OcrHighQuality") == "1";
 
             string? exe = OcrAssets.FindTesseractExe();
             if (exe is null)
@@ -430,25 +431,30 @@ namespace Scalpel
                 ScalpelDialog.Show(this,
                     "OCR needs the free Tesseract engine, which isn't installed.\n\nInstall it from https://github.com/UB-Mannheim/tesseract (or place tesseract.exe in %LOCALAPPDATA%\\Scalpel\\ocr) and try again.",
                     "OCR Engine Needed", MessageBoxButton.OK, MessageBoxImage.None);
-                return;
+                return null;
             }
-
-            if (!OcrAssets.HasLanguage("eng"))
+            if (!OcrAssets.HasLanguage(lang, best))
             {
                 if (ScalpelDialog.Show(this,
-                        "Download the English OCR language data (~12 MB) once into %LOCALAPPDATA%\\Scalpel\\ocr?\n\nThis is a one-time local download; everything stays on your machine.",
+                        $"Download the '{lang}' OCR language data{(best ? " (high quality)" : "")} once into %LOCALAPPDATA%\\Scalpel\\ocr?\n\nThis is a one-time local download; everything stays on your machine.",
                         "Download OCR Data", MessageBoxButton.OKCancel, MessageBoxImage.None) != MessageBoxResult.OK)
-                    return;
-
+                    return null;
                 SetStatus("Downloading OCR language data…");
-                bool ok = await Task.Run(() => OcrAssets.DownloadLanguage("eng"));
+                bool ok = await Task.Run(() => OcrAssets.DownloadLanguage(lang, best));
                 if (!ok)
                 {
                     ScalpelDialog.Show(this, "Could not download the OCR language data. Check your connection and try again.",
                         "Scalpel", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    return null;
                 }
             }
+            return (exe, OcrAssets.ResolveTessdataDir(lang, best), lang);
+        }
+
+        private async void ToolsOcr_Click(object sender, RoutedEventArgs e)
+        {
+            if (!RequireOpenDoc()) return;
+            var r = await EnsureOcrReady(); if (r is null) return;
 
             // Whole flow inside one try so any managed failure (building the working copy, the
             // native rasterization/OCR, or adopting the result) shows a dialog instead of crashing.
@@ -457,11 +463,10 @@ namespace Scalpel
             try
             {
                 string src = BuildWorkingSourceFile();
-                string tessdata = OcrAssets.ResolveTessdataDir("eng");
                 await Task.Run(() =>
                 {
                     using var rasterizer = new DocnetPageRasterizer(src, 2000);
-                    var engine = new TesseractCliOcrEngine(exe, tessdata, "eng");
+                    var engine = new TesseractCliOcrEngine(r.Value.exe, r.Value.tessdata, r.Value.lang);
                     OcrService.MakeSearchable(rasterizer, engine, outPath);
                 });
                 AdoptTransformedFile(outPath, "OCR complete — the document text is now selectable and searchable.");
@@ -472,6 +477,91 @@ namespace Scalpel
                 SetStatus("OCR failed");
                 ScalpelDialog.Show(this, $"OCR failed:\n{ex.Message}", "Scalpel",
                     MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void ToolsOcrLanguage_Click(object sender, RoutedEventArgs e)
+        {
+            string curLang = App.GetSetting("OcrLanguage") ?? "eng";
+            bool curBest = App.GetSetting("OcrHighQuality") == "1";
+            string curName = OcrAssets.Languages.FirstOrDefault(l => l.Code == curLang).Name ?? "English";
+
+            var lang = new ToolField(Loc("Str_Ocr_LangLabel"), ToolFieldKind.Combo,
+                value: curName, options: OcrAssets.Languages.Select(l => l.Name).ToArray());
+            string fast = Loc("Str_Ocr_QualityFast"), bestL = Loc("Str_Ocr_QualityBest");
+            var qual = new ToolField(Loc("Str_Ocr_QualityLabel"), ToolFieldKind.Combo,
+                value: curBest ? bestL : fast, options: new[] { fast, bestL });
+
+            if (!ShowToolForm(Loc("Str_Tool_OcrLanguage"), new[] { lang, qual }, Loc("Str_DocInfo_Save"))) return;
+
+            string code = OcrAssets.Languages.FirstOrDefault(l => l.Name == lang.Value).Code ?? "eng";
+            App.SetSetting("OcrLanguage", code);
+            App.SetSetting("OcrHighQuality", qual.Value == bestL ? "1" : "0");
+            SetStatus(Loc("Str_Ocr_LangSaved"));
+        }
+
+        private async void ToolsOcrPageToClipboard_Click(object sender, RoutedEventArgs e)
+        {
+            if (!RequireOpenDoc()) return;
+            var r = await EnsureOcrReady(); if (r is null) return;
+            int page = System.Math.Max(0, PageList.SelectedIndex);
+            SetStatus("Running OCR…");
+            try
+            {
+                var src = App.MakeTempFile("ocrclip"); _doc!.Save(src);
+                string text = await Task.Run(() =>
+                {
+                    using var rast = new DocnetPageRasterizer(src, 2000);
+                    var raster = rast.RenderPage(page);
+                    var (wPt, hPt) = rast.PageSizePt(page);
+                    var ocr = new TesseractCliOcrEngine(r.Value.exe, r.Value.tessdata, r.Value.lang)
+                        .Recognize(raster.ImageBytes, wPt, hPt);
+                    return OcrTextJoiner.Join(ocr.Words);
+                });
+                if (string.IsNullOrWhiteSpace(text)) { SetStatus("No text recognized on this page"); return; }
+                Clipboard.SetText(text);
+                SetStatus(Loc("Str_Ocr_Copied"));
+            }
+            catch (Exception ex)
+            {
+                Scalpel.Services.Logger.Error("Tools", "ocr.clip.fail", ex.Message, ex);
+                ScalpelDialog.Show(this, $"OCR failed:\n{ex.Message}", "Scalpel", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async void ToolsOcrExtractText_Click(object sender, RoutedEventArgs e)
+        {
+            if (!RequireOpenDoc()) return;
+            var r = await EnsureOcrReady(); if (r is null) return;
+            var dlg = new SaveFileDialog { Filter = "Text|*.txt|Markdown|*.md", FileName = "extracted-text.txt" };
+            if (dlg.ShowDialog() != true) return;
+            string outPath = dlg.FileName;
+            bool md = outPath.EndsWith(".md", StringComparison.OrdinalIgnoreCase);
+            try
+            {
+                var src = App.MakeTempFile("ocrtxt"); _doc!.Save(src);
+                await Task.Run(() =>
+                {
+                    using var rast = new DocnetPageRasterizer(src, 2000);
+                    var engine = new TesseractCliOcrEngine(r.Value.exe, r.Value.tessdata, r.Value.lang);
+                    var sb = new System.Text.StringBuilder();
+                    for (int i = 0; i < rast.PageCount; i++)
+                    {
+                        Dispatcher.Invoke(() => SetStatus($"OCR page {i + 1} of {rast.PageCount}…"));
+                        var raster = rast.RenderPage(i);
+                        var (wPt, hPt) = rast.PageSizePt(i);
+                        var text = OcrTextJoiner.Join(engine.Recognize(raster.ImageBytes, wPt, hPt).Words);
+                        if (md) sb.Append("## Page ").Append(i + 1).Append("\n\n");
+                        sb.Append(text).Append(md ? "\n\n" : "\n\n");
+                    }
+                    File.WriteAllText(outPath, sb.ToString().TrimEnd() + "\n");
+                });
+                SetStatus(Loc("Str_Ocr_ExtractDone"));
+            }
+            catch (Exception ex)
+            {
+                Scalpel.Services.Logger.Error("Tools", "ocr.extract.fail", ex.Message, ex);
+                ScalpelDialog.Show(this, $"OCR failed:\n{ex.Message}", "Scalpel", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
