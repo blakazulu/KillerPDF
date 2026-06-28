@@ -14,6 +14,7 @@ namespace Scalpel.Services
         {
             new Release("1.9.0", "June 2026", new[]
             {
+                "New Line tool in the Edit tab: drag to draw a straight line, and hold Shift to snap it to horizontal, vertical, or 45°. It uses the same color, width, and opacity as the Draw tool.",
                 "Fixed: editing existing Hebrew (and other right-to-left) text now keeps the words in their correct order — a line with more than one Hebrew word used to come back reversed in the edit box.",
                 "Hebrew and Arabic edit boxes now read and align right-to-left while you type, so editing existing text feels natural.",
                 "Editing existing text now matches the original font: if that font isn't installed, Scalpel uses the document's own embedded font when it can, and otherwise tells you exactly which font to install and uses a close substitute in the meantime — for any language.",
