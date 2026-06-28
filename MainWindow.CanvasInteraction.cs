@@ -205,6 +205,28 @@ namespace Scalpel
                     _activeCanvas.CaptureMouse();
                     break;
 
+                case EditTool.Line:
+                    ClearSelection();
+                    _isDrawing = true;
+                    _activeInk = new InkAnnotation { PageIndex = pageIdx, StrokeWidth = _drawWidth };
+                    _activeInk.SetColor(_drawColor);
+                    _activeInk.Points.Add(pos);
+                    _activeInk.Points.Add(pos);
+                    var lpoly = new Polyline
+                    {
+                        Stroke = new SolidColorBrush(_drawColor),
+                        StrokeThickness = _drawWidth,
+                        StrokeLineJoin = PenLineJoin.Round,
+                        StrokeStartLineCap = PenLineCap.Round,
+                        StrokeEndLineCap = PenLineCap.Round
+                    };
+                    lpoly.Points.Add(pos);
+                    lpoly.Points.Add(pos);
+                    _activeCanvas.Children.Add(lpoly);
+                    _activePreview = lpoly;
+                    _activeCanvas.CaptureMouse();
+                    break;
+
                 case EditTool.Signature:
                     if (_pendingSignature is not null)
                     {
@@ -376,6 +398,16 @@ namespace Scalpel
                     _activeInk.Points.Add(pos);
                     poly.Points.Add(pos);
                     break;
+
+                case EditTool.Line when _activePreview is Polyline linePoly && _activeInk is not null && _activeInk.Points.Count == 2:
+                {
+                    var endPt = (Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift
+                        ? LineSnap.SnapEndpoint(_activeInk.Points[0], pos)
+                        : pos;
+                    _activeInk.Points[1] = endPt;
+                    linePoly.Points[1] = endPt;
+                    break;
+                }
 
                 case EditTool.Crop when _activePreview is Rectangle crect:
                     Canvas.SetLeft(crect, Math.Min(pos.X, _drawStart.X));
@@ -574,6 +606,18 @@ namespace Scalpel
                     }
                     _activeInk = null;
                     break;
+
+                case EditTool.Line when _activeInk is not null && _activeInk.Points.Count == 2:
+                {
+                    var a = _activeInk.Points[0];
+                    var b = _activeInk.Points[1];
+                    if ((b - a).Length > 3)
+                        AddAnnotation(_activeInk);
+                    else
+                        _activeCanvas.Children.Remove(_activePreview);
+                    _activeInk = null;
+                    break;
+                }
 
                 case EditTool.Crop when _activePreview is Rectangle cr:
                     _activeCanvas.ReleaseMouseCapture(); // MUST release before showing handles
