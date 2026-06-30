@@ -312,6 +312,58 @@ namespace Scalpel
             }, "Numbering applied.");
         }
 
+        private void ToolsWatermark_Click(object sender, RoutedEventArgs e)
+        {
+            if (!RequireOpenDoc()) return;
+
+            var text = new ToolField("Watermark text", ToolFieldKind.Text, value: "CONFIDENTIAL");
+            var pos = new ToolField("Position", ToolFieldKind.Combo,
+                options: Enum.GetNames(typeof(WatermarkPosition)), value: nameof(WatermarkPosition.Tiled));
+            var opacity = new ToolField("Opacity (%)", ToolFieldKind.Int, value: "30");
+            var fontSize = new ToolField("Font size", ToolFieldKind.Int, value: "48");
+            var rotation = new ToolField("Rotation (°)", ToolFieldKind.Int, value: "45");
+            var addImage = new ToolField("Also stamp an image / logo…", ToolFieldKind.Check, isChecked: false);
+
+            if (!ShowToolForm("Watermark / Stamp", new[] { text, pos, opacity, fontSize, rotation, addImage }, "Apply",
+                    note: "Stamps a semi-transparent text watermark across the pages. Optionally add an image " +
+                          "or logo stamp too. Applies to the working copy — use Save As to write it out."))
+                return;
+
+            string? imagePath = null;
+            if (addImage.Checked)
+            {
+                var ofd = new OpenFileDialog
+                {
+                    Filter = "Images|*.png;*.jpg;*.jpeg;*.bmp;*.gif|All files|*.*",
+                    Title = "Choose an image to stamp",
+                };
+                if (ofd.ShowDialog(this) == true) imagePath = ofd.FileName;
+            }
+
+            if (string.IsNullOrWhiteSpace(text.Value) && string.IsNullOrEmpty(imagePath))
+            {
+                ScalpelDialog.Show(this, "Enter watermark text or choose an image to stamp.");
+                return;
+            }
+
+            var opts = new WatermarkOptions
+            {
+                Text = string.IsNullOrWhiteSpace(text.Value) ? null : text.Value,
+                Position = (WatermarkPosition)Enum.Parse(typeof(WatermarkPosition), pos.Value),
+                Opacity = Math.Max(0, Math.Min(100, ParseInt(opacity.Value, 30))) / 100.0,
+                FontSize = Math.Max(1, ParseInt(fontSize.Value, 48)),
+                RotationDegrees = ParseInt(rotation.Value, 45),
+                ImagePath = imagePath,
+            };
+
+            RunFileTransform("Applying watermark…", src =>
+            {
+                var outPath = App.MakeTempFile("watermarked");
+                WatermarkService.ApplyFile(src, outPath, opts);
+                return outPath;
+            }, "Watermark applied.");
+        }
+
         private void ToolsProtect_Click(object sender, RoutedEventArgs e)
         {
             if (!RequireOpenDoc()) return;

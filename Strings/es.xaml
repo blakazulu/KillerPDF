@@ -173,6 +173,7 @@ Puede desinstalarla en cualquier momento desde Agregar o quitar programas.</sys:
     <sys:String x:Key="Str_TT_Tools">Herramientas PDF</sys:String>
     <sys:String x:Key="Str_Lbl_Tools">Herramientas</sys:String>
     <sys:String x:Key="Str_Tool_Numbering">Numeración / Bates / Encabezado…</sys:String>
+    <sys:String x:Key="Str_Tool_Watermark">Marca de agua / Sello…</sys:String>
     <sys:String x:Key="Str_Tool_Compress">Comprimir PDF…</sys:String>
     <sys:String x:Key="Str_Tool_Ocr">Hacer buscable (OCR)…</sys:String>
     <sys:String x:Key="Str_Tool_Redact">Censurar áreas marcadas…</sys:String>

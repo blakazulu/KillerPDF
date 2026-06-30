@@ -183,6 +183,7 @@
     <sys:String x:Key="Str_TT_Tools">כלי PDF</sys:String>
     <sys:String x:Key="Str_Lbl_Tools">כלים</sys:String>
     <sys:String x:Key="Str_Tool_Numbering">מספור / Bates / כותרת…</sys:String>
+    <sys:String x:Key="Str_Tool_Watermark">סימן מים / חותמת…</sys:String>
     <sys:String x:Key="Str_Tool_Compress">דחיסת PDF…</sys:String>
     <sys:String x:Key="Str_Tool_Ocr">הפיכה לניתן לחיפוש (OCR)…</sys:String>
     <sys:String x:Key="Str_Tool_Redact">צנזור אזורים מסומנים…</sys:String>

@@ -183,6 +183,7 @@ You can uninstall via Add/Remove Programs at any time.</sys:String>
     <sys:String x:Key="Str_TT_Tools">PDF tools</sys:String>
     <sys:String x:Key="Str_Lbl_Tools">Tools</sys:String>
     <sys:String x:Key="Str_Tool_Numbering">Numbering / Bates / Header…</sys:String>
+    <sys:String x:Key="Str_Tool_Watermark">Watermark / Stamp…</sys:String>
     <sys:String x:Key="Str_Tool_Compress">Compress PDF…</sys:String>
     <sys:String x:Key="Str_Tool_Ocr">Make Searchable (OCR)…</sys:String>
     <sys:String x:Key="Str_Tool_Redact">Redact Marked Areas…</sys:String>

@@ -173,6 +173,7 @@
     <sys:String x:Key="Str_TT_Tools">PDF 工具</sys:String>
     <sys:String x:Key="Str_Lbl_Tools">工具</sys:String>
     <sys:String x:Key="Str_Tool_Numbering">编号 / Bates / 页眉…</sys:String>
+    <sys:String x:Key="Str_Tool_Watermark">水印 / 印章…</sys:String>
     <sys:String x:Key="Str_Tool_Compress">压缩 PDF…</sys:String>
     <sys:String x:Key="Str_Tool_Ocr">生成可搜索文本 (OCR)…</sys:String>
     <sys:String x:Key="Str_Tool_Redact">遮蔽标记区域…</sys:String>

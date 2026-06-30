@@ -183,6 +183,7 @@
     <sys:String x:Key="Str_TT_Tools">Инструменты PDF</sys:String>
     <sys:String x:Key="Str_Lbl_Tools">Инструменты</sys:String>
     <sys:String x:Key="Str_Tool_Numbering">Нумерация / Bates / Колонтитул…</sys:String>
+    <sys:String x:Key="Str_Tool_Watermark">Водяной знак / Штамп…</sys:String>
     <sys:String x:Key="Str_Tool_Compress">Сжать PDF…</sys:String>
     <sys:String x:Key="Str_Tool_Ocr">Сделать с поиском (OCR)…</sys:String>
     <sys:String x:Key="Str_Tool_Redact">Закрасить выделенное…</sys:String>

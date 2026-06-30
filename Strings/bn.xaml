@@ -173,6 +173,7 @@
     <sys:String x:Key="Str_TT_Tools">PDF সরঞ্জাম</sys:String>
     <sys:String x:Key="Str_Lbl_Tools">সরঞ্জাম</sys:String>
     <sys:String x:Key="Str_Tool_Numbering">নম্বরিং / Bates / শিরোনাম…</sys:String>
+    <sys:String x:Key="Str_Tool_Watermark">ওয়াটারমার্ক / স্ট্যাম্প…</sys:String>
     <sys:String x:Key="Str_Tool_Compress">PDF সংকুচিত করুন…</sys:String>
     <sys:String x:Key="Str_Tool_Ocr">অনুসন্ধানযোগ্য করুন (OCR)…</sys:String>
     <sys:String x:Key="Str_Tool_Redact">চিহ্নিত এলাকা রিড্যাক্ট করুন…</sys:String>

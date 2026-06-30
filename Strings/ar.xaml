@@ -183,6 +183,7 @@
     <sys:String x:Key="Str_TT_Tools">أدوات PDF</sys:String>
     <sys:String x:Key="Str_Lbl_Tools">أدوات</sys:String>
     <sys:String x:Key="Str_Tool_Numbering">ترقيم / Bates / ترويسة…</sys:String>
+    <sys:String x:Key="Str_Tool_Watermark">علامة مائية / ختم…</sys:String>
     <sys:String x:Key="Str_Tool_Compress">ضغط PDF…</sys:String>
     <sys:String x:Key="Str_Tool_Ocr">جعله قابلاً للبحث (OCR)…</sys:String>
     <sys:String x:Key="Str_Tool_Redact">حجب المناطق المحددة…</sys:String>

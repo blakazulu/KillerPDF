@@ -511,6 +511,7 @@
                     <Button.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="{DynamicResource Str_Tool_Numbering}" Click="ToolsNumbering_Click"/>
+                            <MenuItem Header="{DynamicResource Str_Tool_Watermark}" Click="ToolsWatermark_Click"/>
                             <MenuItem Header="{DynamicResource Str_Tool_Compress}" Click="ToolsCompress_Click"/>
                             <MenuItem Header="{DynamicResource Str_Tool_Ocr}" Click="ToolsOcr_Click"/>
                             <MenuItem Header="{DynamicResource Str_Tool_OcrClipboard}" Click="ToolsOcrPageToClipboard_Click"/>
