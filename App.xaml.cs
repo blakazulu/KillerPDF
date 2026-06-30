@@ -229,6 +229,15 @@ namespace Scalpel
                 new RoutedEventHandler(OnAnyControlClicked), handledEventsToo: true);
             EventManager.RegisterClassHandler(typeof(MenuItem), MenuItem.ClickEvent,
                 new RoutedEventHandler(OnAnyControlClicked), handledEventsToo: true);
+            // Also log ToggleButton Checked/Unchecked (covers RadioButton, which derives from
+            // ToggleButton). A click toggles via Click (already covered above), but a state
+            // change driven programmatically or by assistive tech / UI automation (UIA Toggle
+            // and SelectionItem patterns) raises Checked/Unchecked WITHOUT Click — logging
+            // these makes such interactions observable as the same "UI/click <name>" event.
+            EventManager.RegisterClassHandler(typeof(ToggleButton), ToggleButton.CheckedEvent,
+                new RoutedEventHandler(OnAnyControlClicked), handledEventsToo: true);
+            EventManager.RegisterClassHandler(typeof(ToggleButton), ToggleButton.UncheckedEvent,
+                new RoutedEventHandler(OnAnyControlClicked), handledEventsToo: true);
         }
 
         private static void OnAnyControlClicked(object sender, RoutedEventArgs e)
@@ -794,6 +803,26 @@ namespace Scalpel
             }
             catch { /* best-effort */ }
         }
+
+        // ── Recent files (most-recent first, capped, de-duplicated) ──────────
+        internal static System.Collections.Generic.List<string> GetRecentFiles() =>
+            Scalpel.Services.RecentFiles.Parse(GetSetting("RecentFiles"));
+
+        internal static void AddRecentFile(string path)
+        {
+            try { SetSetting("RecentFiles", Scalpel.Services.RecentFiles.Serialize(
+                Scalpel.Services.RecentFiles.Add(GetRecentFiles(), path))); }
+            catch { }
+        }
+
+        internal static void RemoveRecentFile(string path)
+        {
+            try { SetSetting("RecentFiles", Scalpel.Services.RecentFiles.Serialize(
+                Scalpel.Services.RecentFiles.Remove(GetRecentFiles(), path))); }
+            catch { }
+        }
+
+        internal static void ClearRecentFiles() => SetSetting("RecentFiles", "");
 
         private static bool IsInstalled()
         {

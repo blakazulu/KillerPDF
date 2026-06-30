@@ -14,6 +14,7 @@ namespace Scalpel.Services
         {
             new Release("1.9.0", "June 2026", new[]
             {
+                "Recent files: reopen a recently-opened PDF from the start screen or by right-clicking the Open button; missing files clean themselves out of the list.",
                 "OCR upgrades: pick from many languages and a high-quality mode, copy a page's recognized text to the clipboard, or extract all text to a .txt/.md file — all on your machine.",
                 "New full-screen mode (F11) plus keyboard shortcuts: F1 shortcuts, F2 about, F5–F8 view modes, and letter keys (V/T/H/D/L/I) to pick Edit tools.",
                 "New Document Info (Tools menu or F12): view and edit a PDF's title, author, subject, keywords, and creator, with a read-only summary of producer, page count, version, date, and size.",

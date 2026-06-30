@@ -20,10 +20,13 @@ public static class Assertions
             case "modePagesActive": return TabSelected(driver, "ModePagesTab");
             case "modeSignActive":  return TabSelected(driver, "ModeSignTab");
             case "settingsOverlayOpen":
-                // The overlay container isn't in the UIA tree either; assert a
-                // control that only lives inside the open Settings overlay.
-                return ControlOnscreen(driver, "ThemeDarkRadio",
-                    "Settings overlay did not open (ThemeDarkRadio not visible)");
+                // The overlay container isn't in the UIA tree either; assert a control that
+                // only lives inside the open Settings overlay. Use the Theme section header
+                // toggle, which is present whenever the overlay is open — unlike the theme
+                // radios, which collapse out of the tree when their accordion section is
+                // closed (the default state on open).
+                return ControlOnscreen(driver, "ThemeHeaderToggle",
+                    "Settings overlay did not open (ThemeHeaderToggle not visible)");
             case "zoomIncreased":
             case "zoomDecreased":
                 // Value-delta comparison is performed by ActionRunner; here we only

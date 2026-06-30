@@ -177,10 +177,14 @@ namespace Scalpel
         private void LangRuRadio_Checked(object sender, RoutedEventArgs e)
             => Scalpel.Services.LocaleManager.Apply(Scalpel.Services.Locale.Ru);
 
-        private void ViewSingle_Click(object sender, RoutedEventArgs e)     { SetViewMode(ViewMode.Single);     UpdateViewModeButtons(); }
-        private void ViewContinuous_Click(object sender, RoutedEventArgs e) { SetViewMode(ViewMode.Continuous); UpdateViewModeButtons(); }
-        private void ViewTwoPage_Click(object sender, RoutedEventArgs e)    { SetViewMode(ViewMode.TwoPage);    UpdateViewModeButtons(); }
-        private void ViewGrid_Click(object sender, RoutedEventArgs e)       { SetViewMode(ViewMode.Grid);       UpdateViewModeButtons(); }
+        // The four exclusive view-mode buttons are grouped RadioButtons (GroupName
+        // "ViewModeGroup"), so they fire Checked when activated — by mouse, keyboard, or UI
+        // automation's SelectionItem pattern alike. UpdateViewModeButtons keeps their checked
+        // state in sync when the mode is changed programmatically (e.g. via keyboard shortcut).
+        private void ViewSingle_Checked(object sender, RoutedEventArgs e)     { SetViewMode(ViewMode.Single);     UpdateViewModeButtons(); }
+        private void ViewContinuous_Checked(object sender, RoutedEventArgs e) { SetViewMode(ViewMode.Continuous); UpdateViewModeButtons(); }
+        private void ViewTwoPage_Checked(object sender, RoutedEventArgs e)    { SetViewMode(ViewMode.TwoPage);    UpdateViewModeButtons(); }
+        private void ViewGrid_Checked(object sender, RoutedEventArgs e)       { SetViewMode(ViewMode.Grid);       UpdateViewModeButtons(); }
         private void ViewFit_Click(object sender, RoutedEventArgs e)        => FitToWidth();
 
         private void UpdateViewModeButtons()

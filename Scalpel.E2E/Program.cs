@@ -21,6 +21,10 @@ internal static class Program
         // FlaUI's launch with UseShellExecute=false) cannot find it.
         appPath = Path.GetFullPath(appPath);
 
+        // Snapshot the user's persisted Scalpel settings, baseline them for a deterministic run,
+        // and restore them when this method returns (the suites mutate theme/accent/locale/view).
+        using var settingsGuard = AppSettingsGuard.SnapshotAndBaseline();
+
         // 1. Fixtures.
         string corpusDir = Path.Combine(Path.GetTempPath(), "scalpel-e2e-corpus");
         var corpus = Corpus.Generate(corpusDir);
@@ -69,6 +73,13 @@ internal static class Program
     private static RunReport RunSequential(string appPath, string openWith, string hebrewPath,
         string missingFontPath, IReadOnlyList<string> selected, int seed)
     {
+        // Pristine snapshot of the corpus doc, taken BEFORE the app opens (or re-saves) it. The
+        // fonts/save suites relaunch onto private copies for isolation; copying the live openWith
+        // file once the app has held and re-saved it (e.g. singles' Save-in-place) yields a copy a
+        // freshly-relaunched app refuses to open. Copy from this untouched snapshot instead.
+        string cleanCorpus = openWith + ".clean.pdf";
+        try { File.Copy(openWith, cleanCorpus, overwrite: true); } catch { }
+
         using var driver = AppDriver.Launch(appPath, openWith);
         System.Threading.Thread.Sleep(800); // let app.start + open.success flush
         string? logPath = driver.ResolveLogPath();
@@ -90,8 +101,8 @@ internal static class Program
                 case "journeys": JourneysSuite.Run(driver, runner, report); break;
                 case "pairwise": PairwiseSuite.Run(driver, runner, report); break;
                 case "monkey":   MonkeySuite.Run(driver, runner, report, seed); break;
-                case "fonts":    FontHebrewSuite.Run(driver, runner, report, openWith, hebrewPath, missingFontPath); break;
-                case "save":     SaveVerifySuite.Run(driver, report, openWith); break;
+                case "fonts":    FontHebrewSuite.Run(driver, runner, report, cleanCorpus, hebrewPath, missingFontPath); break;
+                case "save":     SaveVerifySuite.Run(driver, report, cleanCorpus); break;
             }
         }
         return report;

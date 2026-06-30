@@ -546,6 +546,7 @@ namespace Scalpel
 
         private void FinishOpenFile(string displayPath, string workingPath)
         {
+            try { if (System.IO.File.Exists(displayPath)) App.AddRecentFile(displayPath); } catch { }
             _currentFile = workingPath;
             _originalFile = displayPath;
             FileNameLabel.Text = System.IO.Path.GetFileName(displayPath);

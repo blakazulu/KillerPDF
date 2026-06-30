@@ -452,9 +452,9 @@
                     <!-- QAT divider -->
                     <Border Width="1" Height="18" Background="{DynamicResource BorderDim}" Margin="12,0,8,0"/>
                     <!-- Quick Access Toolbar: persistent file actions (right-click Open/Save for more) -->
-                    <Button Style="{StaticResource QatButton}" Click="Open_Click" Content="{StaticResource Ico_Open}" ToolTip="{DynamicResource Str_TT_Open}">
+                    <Button x:Name="OpenMenuBtn" Style="{StaticResource QatButton}" Click="Open_Click" Content="{StaticResource Ico_Open}" ToolTip="{DynamicResource Str_TT_Open}">
                         <Button.ContextMenu>
-                            <ContextMenu>
+                            <ContextMenu x:Name="OpenContextMenu" Opened="OpenContextMenu_Opened">
                                 <MenuItem Header="{DynamicResource Str_Lbl_Open}" Click="Open_Click"/>
                                 <MenuItem Header="{DynamicResource Str_Lbl_New}" Click="New_Click"/>
                                 <MenuItem x:Name="CloseFileMenuItem" Header="{DynamicResource Str_Lbl_CloseFile}" Click="CloseFile_Click" IsEnabled="False"/>
@@ -535,18 +535,18 @@
               <StackPanel x:Name="ModePanelView" Orientation="Horizontal" Visibility="Visible">
                 <StackPanel Margin="2,0">
                   <StackPanel Orientation="Horizontal">
-                    <ToggleButton x:Name="ViewSingleBtn" Style="{StaticResource RibbonToggle}" Click="ViewSingle_Click" ToolTip="{DynamicResource Str_View_Single}">
+                    <RadioButton x:Name="ViewSingleBtn" GroupName="ViewModeGroup" Style="{StaticResource RibbonToggle}" Checked="ViewSingle_Checked" ToolTip="{DynamicResource Str_View_Single}">
                       <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_Single}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_View_Single}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
-                    </ToggleButton>
-                    <ToggleButton x:Name="ViewContinuousBtn" Style="{StaticResource RibbonToggle}" Click="ViewContinuous_Click" ToolTip="{DynamicResource Str_View_Continuous}">
+                    </RadioButton>
+                    <RadioButton x:Name="ViewContinuousBtn" GroupName="ViewModeGroup" Style="{StaticResource RibbonToggle}" Checked="ViewContinuous_Checked" ToolTip="{DynamicResource Str_View_Continuous}">
                       <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_Continuous}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_View_Continuous}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
-                    </ToggleButton>
-                    <ToggleButton x:Name="ViewTwoPageBtn" Style="{StaticResource RibbonToggle}" Click="ViewTwoPage_Click" ToolTip="{DynamicResource Str_View_TwoPage}">
+                    </RadioButton>
+                    <RadioButton x:Name="ViewTwoPageBtn" GroupName="ViewModeGroup" Style="{StaticResource RibbonToggle}" Checked="ViewTwoPage_Checked" ToolTip="{DynamicResource Str_View_TwoPage}">
                       <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_TwoPage}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_View_TwoPage}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
-                    </ToggleButton>
-                    <ToggleButton x:Name="ViewGridBtn" Style="{StaticResource RibbonToggle}" Click="ViewGrid_Click" ToolTip="{DynamicResource Str_View_Grid}">
+                    </RadioButton>
+                    <RadioButton x:Name="ViewGridBtn" GroupName="ViewModeGroup" Style="{StaticResource RibbonToggle}" Checked="ViewGrid_Checked" ToolTip="{DynamicResource Str_View_Grid}">
                       <StackPanel><TextBlock FontFamily="{DynamicResource FontIcon}" FontSize="23" Text="{StaticResource Ico_Grid}" HorizontalAlignment="Center"/><TextBlock Text="{DynamicResource Str_View_Grid}" Margin="0,5,0,0" HorizontalAlignment="Center"/></StackPanel>
-                    </ToggleButton>
+                    </RadioButton>
                   </StackPanel>
                   <TextBlock Text="{StaticResource Grp_Layout}" FontFamily="{DynamicResource FontUI}" FontSize="{DynamicResource FsSidebarLabel}" FontWeight="SemiBold" Foreground="{DynamicResource RibbonGroupLabel}" HorizontalAlignment="Center" Margin="0,5,0,0"/>
                 </StackPanel>
@@ -868,11 +868,39 @@
                                 CornerRadius="8" Margin="40" Padding="40"
                                 HorizontalAlignment="Center" VerticalAlignment="Center"
                                 Background="Transparent" Style="{x:Null}">
-                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="320">
                                 <TextBlock Text="Drop PDF here" FontFamily="{DynamicResource FontUI}" FontSize="20"
                                            Foreground="{DynamicResource TextSecondary}" HorizontalAlignment="Center"/>
                                 <TextBlock Text="or click to browse" FontFamily="{DynamicResource FontUI}" FontSize="13"
                                            Foreground="{DynamicResource TextSecondary}" HorizontalAlignment="Center" Margin="0,8,0,0"/>
+                                <TextBlock x:Name="RecentHeader" Text="{DynamicResource Str_Recent}" Visibility="Collapsed"
+                                           FontFamily="{DynamicResource FontUI}" FontSize="12" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextDim}" HorizontalAlignment="Left" Margin="0,22,0,6"/>
+                                <ItemsControl x:Name="RecentList" Visibility="Collapsed" HorizontalAlignment="Stretch">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="Transparent" Padding="6,4" Margin="0,1" CornerRadius="5"
+                                                    MouseLeftButtonDown="RecentRow_Click" Cursor="Hand" Tag="{Binding Path}">
+                                                <DockPanel LastChildFill="True">
+                                                    <TextBlock DockPanel.Dock="Left" Text="{StaticResource Ico_Open}"
+                                                               FontFamily="{DynamicResource FontIcon}" FontSize="14"
+                                                               Foreground="{DynamicResource TextDim}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                                    <Button DockPanel.Dock="Right" Content="{StaticResource Ico_WinClose}"
+                                                            FontFamily="{DynamicResource FontIcon}" Style="{StaticResource StudioIconButton}"
+                                                            ToolTip="{DynamicResource Str_Recent_Remove}" Tag="{Binding Path}"
+                                                            Click="RecentRemove_Click" VerticalAlignment="Center"/>
+                                                    <TextBlock DockPanel.Dock="Right" Text="{Binding Dir}" Margin="10,0,8,0"
+                                                               FontFamily="{DynamicResource FontUI}" FontSize="11"
+                                                               Foreground="{DynamicResource TextDim}" VerticalAlignment="Center"
+                                                               TextTrimming="CharacterEllipsis" MaxWidth="140"/>
+                                                    <TextBlock Text="{Binding FileName}" FontFamily="{DynamicResource FontUI}" FontSize="13"
+                                                               Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center"
+                                                               TextTrimming="CharacterEllipsis"/>
+                                                </DockPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
                             </StackPanel>
                         </Border>
                     </Border>
@@ -1348,7 +1376,7 @@
                     </Border>
                     </StackPanel>
                     <!-- X close button overlaid at top-right - no vertical space consumed -->
-                    <Button Click="AboutOverlayClose_Click"
+                    <Button x:Name="AboutOverlayCloseBtn" Click="AboutOverlayClose_Click"
                             Style="{StaticResource StudioIconButton}"
                             HorizontalAlignment="Right" VerticalAlignment="Top"
                             FocusVisualStyle="{x:Null}"
@@ -1375,7 +1403,7 @@
                                    FontFamily="{DynamicResource FontUI}" FontSize="{DynamicResource FsDialogTitle}"
                                    FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}"
                                    HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                        <Button Click="WhatsNewOverlayClose_Click"
+                        <Button x:Name="WhatsNewOverlayCloseBtn" Click="WhatsNewOverlayClose_Click"
                                 Style="{StaticResource StudioIconButton}"
                                 HorizontalAlignment="Right" VerticalAlignment="Center"
                                 FocusVisualStyle="{x:Null}"

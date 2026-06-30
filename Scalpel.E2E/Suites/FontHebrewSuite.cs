@@ -24,9 +24,26 @@ public static class FontHebrewSuite
     {
         const string Suite = "fonts";
 
+        // Pristine per-scenario copies, taken before any scenario edits a doc. Each new-text
+        // scenario relaunches onto its OWN copy so it types onto a clean first page AND never
+        // mutates the shared corpus file — otherwise Scenario A's burned-in Hebrew would land
+        // exactly where a later suite (the save suite) clicks to place its own text.
+        string aDoc = openWithPath + ".scenarioA.pdf";
+        string dDoc = openWithPath + ".scenarioD.pdf";
+        string eDoc = openWithPath + ".scenarioE.pdf";
+        try { File.Copy(openWithPath, aDoc, overwrite: true); } catch { }
+        try { File.Copy(openWithPath, dDoc, overwrite: true); } catch { }
+        try { File.Copy(openWithPath, eDoc, overwrite: true); } catch { }
+
         // ─── Scenario A: place NEW Hebrew text annotation ────────────────────────
 
-        // Step 1: Switch to Edit mode.
+        // Relaunch onto Scenario A's pristine copy so the shared corpus doc stays untouched.
+        driver.Relaunch(aDoc);
+        System.Threading.Thread.Sleep(1200);
+
+        // Step 1: Edit mode. The relaunch above re-applied the settings baseline (single-page
+        // view, 100% zoom), so the page preview is already in the right layout for canvas
+        // placement — only the ribbon mode needs switching.
         report.Results.Add(runner.RunRaw(Suite, "mode:edit",
             () => driver.EnsureSurface(Surface.EditMode), null, null));
 
@@ -40,17 +57,10 @@ public static class FontHebrewSuite
         report.Results.Add(runner.RunRaw(Suite, "canvas:place-type-commit",
             () => driver.WithForeground(() =>
             {
-                // 3. Click the canvas to place an annotation TextBox.
-                driver.ClickCanvas();
-                // 4. Wait for the TextBox to be rendered and receive keyboard focus
-                //    (focus is given via tb.Loaded += (s,e) => tb.Focus() inside PlaceTextBox).
-                System.Threading.Thread.Sleep(600);
-                // Click the annotation TextBox via UIA to ensure keyboard focus.
-                var annTb = driver.FindAnyTextBox();
-                annTb?.Click();
-                System.Threading.Thread.Sleep(150);
-                // 5. Type the Hebrew word. Keyboard.Type sends Unicode via SendInput/WM_CHAR.
-                driver.TypeText(HebrewShalom);
+                // 3-5. Place the annotation box on the canvas and set the Hebrew word via the UIA
+                //      Value pattern (foreground-independent; reliably lands Unicode), retrying the
+                //      placement click if it misses.
+                driver.PlaceAndSetAnnotationText(HebrewShalom);
                 System.Threading.Thread.Sleep(200);
                 // 6. Commit the annotation by re-clicking ToolTextBtn.
                 //    SetTool(EditTool.Text) calls CommitActiveTextBox() first (MainWindow line ~3219),
@@ -82,23 +92,29 @@ public static class FontHebrewSuite
 
         // Step 8: Final assertion — inspect the saved PDF with PdfPig and verify
         // at least one Hebrew-block character (U+0590–U+05FF) was burned in.
-        report.Results.Add(AssertHebrewInPdf(Suite, openWithPath, "assert:hebrew-in-pdf"));
+        report.Results.Add(AssertHebrewInPdf(Suite, aDoc, "assert:hebrew-in-pdf"));
 
         // ─── Scenario D: place NEW Arabic text annotation ────────────────────────
         // Same place→type→commit→save flow, with Arabic. Exercises ArabicShaper
         // (cursive joining), BidiReorder (Arabic ranges), and PickFace → Noto Sans Arabic.
         // Assert (PdfPig) a char in an Arabic block burned in: base (U+0600–06FF) or
         // presentation forms A/B (U+FB50–FDFF, U+FE70–FEFF, what the shaper emits).
+        // Relaunch onto a pristine copy first so this is a clean first-annotation and the
+        // assertion reads exactly the file that was edited.
+        driver.Relaunch(dDoc);
+        System.Threading.Thread.Sleep(1200);
         PlaceNewTextScenario(driver, runner, report, Suite, "D", ArabicSalam);
-        report.Results.Add(AssertScriptInPdf(Suite, openWithPath, "D:assert:arabic-in-pdf", "Arabic",
+        report.Results.Add(AssertScriptInPdf(Suite, dDoc, "D:assert:arabic-in-pdf", "Arabic",
             new[] { ('؀', 'ۿ'), ('ﭐ', '﷿'), ('ﹰ', '﻿') }));
 
         // ─── Scenario E: place NEW Russian (Cyrillic) text annotation ────────────
         // LTR but the candidate "Geist" lacks Cyrillic; PickFace must fall back to
         // Noto Sans so it renders glyphs, not .notdef boxes. Assert a Cyrillic-block
         // char (U+0400–04FF) is present (proves real glyphs were drawn).
+        driver.Relaunch(eDoc);
+        System.Threading.Thread.Sleep(1200);
         PlaceNewTextScenario(driver, runner, report, Suite, "E", RussianPrivet);
-        report.Results.Add(AssertScriptInPdf(Suite, openWithPath, "E:assert:cyrillic-in-pdf", "Cyrillic",
+        report.Results.Add(AssertScriptInPdf(Suite, eDoc, "E:assert:cyrillic-in-pdf", "Cyrillic",
             new[] { ('Ѐ', 'ӿ') }));
 
         // ─── Scenario B: edit EXISTING Hebrew text ───────────────────────────────
@@ -325,18 +341,18 @@ public static class FontHebrewSuite
     private static void PlaceNewTextScenario(AppDriver driver, ActionRunner runner,
         RunReport report, string suite, string label, string text)
     {
+        // Edit mode. The relaunch re-applied the settings baseline (single-page view), so only
+        // the ribbon mode needs switching; ToolTextBtn lives in the Edit ribbon panel.
+        report.Results.Add(runner.RunRaw(suite, $"{label}:mode:edit",
+            () => driver.EnsureSurface(Surface.EditMode), null, null));
+
         report.Results.Add(runner.RunRaw(suite, $"{label}:tool:text",
             () => driver.Click("ToolTextBtn"), null, null));
 
         report.Results.Add(runner.RunRaw(suite, $"{label}:canvas:place-type-commit",
             () => driver.WithForeground(() =>
             {
-                driver.ClickCanvas();
-                System.Threading.Thread.Sleep(600);
-                var annTb = driver.FindAnyTextBox();
-                annTb?.Click();
-                System.Threading.Thread.Sleep(150);
-                driver.TypeText(text);
+                driver.PlaceAndSetAnnotationText(text);
                 System.Threading.Thread.Sleep(200);
                 driver.Click("ToolTextBtn"); // re-click commits the active TextBox
                 System.Threading.Thread.Sleep(300);

@@ -19,6 +19,15 @@ public static class SaveVerifySuite
     {
         const string Suite = "save";
 
+        // Isolate from prior suites: the fonts suite relaunches the app onto its own
+        // fixtures (and leaves it open on missingfont-1p), so without a relaunch here we
+        // would edit one file but assert another. Open a fresh private copy of the corpus
+        // doc and both edit AND verify THAT file.
+        string saveDoc = Path.Combine(Path.GetDirectoryName(openWithPath)!, "save-verify-inplace.pdf");
+        try { File.Copy(openWithPath, saveDoc, overwrite: true); } catch { }
+        driver.Relaunch(saveDoc);
+        System.Threading.Thread.Sleep(1200);
+
         // Edit → in-place Save (Ctrl+S) → reopen the file → verify the edit persisted.
         PlaceTextAnnotation(driver, InPlaceMarker);
         driver.WithForeground(() =>
@@ -28,24 +37,19 @@ public static class SaveVerifySuite
                 Keyboard.Press(VirtualKeyShort.KEY_S);
         });
         System.Threading.Thread.Sleep(2200); // flush to disk
-        report.Results.Add(AssertPdfContains(Suite, "inplace-save:persisted", openWithPath, InPlaceMarker));
+        report.Results.Add(AssertPdfContains(Suite, "inplace-save:persisted", saveDoc, InPlaceMarker));
     }
 
     // Edit-mode → Text tool → click canvas → type marker → commit (re-click the tool).
     private static void PlaceTextAnnotation(AppDriver driver, string text)
     {
-        driver.EnsureSurface(Surface.EditMode);
+        driver.EnsureSurface(Surface.EditMode); // relaunch re-applied the single-page baseline; just switch ribbon mode
         System.Threading.Thread.Sleep(200);
         driver.Click("ToolTextBtn");
         System.Threading.Thread.Sleep(200);
         driver.WithForeground(() =>
         {
-            driver.ClickCanvas();
-            System.Threading.Thread.Sleep(600);
-            var tb = driver.FindAnyTextBox();
-            tb?.Click();
-            System.Threading.Thread.Sleep(150);
-            driver.TypeText(text);
+            driver.PlaceAndSetAnnotationText(text);
             System.Threading.Thread.Sleep(200);
             driver.Click("ToolTextBtn"); // re-click commits the active TextBox
             System.Threading.Thread.Sleep(300);

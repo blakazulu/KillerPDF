@@ -206,7 +206,46 @@ public sealed class AppDriver : IDisposable
         throw new InvalidOperationException("Scalpel main window did not appear.");
     }
 
-    public Window MainWindow => _app.GetMainWindow(_automation, TimeSpan.FromSeconds(5));
+    private Window? _mainWindowCache;
+
+    public Window MainWindow
+    {
+        get
+        {
+            // Reuse the cached window while it is still valid — MainWindow is read on nearly every
+            // operation, and re-resolving (GetAllTopLevelWindows + ClassName probes) each time is
+            // far too slow. A cheap handle read tells us the cached element is still live.
+            if (_mainWindowCache != null)
+            {
+                try
+                {
+                    if (_mainWindowCache.Properties.NativeWindowHandle.ValueOrDefault != IntPtr.Zero)
+                        return _mainWindowCache;
+                }
+                catch { }
+            }
+            return _mainWindowCache = ResolveMainWindow();
+        }
+    }
+
+    // WPF can keep a stray top-level Popup HWND (a tooltip/adorner) alongside the real window, and
+    // FlaUI.GetMainWindow sometimes returns that Popup — which has none of our controls, making
+    // every Find() fail. Prefer the process's actual application window: the top-level whose
+    // ClassName is not "Popup" (its title is "Scalpel").
+    private Window ResolveMainWindow()
+    {
+        try
+        {
+            var tops = _app.GetAllTopLevelWindows(_automation);
+            var real = tops.FirstOrDefault(w =>
+            {
+                try { return w.ClassName != "Popup"; } catch { return false; }
+            });
+            if (real != null) return real;
+        }
+        catch { }
+        return _app.GetMainWindow(_automation, TimeSpan.FromSeconds(5));
+    }
 
     public bool IsAlive
     {
@@ -219,7 +258,29 @@ public sealed class AppDriver : IDisposable
 
     public void Relaunch(string openWithPath)
     {
-        try { _app.Close(); _app.Dispose(); } catch { }
+        // Fully tear down the old instance BEFORE launching the new one. Closing without waiting
+        // raced the new launch: while the heavy first instance was still shutting down, the new
+        // process's command-line file-open could be dropped, leaving the relaunched app with no
+        // document loaded (no page to place annotations on). Wait for the old PID to actually exit.
+        int oldPid = -1;
+        try { oldPid = _app.ProcessId; } catch { }
+        try { _app.Close(); } catch { }
+        try { _app.Dispose(); } catch { }
+        if (oldPid > 0)
+        {
+            try
+            {
+                using var op = System.Diagnostics.Process.GetProcessById(oldPid);
+                if (!op.WaitForExit(4000)) { try { op.Kill(); op.WaitForExit(1000); } catch { } }
+            }
+            catch { /* already gone */ }
+        }
+        _mainWindowCache = null; // the relaunched app is a new window — drop the stale cache
+        _lastMainHandle = IntPtr.Zero;
+        // Re-apply the settings baseline so the relaunched app opens in a known state. Prior suites
+        // persist theme/locale/view-mode by clicking those controls; without this the relaunch
+        // would inherit, e.g., an RTL locale that breaks canvas annotation placement.
+        AppSettingsGuard.WriteBaseline();
         var psi = new ProcessStartInfo(_exePath, $"\"{openWithPath}\"") { UseShellExecute = false };
         // Preserve this instance's private log dir across relaunches, otherwise the new
         // session would log to the shared default dir and collide with sibling instances.
@@ -246,35 +307,41 @@ public sealed class AppDriver : IDisposable
         try { if (el.Patterns.ScrollItem.IsSupported) el.Patterns.ScrollItem.Pattern.ScrollIntoView(); } catch { }
         try
         {
-            // We need a REAL click that raises WPF's ButtonBase.Click routed event,
-            // because the app's global logger hooks that event. Plain Buttons expose
-            // the Invoke pattern, which raises Click and works regardless of window
-            // focus. ToggleButton/RadioButton do NOT support Invoke, and their
-            // Toggle()/SelectionItem.Select()/LegacyIAccessible.DoDefaultAction()
-            // patterns change state WITHOUT raising Click — so nothing gets logged.
-            // For those, only a physical click raises Click, and it requires the
-            // window to be in the foreground (otherwise the synthesized click lands
-            // on whatever is on top). Foreground the window first, then click.
+            // Drive each control through the mechanism that actually runs its real handler,
+            // preferring the ones that work on a BACKGROUND window (no shared cursor, no
+            // foreground race) so the run is deterministic in an automation host:
+            //
+            //   * Plain Button  → Invoke: raises ButtonBase.Click (the app logs it). Background-safe.
+            //   * RadioButton   → SelectionItem.Select: raises Checked, which is what every radio's
+            //                     handler (ModeTab_Checked, Accent*/Lang*/Theme*_Checked) listens to.
+            //                     The app now also logs Checked, so this is observable. Background-safe.
+            //                     Re-selecting an already-selected radio fires nothing — that is fine;
+            //                     the verifier falls back to the selected STATE.
+            //   * ToggleButton  → physical click. The view-mode toggles act on their *Click* handler
+            //                     (ViewSingle_Click …), and TogglePattern.Toggle() raises only
+            //                     Checked/Unchecked, NOT Click — so it would log without switching the
+            //                     view. A physical click is the only thing that runs their handler;
+            //                     it is serialized through the foreground gate and retried once.
             if (el.Patterns.Invoke.IsSupported)
             {
-                // Invoke works on a BACKGROUND window and never touches the cursor — no gate.
                 el.Patterns.Invoke.Pattern.Invoke();
+            }
+            else if (el.Patterns.SelectionItem.IsSupported)
+            {
+                el.Patterns.SelectionItem.Pattern.Select();
             }
             else
             {
-                // Physical click (ToggleButton/RadioButton/CheckBox): needs the foreground and
-                // the shared cursor. Serialize all physical input through the global gate.
                 ForegroundGate.Wait();
                 try
                 {
-                    FocusMainWindow(); // robust forced-foreground; physical clicks need it
-                    System.Threading.Thread.Sleep(60); // let the window actually come forward
+                    FocusMainWindow();
+                    System.Threading.Thread.Sleep(60);
                     el.Click();
-                    // Self-heal a missed click under foreground contention (higher in parallel
-                    // mode): for a selectable control that should now be selected but isn't,
-                    // re-foreground and click once more — within the same gate hold. This makes
-                    // physical clicks robust everywhere, not just the RunControl retry path.
-                    if (SelectableButNotSelected(el))
+                    // Self-heal a missed physical click: if a toggle didn't register, re-foreground
+                    // and click once more within the same gate hold.
+                    if (el.Patterns.Toggle.IsSupported &&
+                        el.Patterns.Toggle.Pattern.ToggleState.Value == FlaUI.Core.Definitions.ToggleState.Off)
                     {
                         System.Threading.Thread.Sleep(90);
                         FocusMainWindow();
@@ -287,21 +354,6 @@ public sealed class AppDriver : IDisposable
             return true;
         }
         catch { return false; }
-    }
-
-    // True only when the element exposes SelectionItem (RadioButton / selectable) AND is
-    // currently NOT selected — i.e. a click that should have selected it didn't land. Returns
-    // false for non-selectable controls and for togglables (a toggle legitimately ends up off),
-    // so we never retry a click that did take effect.
-    private static bool SelectableButNotSelected(AutomationElement el)
-    {
-        try
-        {
-            if (el.Patterns.SelectionItem.IsSupported)
-                return !el.Patterns.SelectionItem.Pattern.IsSelected.ValueOrDefault;
-        }
-        catch { }
-        return false;
     }
 
     /// <summary>
@@ -324,6 +376,20 @@ public sealed class AppDriver : IDisposable
         catch { return false; }
     }
 
+    /// <summary>
+    /// True if the control exists in the tree but is currently disabled (IsEnabled == false).
+    /// Returns false when the control is absent, so the caller's normal "not found" path still
+    /// fires. Used to skip controls that are legitimately non-interactable in the current state
+    /// (e.g. the accent radios while High Contrast is the active theme).
+    /// </summary>
+    public bool IsDisabled(string automationId)
+    {
+        var el = Find(automationId);
+        if (el == null) return false;
+        try { return !el.Properties.IsEnabled.ValueOrDefault; }
+        catch { return false; }
+    }
+
     public void EnsureSurface(Surface surface)
     {
         switch (surface)
@@ -339,6 +405,12 @@ public sealed class AppDriver : IDisposable
                 // only if it is somehow not already open. We do NOT toggle the overlay
                 // for other surfaces — UIA visibility lag made that race and reopen it.
                 if (!IsSettingsOverlayOpen()) Click("SettingsBtn");
+                // The overlay's Theme/Accent/Language groups are collapsible accordion
+                // sections that open collapsed by default, so their radios are absent
+                // from the UIA tree until the section is expanded. Expand all three via
+                // the Toggle pattern (programmatic — no foreground/cursor needed) so the
+                // catalogued radios are reachable.
+                ExpandSettingsSections();
                 break;
             case Surface.AlwaysVisible: default: break;
         }
@@ -363,16 +435,43 @@ public sealed class AppDriver : IDisposable
     }
 
     /// <summary>
-    /// True when the Settings overlay is open, detected by a control that only
-    /// renders inside it (ThemeDarkRadio). When the overlay is collapsed, that
-    /// control is absent from the UIA tree.
+    /// True when the Settings overlay is open, detected by the Theme section header
+    /// toggle — a control that renders inside the overlay and, unlike the theme
+    /// radios, is present whether or not its accordion section is expanded. (The
+    /// radios collapse out of the tree when their section is closed, which is the
+    /// default, so they are not a reliable open-signal.) When the overlay is
+    /// collapsed, the header toggle is absent from the UIA tree.
     /// </summary>
     public bool IsSettingsOverlayOpen()
     {
-        var el = Find("ThemeDarkRadio");
+        var el = Find("ThemeHeaderToggle");
         if (el == null) return false;
         try { return !el.Properties.IsOffscreen.ValueOrDefault; }
         catch { return false; }
+    }
+
+    /// <summary>
+    /// Expand the three collapsible Settings accordion sections (Theme / Accent /
+    /// Language) so their radios are present in the UIA tree. Uses the UIA Toggle
+    /// pattern, which flips IsChecked programmatically without a physical click — so
+    /// it needs neither the foreground nor the shared cursor and never races other
+    /// instances. Idempotent: a section already expanded is left alone.
+    /// </summary>
+    public void ExpandSettingsSections()
+    {
+        foreach (var id in new[] { "ThemeHeaderToggle", "AccentHeaderToggle", "LangHeaderToggle" })
+        {
+            var el = Find(id);
+            if (el == null) continue;
+            try
+            {
+                if (el.Patterns.Toggle.IsSupported &&
+                    el.Patterns.Toggle.Pattern.ToggleState.Value != FlaUI.Core.Definitions.ToggleState.On)
+                    el.Patterns.Toggle.Pattern.Toggle();
+            }
+            catch { }
+        }
+        System.Threading.Thread.Sleep(80); // let the visibility bindings propagate to UIA
     }
 
     /// <summary>
@@ -391,37 +490,41 @@ public sealed class AppDriver : IDisposable
         catch { }
     }
 
+    // Last successfully-read main-window handle. The HWND is stable for a window's lifetime,
+    // so caching it lets DismissModals identify the main window even when a transient UIA read
+    // returns 0 (which happens while the visual tree is rebuilding during a mode switch).
+    private IntPtr _lastMainHandle;
+
+    private IntPtr GetMainWindowHandle()
+    {
+        try
+        {
+            var h = MainWindow?.Properties.NativeWindowHandle.ValueOrDefault ?? IntPtr.Zero;
+            if (h != IntPtr.Zero) _lastMainHandle = h;
+        }
+        catch { }
+        return _lastMainHandle;
+    }
+
     /// <summary>
-    /// Close any unexpected modal/dialog windows that are not the main window.
-    /// FlaUI 4.x: Window.IsModal is a direct property (not a pattern call).
-    /// Uses native window handles (IntPtr) for stable identity comparison instead of object equality.
+    /// Close any unexpected top-level windows that are not the main window — modal dialogs (file
+    /// pickers, message boxes) AND stray non-modal Popup HWNDs that WPF can leave behind (a stale
+    /// tooltip/adorner popup otherwise confuses window resolution). The critical safety rule: if
+    /// the main-window handle can't be determined, do NOTHING — leaving a stray window is far
+    /// better than killing the run by closing the main window (the bug this guard fixes).
     /// </summary>
     public void DismissModals()
     {
         try
         {
-            // Defensively read the main window's native handle once.
-            IntPtr mainWindowHandle = IntPtr.Zero;
-            try
-            {
-                var mainWindow = MainWindow;
-                if (mainWindow != null)
-                {
-                    mainWindowHandle = mainWindow.Properties.NativeWindowHandle;
-                }
-            }
-            catch { }
+            IntPtr mainHandle = GetMainWindowHandle();
+            if (mainHandle == IntPtr.Zero) return; // can't identify main → never risk closing it
 
-            // Close all top-level windows except the main window (by handle).
             foreach (var w in _app.GetAllTopLevelWindows(_automation))
             {
                 try
                 {
-                    // If we have the main window's handle and this window matches it, skip.
-                    if (mainWindowHandle != IntPtr.Zero && w.Properties.NativeWindowHandle == mainWindowHandle)
-                    {
-                        continue;
-                    }
+                    if (w.Properties.NativeWindowHandle.ValueOrDefault == mainHandle) continue;
                     w.AsWindow()?.Close();
                 }
                 catch { }
@@ -663,6 +766,61 @@ public sealed class AppDriver : IDisposable
             return all.FirstOrDefault(e => string.IsNullOrEmpty(e.AutomationId));
         }
         catch { return null; }
+    }
+
+    /// <summary>
+    /// Place a new annotation text box on the canvas and set its text via the UIA Value pattern,
+    /// robust to a placement click that misses (a single physical canvas click can land nowhere
+    /// under foreground contention, most often right after a relaunch). Clicks the canvas, waits
+    /// up to ~1.8s for the text box to appear and sets it; if it never appears, clicks once more.
+    /// Falls back to physical typing as a last resort. Returns true if the text was set.
+    /// Requires the Text tool to already be active.
+    /// </summary>
+    public bool PlaceAndSetAnnotationText(string text)
+    {
+        ClickCanvas();
+        for (int i = 0; i < 6; i++)
+        {
+            System.Threading.Thread.Sleep(300);
+            if (SetActiveAnnotationText(text)) return true;
+        }
+        // The box never appeared — one more placement attempt.
+        ClickCanvas();
+        System.Threading.Thread.Sleep(600);
+        if (SetActiveAnnotationText(text)) return true;
+        // Last resort: physical typing into whatever text box exists.
+        var tb = FindAnyTextBox();
+        if (tb != null)
+        {
+            try { tb.Click(); } catch { }
+            System.Threading.Thread.Sleep(150);
+            TypeText(text);
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Set the text of the active (unnamed) annotation TextBox via the UIA Value pattern. Unlike
+    /// physical Keyboard typing this is foreground-independent and reliably lands Unicode
+    /// (Hebrew / Arabic / Cyrillic) — the app's commit path reads TextBox.Text, which SetValue
+    /// updates directly. Returns false if no annotation TextBox is present or it lacks the Value
+    /// pattern, so the caller can fall back to physical typing.
+    /// </summary>
+    public bool SetActiveAnnotationText(string text)
+    {
+        var el = FindAnyTextBox();
+        if (el == null) return false;
+        try
+        {
+            if (el.Patterns.Value.IsSupported)
+            {
+                el.Patterns.Value.Pattern.SetValue(text);
+                return true;
+            }
+        }
+        catch { }
+        return false;
     }
 
     /// <summary>

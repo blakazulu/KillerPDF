@@ -70,6 +70,7 @@ namespace Scalpel
             _annotationCanvas.Children.Clear();
             FileNameLabel.Text = "";
             DropZone.Visibility = Visibility.Visible;
+            PopulateRecentList();
             PagePreviewPanel.Visibility = Visibility.Collapsed;
             CloseSearchBar();
             HideDrawSettings();

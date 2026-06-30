@@ -229,6 +229,7 @@ namespace Scalpel
             SetTool(EditTool.Select);
             SetMode(AppMode.View);
             UpdateViewModeButtons();
+            PopulateRecentList();
             ApplyGrainTexture();
             SourceInitialized += MainWindow_SourceInitialized;
             Closed += (_, _) => { _doc?.Close(); App.CleanupSessionTemps(); };

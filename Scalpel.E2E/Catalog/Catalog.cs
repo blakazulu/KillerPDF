@@ -12,10 +12,11 @@ public static class Catalog
         new("ModePagesTab", Surface.AlwaysVisible, "modePagesActive"),
         new("ModeSignTab",  Surface.AlwaysVisible, "modeSignActive"),
 
-        // File group / zoom (always visible)
-        new("OpenMenuBtn",   Surface.AlwaysVisible, null),
+        // File group / zoom (always visible). NOTE: the Open button (OpenMenuBtn) is NOT
+        // auto-clicked — invoking it raises a modal OS file picker that would wedge the
+        // single-pass scan; it is listed in SinglesSuite.ExcludedFromCoverage. The Save
+        // button (SaveAsBtn → Save_Click → SaveInPlace) saves with no dialog and is safe.
         new("SaveAsBtn",     Surface.AlwaysVisible, null),
-        new("SaveMenuBtn",   Surface.AlwaysVisible, null),
         new("ZoomOutBtn",    Surface.AlwaysVisible, "zoomDecreased"),
         new("ZoomInBtn",     Surface.AlwaysVisible, "zoomIncreased"),
         new("SidebarToggleBtn", Surface.AlwaysVisible, null),
@@ -35,6 +36,7 @@ public static class Catalog
         new("ToolHighlightBtn", Surface.EditMode, null),
         new("ToolDrawBtn",      Surface.EditMode, null),
         new("ToolImageBtn",     Surface.EditMode, null),
+        new("ToolLineBtn",      Surface.EditMode, null),
         new("ToolCropBtn",      Surface.EditMode, null),
 
         // Sign mode panel
@@ -43,13 +45,16 @@ public static class Catalog
         // Settings overlay — SettingsBtn opens it and must be tested first so the
         // overlay is up for the controls that live inside it.
         new("SettingsBtn",        Surface.AlwaysVisible, "settingsOverlayOpen"),
-        new("ThemeDarkRadio",     Surface.SettingsOverlay, null),
-        new("ThemeLightRadio",    Surface.SettingsOverlay, null),
-        new("ThemeHCRadio",       Surface.SettingsOverlay, null),
+        // Accent BEFORE Theme on purpose: selecting High Contrast (a theme) DISABLES the
+        // accent picker (HC owns its own accent), so the accent radios must be exercised
+        // while a non-HC theme is still active, or Select() hits a disabled control.
         new("AccentAmberRadio",   Surface.SettingsOverlay, null),
         new("AccentRedRadio",     Surface.SettingsOverlay, null),
         new("AccentGreenRadio",   Surface.SettingsOverlay, null),
         new("AccentCyanRadio",    Surface.SettingsOverlay, null),
+        new("ThemeDarkRadio",     Surface.SettingsOverlay, null),
+        new("ThemeLightRadio",    Surface.SettingsOverlay, null),
+        new("ThemeHCRadio",       Surface.SettingsOverlay, null),
         new("LangEnRadio",        Surface.SettingsOverlay, null),
         new("LangEsRadio",        Surface.SettingsOverlay, null),
         new("LangZhTWRadio",      Surface.SettingsOverlay, null),

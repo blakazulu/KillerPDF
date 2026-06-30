@@ -33,6 +33,7 @@
   <ItemGroup>
     <Compile Include="..\Models\EditingTypes.cs" Link="Models\EditingTypes.cs" />
     <Compile Include="..\Services\SignatureStore.cs" Link="Services\SignatureStore.cs" />
+    <Compile Include="..\Services\RecentFiles.cs" Link="Services\RecentFiles.cs" />
     <Compile Include="..\Services\FontResolver.cs" Link="Services\FontResolver.cs" />
     <Compile Include="..\Services\PdfFontResolver.cs" Link="Services\PdfFontResolver.cs" />
     <Compile Include="..\Services\TrueTypeName.cs" Link="Services\TrueTypeName.cs" />
