@@ -44,6 +44,7 @@
     <Compile Include="..\Services\SearchService.cs" Link="Services\SearchService.cs" />
     <Compile Include="..\Services\BatesNumberingService.cs" Link="Services\BatesNumberingService.cs" />
     <Compile Include="..\Services\WatermarkService.cs" Link="Services\WatermarkService.cs" />
+    <Compile Include="..\Services\TransformService.cs" Link="Services\TransformService.cs" />
     <Compile Include="..\Services\PdfEncryptionService.cs" Link="Services\PdfEncryptionService.cs" />
     <Compile Include="..\Services\MetadataSanitizer.cs" Link="Services\MetadataSanitizer.cs" />
     <Compile Include="..\Services\PdfRasterTools.cs" Link="Services\PdfRasterTools.cs" />

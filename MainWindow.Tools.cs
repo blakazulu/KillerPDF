@@ -364,6 +364,73 @@ namespace Scalpel
             }, "Watermark applied.");
         }
 
+        private void ToolsTransform_Click(object sender, RoutedEventArgs e)
+        {
+            if (!RequireOpenDoc()) return;
+
+            var rotate = new ToolField(Loc("Str_Tf_Rotate"), ToolFieldKind.Combo,
+                options: new[] { "0°", "90° CW", "180°", "270° CW" }, value: "0°");
+            var fine = new ToolField(Loc("Str_Tf_FineAngle"), ToolFieldKind.Int, value: "0");
+            var scale = new ToolField(Loc("Str_Tf_Scale"), ToolFieldKind.Int, value: "100");
+            var flipH = new ToolField(Loc("Str_Tf_FlipH"), ToolFieldKind.Check, isChecked: false);
+            var flipV = new ToolField(Loc("Str_Tf_FlipV"), ToolFieldKind.Check, isChecked: false);
+            var resize = new ToolField(Loc("Str_Tf_ResizePage"), ToolFieldKind.Check, isChecked: true);
+            var range = new ToolField(Loc("Str_Tf_Range"), ToolFieldKind.Text, value: "");
+
+            if (!ShowToolForm(Loc("Str_Tool_Transform"),
+                    new[] { rotate, fine, scale, flipH, flipV, resize, range }, Loc("Str_Tf_Apply"),
+                    note: Loc("Str_Tf_Note")))
+                return;
+
+            int turns = rotate.Value switch
+            {
+                "90° CW" => 1,
+                "180°" => 2,
+                "270° CW" => 3,
+                _ => 0,
+            };
+            double fineAngle = Math.Max(-45, Math.Min(45, ParseInt(fine.Value, 0)));
+            double scaleFactor = Math.Max(10, Math.Min(400, ParseInt(scale.Value, 100))) / 100.0;
+            var (fromPage, toPage) = ParsePageRange(range.Value);
+
+            var opts = new TransformOptions
+            {
+                QuarterTurns = turns,
+                FineAngleDegrees = fineAngle,
+                Scale = scaleFactor,
+                FlipHorizontal = flipH.Checked,
+                FlipVertical = flipV.Checked,
+                ResizePage = resize.Checked,
+                FromPage = fromPage,
+                ToPage = toPage,
+            };
+
+            if (turns == 0 && Math.Abs(fineAngle) < 0.001 && Math.Abs(scaleFactor - 1.0) < 0.001
+                && !flipH.Checked && !flipV.Checked)
+            {
+                ScalpelDialog.Show(this, Loc("Str_Tf_NothingToDo"));
+                return;
+            }
+
+            RunFileTransform(Loc("Str_Tf_Working"), src =>
+            {
+                var outPath = App.MakeTempFile("transformed");
+                TransformService.ApplyFile(src, outPath, opts);
+                return outPath;
+            }, Loc("Str_Tf_Done"));
+        }
+
+        /// <summary>Parses a "from-to" / "from" page range string into 1-based inclusive bounds
+        /// (null on either side = open-ended). Blank or unparseable = full document.</summary>
+        private static (int? from, int? to) ParsePageRange(string? s)
+        {
+            if (string.IsNullOrWhiteSpace(s)) return (null, null);
+            var parts = s!.Split(new[] { '-', '–', ':' }, 2);
+            int? from = int.TryParse(parts[0].Trim(), out int a) && a > 0 ? a : (int?)null;
+            int? to = parts.Length > 1 && int.TryParse(parts[1].Trim(), out int b) && b > 0 ? b : (int?)null;
+            return (from, to);
+        }
+
         private void ToolsProtect_Click(object sender, RoutedEventArgs e)
         {
             if (!RequireOpenDoc()) return;

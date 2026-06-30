@@ -14,6 +14,7 @@ namespace Scalpel.Services
         {
             new Release("1.9.0", "June 2026", new[]
             {
+                "New Transform Pages tool (Tools menu): rotate pages in 90° steps, fine-deskew by a small angle, scale up or down, and flip horizontally or vertically — over the whole document or a page range. A plain 90° rotation stays crisp and text-selectable; deskew, scale, and flip re-render the affected pages as images.",
                 "New Watermark / Stamp tool (Tools menu): add a semi-transparent text watermark like \"CONFIDENTIAL\" — diagonal, tiled, or pinned to any corner — and optionally stamp an image or logo, with adjustable opacity, size, rotation, and a page range.",
                 "New color picker for the Draw, Line, and Text tools: click the \"+\" next to the swatches to choose any color with an RGB/hex picker, or use the eyedropper to grab a color from anywhere on your screen.",
                 "Recent files: reopen a recently-opened PDF from the start screen or by right-clicking the Open button; missing files clean themselves out of the list.",

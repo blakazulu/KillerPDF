@@ -174,6 +174,19 @@
     <sys:String x:Key="Str_Lbl_Tools">সরঞ্জাম</sys:String>
     <sys:String x:Key="Str_Tool_Numbering">নম্বরিং / Bates / শিরোনাম…</sys:String>
     <sys:String x:Key="Str_Tool_Watermark">ওয়াটারমার্ক / স্ট্যাম্প…</sys:String>
+    <sys:String x:Key="Str_Tool_Transform">পৃষ্ঠা রূপান্তর (ঘোরানো / স্কেল / উল্টানো)…</sys:String>
+    <sys:String x:Key="Str_Tf_Rotate">ঘোরান</sys:String>
+    <sys:String x:Key="Str_Tf_FineAngle">সূক্ষ্ম কোণ (°, সোজা করা)</sys:String>
+    <sys:String x:Key="Str_Tf_Scale">স্কেল (%)</sys:String>
+    <sys:String x:Key="Str_Tf_FlipH">অনুভূমিকভাবে উল্টান</sys:String>
+    <sys:String x:Key="Str_Tf_FlipV">উল্লম্বভাবে উল্টান</sys:String>
+    <sys:String x:Key="Str_Tf_ResizePage">পৃষ্ঠার আকার মানানসই করুন (বন্ধ = আকার রাখুন)</sys:String>
+    <sys:String x:Key="Str_Tf_Range">পৃষ্ঠার পরিসর (যেমন 2-5; ফাঁকা = সব)</sys:String>
+    <sys:String x:Key="Str_Tf_Apply">প্রয়োগ করুন</sys:String>
+    <sys:String x:Key="Str_Tf_Note">পৃষ্ঠা ঘোরান, সোজা করুন, স্কেল করুন বা উল্টান। সাধারণ ৯০° ঘোরানো লেখা পরিষ্কার রাখে; সোজা করা, স্কেল ও উল্টানো প্রভাবিত পৃষ্ঠাগুলিকে ছবি হিসেবে পুনরায় রেন্ডার করে। এটি কাজের কপিতে প্রয়োগ হয়—রপ্তানি করতে Save As ব্যবহার করুন।</sys:String>
+    <sys:String x:Key="Str_Tf_NothingToDo">অন্তত একটি রূপান্তর বেছে নিন (ঘোরানো, কোণ, স্কেল বা উল্টানো)।</sys:String>
+    <sys:String x:Key="Str_Tf_Working">পৃষ্ঠা রূপান্তর হচ্ছে…</sys:String>
+    <sys:String x:Key="Str_Tf_Done">পৃষ্ঠা রূপান্তরিত হয়েছে।</sys:String>
     <sys:String x:Key="Str_Tool_Compress">PDF সংকুচিত করুন…</sys:String>
     <sys:String x:Key="Str_Tool_Ocr">অনুসন্ধানযোগ্য করুন (OCR)…</sys:String>
     <sys:String x:Key="Str_Tool_Redact">চিহ্নিত এলাকা রিড্যাক্ট করুন…</sys:String>

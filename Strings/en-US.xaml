@@ -184,6 +184,19 @@ You can uninstall via Add/Remove Programs at any time.</sys:String>
     <sys:String x:Key="Str_Lbl_Tools">Tools</sys:String>
     <sys:String x:Key="Str_Tool_Numbering">Numbering / Bates / Header…</sys:String>
     <sys:String x:Key="Str_Tool_Watermark">Watermark / Stamp…</sys:String>
+    <sys:String x:Key="Str_Tool_Transform">Transform Pages (Rotate / Scale / Flip)…</sys:String>
+    <sys:String x:Key="Str_Tf_Rotate">Rotate</sys:String>
+    <sys:String x:Key="Str_Tf_FineAngle">Fine angle (°, deskew)</sys:String>
+    <sys:String x:Key="Str_Tf_Scale">Scale (%)</sys:String>
+    <sys:String x:Key="Str_Tf_FlipH">Flip horizontally</sys:String>
+    <sys:String x:Key="Str_Tf_FlipV">Flip vertically</sys:String>
+    <sys:String x:Key="Str_Tf_ResizePage">Resize page to fit (off = keep page size)</sys:String>
+    <sys:String x:Key="Str_Tf_Range">Page range (e.g. 2-5; blank = all)</sys:String>
+    <sys:String x:Key="Str_Tf_Apply">Apply</sys:String>
+    <sys:String x:Key="Str_Tf_Note">Rotate, deskew, scale, or flip pages. A plain 90° rotation keeps the text sharp; deskew, scale, and flip re-render the affected pages as images. Applies to the working copy — use Save As to write it out.</sys:String>
+    <sys:String x:Key="Str_Tf_NothingToDo">Choose at least one transform (rotation, angle, scale, or flip).</sys:String>
+    <sys:String x:Key="Str_Tf_Working">Transforming pages…</sys:String>
+    <sys:String x:Key="Str_Tf_Done">Pages transformed.</sys:String>
     <sys:String x:Key="Str_Tool_Compress">Compress PDF…</sys:String>
     <sys:String x:Key="Str_Tool_Ocr">Make Searchable (OCR)…</sys:String>
     <sys:String x:Key="Str_Tool_Redact">Redact Marked Areas…</sys:String>

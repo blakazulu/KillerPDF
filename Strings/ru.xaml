@@ -184,6 +184,19 @@
     <sys:String x:Key="Str_Lbl_Tools">Инструменты</sys:String>
     <sys:String x:Key="Str_Tool_Numbering">Нумерация / Bates / Колонтитул…</sys:String>
     <sys:String x:Key="Str_Tool_Watermark">Водяной знак / Штамп…</sys:String>
+    <sys:String x:Key="Str_Tool_Transform">Преобразовать страницы (поворот / масштаб / отражение)…</sys:String>
+    <sys:String x:Key="Str_Tf_Rotate">Поворот</sys:String>
+    <sys:String x:Key="Str_Tf_FineAngle">Точный угол (°, выравнивание)</sys:String>
+    <sys:String x:Key="Str_Tf_Scale">Масштаб (%)</sys:String>
+    <sys:String x:Key="Str_Tf_FlipH">Отразить по горизонтали</sys:String>
+    <sys:String x:Key="Str_Tf_FlipV">Отразить по вертикали</sys:String>
+    <sys:String x:Key="Str_Tf_ResizePage">Подогнать размер страницы (выкл. = сохранить размер)</sys:String>
+    <sys:String x:Key="Str_Tf_Range">Диапазон страниц (напр. 2-5; пусто = все)</sys:String>
+    <sys:String x:Key="Str_Tf_Apply">Применить</sys:String>
+    <sys:String x:Key="Str_Tf_Note">Поворот, выравнивание, масштабирование или отражение страниц. Простой поворот на 90° сохраняет чёткость текста; выравнивание, масштаб и отражение перерисовывают затронутые страницы как изображения. Применяется к рабочей копии — используйте «Сохранить как» для экспорта.</sys:String>
+    <sys:String x:Key="Str_Tf_NothingToDo">Выберите хотя бы одно преобразование (поворот, угол, масштаб или отражение).</sys:String>
+    <sys:String x:Key="Str_Tf_Working">Преобразование страниц…</sys:String>
+    <sys:String x:Key="Str_Tf_Done">Страницы преобразованы.</sys:String>
     <sys:String x:Key="Str_Tool_Compress">Сжать PDF…</sys:String>
     <sys:String x:Key="Str_Tool_Ocr">Сделать с поиском (OCR)…</sys:String>
     <sys:String x:Key="Str_Tool_Redact">Закрасить выделенное…</sys:String>

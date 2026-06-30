@@ -184,6 +184,19 @@
     <sys:String x:Key="Str_Lbl_Tools">כלים</sys:String>
     <sys:String x:Key="Str_Tool_Numbering">מספור / Bates / כותרת…</sys:String>
     <sys:String x:Key="Str_Tool_Watermark">סימן מים / חותמת…</sys:String>
+    <sys:String x:Key="Str_Tool_Transform">המרת עמודים (סיבוב / שינוי קנה מידה / היפוך)…</sys:String>
+    <sys:String x:Key="Str_Tf_Rotate">סיבוב</sys:String>
+    <sys:String x:Key="Str_Tf_FineAngle">זווית עדינה (°, יישור)</sys:String>
+    <sys:String x:Key="Str_Tf_Scale">קנה מידה (%)</sys:String>
+    <sys:String x:Key="Str_Tf_FlipH">היפוך אופקי</sys:String>
+    <sys:String x:Key="Str_Tf_FlipV">היפוך אנכי</sys:String>
+    <sys:String x:Key="Str_Tf_ResizePage">שינוי גודל העמוד להתאמה (כבוי = שמירה על גודל)</sys:String>
+    <sys:String x:Key="Str_Tf_Range">טווח עמודים (למשל 2-5; ריק = הכול)</sys:String>
+    <sys:String x:Key="Str_Tf_Apply">החל</sys:String>
+    <sys:String x:Key="Str_Tf_Note">סובב, ישר, שנה קנה מידה או הפוך עמודים. סיבוב פשוט של 90° שומר על טקסט חד; יישור, שינוי קנה מידה והיפוך מעבדים מחדש את העמודים המושפעים כתמונות. חל על עותק העבודה—השתמש בשמירה בשם כדי לייצא.</sys:String>
+    <sys:String x:Key="Str_Tf_NothingToDo">בחר לפחות פעולה אחת (סיבוב, זווית, קנה מידה או היפוך).</sys:String>
+    <sys:String x:Key="Str_Tf_Working">ממיר עמודים…</sys:String>
+    <sys:String x:Key="Str_Tf_Done">העמודים הומרו.</sys:String>
     <sys:String x:Key="Str_Tool_Compress">דחיסת PDF…</sys:String>
     <sys:String x:Key="Str_Tool_Ocr">הפיכה לניתן לחיפוש (OCR)…</sys:String>
     <sys:String x:Key="Str_Tool_Redact">צנזור אזורים מסומנים…</sys:String>

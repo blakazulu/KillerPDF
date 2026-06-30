@@ -184,6 +184,19 @@
     <sys:String x:Key="Str_Lbl_Tools">أدوات</sys:String>
     <sys:String x:Key="Str_Tool_Numbering">ترقيم / Bates / ترويسة…</sys:String>
     <sys:String x:Key="Str_Tool_Watermark">علامة مائية / ختم…</sys:String>
+    <sys:String x:Key="Str_Tool_Transform">تحويل الصفحات (تدوير / تحجيم / قلب)…</sys:String>
+    <sys:String x:Key="Str_Tf_Rotate">تدوير</sys:String>
+    <sys:String x:Key="Str_Tf_FineAngle">زاوية دقيقة (°، تسوية)</sys:String>
+    <sys:String x:Key="Str_Tf_Scale">تحجيم (%)</sys:String>
+    <sys:String x:Key="Str_Tf_FlipH">قلب أفقي</sys:String>
+    <sys:String x:Key="Str_Tf_FlipV">قلب رأسي</sys:String>
+    <sys:String x:Key="Str_Tf_ResizePage">تغيير حجم الصفحة للملاءمة (إيقاف = الحفاظ على الحجم)</sys:String>
+    <sys:String x:Key="Str_Tf_Range">نطاق الصفحات (مثل 2-5؛ فارغ = الكل)</sys:String>
+    <sys:String x:Key="Str_Tf_Apply">تطبيق</sys:String>
+    <sys:String x:Key="Str_Tf_Note">قم بتدوير الصفحات أو تسويتها أو تحجيمها أو قلبها. التدوير البسيط بمقدار 90° يحافظ على وضوح النص؛ أما التسوية والتحجيم والقلب فتعيد عرض الصفحات المتأثرة كصور. يُطبَّق على نسخة العمل—استخدم حفظ باسم للتصدير.</sys:String>
+    <sys:String x:Key="Str_Tf_NothingToDo">اختر تحويلاً واحداً على الأقل (تدوير، زاوية، تحجيم، أو قلب).</sys:String>
+    <sys:String x:Key="Str_Tf_Working">جارٍ تحويل الصفحات…</sys:String>
+    <sys:String x:Key="Str_Tf_Done">تم تحويل الصفحات.</sys:String>
     <sys:String x:Key="Str_Tool_Compress">ضغط PDF…</sys:String>
     <sys:String x:Key="Str_Tool_Ocr">جعله قابلاً للبحث (OCR)…</sys:String>
     <sys:String x:Key="Str_Tool_Redact">حجب المناطق المحددة…</sys:String>

@@ -174,6 +174,19 @@ Bu işlem uygulamayı %LocalAppData%\Scalpel konumuna kopyalar ve bir Başlat Me
     <sys:String x:Key="Str_Lbl_Tools">Araçlar</sys:String>
     <sys:String x:Key="Str_Tool_Numbering">Numaralandırma / Bates / Üstbilgi…</sys:String>
     <sys:String x:Key="Str_Tool_Watermark">Filigran / Damga…</sys:String>
+    <sys:String x:Key="Str_Tool_Transform">Sayfaları Dönüştür (Döndür / Ölçekle / Çevir)…</sys:String>
+    <sys:String x:Key="Str_Tf_Rotate">Döndür</sys:String>
+    <sys:String x:Key="Str_Tf_FineAngle">İnce açı (°, düzeltme)</sys:String>
+    <sys:String x:Key="Str_Tf_Scale">Ölçek (%)</sys:String>
+    <sys:String x:Key="Str_Tf_FlipH">Yatay çevir</sys:String>
+    <sys:String x:Key="Str_Tf_FlipV">Dikey çevir</sys:String>
+    <sys:String x:Key="Str_Tf_ResizePage">Sayfayı sığacak şekilde yeniden boyutlandır (kapalı = boyutu koru)</sys:String>
+    <sys:String x:Key="Str_Tf_Range">Sayfa aralığı (örn. 2-5; boş = tümü)</sys:String>
+    <sys:String x:Key="Str_Tf_Apply">Uygula</sys:String>
+    <sys:String x:Key="Str_Tf_Note">Sayfaları döndürün, düzeltin, ölçekleyin veya çevirin. Düz bir 90° döndürme metni net tutar; düzeltme, ölçekleme ve çevirme etkilenen sayfaları görüntü olarak yeniden işler. Çalışma kopyasına uygulanır—dışa aktarmak için Farklı Kaydet'i kullanın.</sys:String>
+    <sys:String x:Key="Str_Tf_NothingToDo">En az bir dönüşüm seçin (döndürme, açı, ölçek veya çevirme).</sys:String>
+    <sys:String x:Key="Str_Tf_Working">Sayfalar dönüştürülüyor…</sys:String>
+    <sys:String x:Key="Str_Tf_Done">Sayfalar dönüştürüldü.</sys:String>
     <sys:String x:Key="Str_Tool_Compress">PDF'yi Sıkıştır…</sys:String>
     <sys:String x:Key="Str_Tool_Ocr">Aranabilir Yap (OCR)…</sys:String>
     <sys:String x:Key="Str_Tool_Redact">İşaretli Alanları Karart…</sys:String>
