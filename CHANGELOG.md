@@ -4,22 +4,6 @@ All notable changes to Scalpel are documented here.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
-
-### Added
-- **Tools menu — five local-only PDF power features** (no subscription, no uploads), exposed via a new **Tools ▾** button in the toolbar's File group. Each is backed by a unit-tested service under `Services/`:
-  - **Page numbering / Bates numbering / headers & footers** (`BatesNumberingService`) — sequential Bates IDs with prefix/suffix and zero-padding, `Page X of N` page numbers, or custom header/footer text, placed in any of six page corners.
-  - **Compress PDF** (`PdfCompressionService` + `DocnetPageRasterizer`) — Low/Medium/High presets re-encode pages as downscaled JPEGs entirely on-device; highly effective on scan/photo-heavy files. Output pages become images (text non-selectable) — run OCR after to restore searchable text.
-  - **Make Searchable (OCR)** (`OcrService`, `SearchableLayerWriter`, `TesseractTsv`, `TesseractCliOcrEngine`, `OcrAssets`) — turns scanned pages into selectable, searchable text via an invisible text layer, fully offline. Distribution-aware packaging: the installed Windows download bundles the Tesseract engine + English data in `<AppDir>\ocr`; the portable build fetches the language data on demand (~12 MB, official tessdata source) into `%LOCALAPPDATA%\Scalpel\ocr`.
-  - **Redact Marked Areas** (`RedactionService`) — mark regions with the Highlight tool, then permanently flatten the affected pages to images with black boxes so the underlying text is unrecoverable (not just visually covered). Untouched pages keep selectable text.
-  - **Password Protect** (`PdfEncryptionService`) — encrypt a saved copy with a user password and print/copy permission flags. (Removing a known password is implicit: open it, then Save As.)
-  - **Remove Metadata** (`MetadataSanitizer`) — strip author, title, subject, keywords, and the hidden XMP metadata stream before sharing.
-- The self-installer now carries a bundled `ocr/` folder (when shipped next to the EXE) into the install directory, so the installed "Windows (with OCR)" download works offline out of the box; `release.ps1` gains an `-OcrSourceDir` parameter that assembles that distribution.
-- Local-only session logging for diagnostics and QA. Each app launch writes a JSONL log to `%LOCALAPPDATA%\Scalpel\logs\` (one file per session, named `scalpel-<timestamp>.jsonl`) recording app start/exit, every button and menu click, the outcome of major operations (open, save, save-flattened, merge, extract, sign, print), and all errors and crashes. On by default, with a **Settings → Diagnostics** section to toggle logging, open the logs folder, or clear old logs; session logs older than 7 days are removed automatically on startup. Stays fully offline — logs are written only to the local machine and never transmitted. See `docs/LOGGING.md`.
-
-### Fixed
-- Opening the Settings panel no longer records a spurious `logging.toggle` event or re-saves the logging setting on every open; the Diagnostics checkbox now syncs to the current state without re-triggering its change handler.
-
 ## 2.0.0 - 2026-06-30
 
 ### Added
@@ -39,6 +23,37 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this
 
 ### Changed
 - The end-to-end UI test harness (`Scalpel.E2E`) was made deterministic — driving radios/toggles through foreground-free UI Automation patterns instead of synthesized clicks — and now passes the full suite headlessly. The four exclusive view-mode toggles became grouped `RadioButton`s (no visual change).
+
+## 1.8.0 - 2026-06-25
+
+### Added
+- **Optional update notifications.** Scalpel can let you know when a new version is out. It is **off until you turn it on**, sends nothing about you or your files, and can be toggled anytime in Settings. The notification links straight to the right place to update — the Microsoft Store for Store installs, the website for portable and installed copies (`Services/UpdateService.cs`, reading a single static `version.json`).
+
+### Fixed
+- The Settings checkboxes are now clearly legible in Dark and High Contrast themes.
+
+## 1.7.0 - 2026-06-21
+
+### Changed
+- **Brand-new "Clinical" ribbon interface.** The toolbar is now organized like familiar office apps — **View / Edit / Pages / Sign** tabs open clearly labeled groups of tools — with a smooth animated transition when switching tabs. A **Quick Access toolbar** in the title bar keeps Open, Save, Print, and Undo one click away, and zoom moved to the bottom-right of the status bar.
+- A clean light theme with a precise red accent (the **Light + Red "Clinical"** look) is now the default; the design carries across every theme (Light, Dark, High Contrast) and accent.
+- Refreshed app icon and Microsoft Store artwork to match — a steel tile with the scalpel's surgical-red cutting edge.
+
+## 1.6.0 - 2026-06-17
+
+### Added
+- **Tools menu — six local-only PDF power features** (no subscription, no uploads), exposed via a new **Tools ▾** button in the toolbar's File group. Each is backed by a unit-tested service under `Services/`:
+  - **Page numbering / Bates numbering / headers & footers** (`BatesNumberingService`) — sequential Bates IDs with prefix/suffix and zero-padding, `Page X of N` page numbers, or custom header/footer text, placed in any of six page corners.
+  - **Compress PDF** (`PdfCompressionService` + `DocnetPageRasterizer`) — Low/Medium/High presets re-encode pages as downscaled JPEGs entirely on-device; highly effective on scan/photo-heavy files. Output pages become images (text non-selectable) — run OCR after to restore searchable text.
+  - **Make Searchable (OCR)** (`OcrService`, `SearchableLayerWriter`, `TesseractTsv`, `TesseractCliOcrEngine`, `OcrAssets`) — turns scanned pages into selectable, searchable text via an invisible text layer, fully offline. Distribution-aware packaging: the installed Windows download bundles the Tesseract engine + English data in `<AppDir>\ocr`; the portable build fetches the language data on demand (~12 MB, official tessdata source) into `%LOCALAPPDATA%\Scalpel\ocr`.
+  - **Redact Marked Areas** (`RedactionService`) — mark regions with the Highlight tool, then permanently flatten the affected pages to images with black boxes so the underlying text is unrecoverable (not just visually covered). Untouched pages keep selectable text.
+  - **Password Protect** (`PdfEncryptionService`) — encrypt a saved copy with a user password and print/copy permission flags. (Removing a known password is implicit: open it, then Save As.)
+  - **Remove Metadata** (`MetadataSanitizer`) — strip author, title, subject, keywords, and the hidden XMP metadata stream before sharing.
+- The self-installer now carries a bundled `ocr/` folder (when shipped next to the EXE) into the install directory, so the installed "Windows (with OCR)" download works offline out of the box; `release.ps1` gains an `-OcrSourceDir` parameter that assembles that distribution.
+- Local-only session logging for diagnostics and QA. Each app launch writes a JSONL log to `%LOCALAPPDATA%\Scalpel\logs\` (one file per session, named `scalpel-<timestamp>.jsonl`) recording app start/exit, every button and menu click, the outcome of major operations (open, save, save-flattened, merge, extract, sign, print), and all errors and crashes. On by default, with a **Settings → Diagnostics** section to toggle logging, open the logs folder, or clear old logs; session logs older than 7 days are removed automatically on startup. Stays fully offline — logs are written only to the local machine and never transmitted. See `docs/LOGGING.md`.
+
+### Fixed
+- Opening the Settings panel no longer records a spurious `logging.toggle` event or re-saves the logging setting on every open; the Diagnostics checkbox now syncs to the current state without re-triggering its change handler.
 
 ## 1.5.1 - 2026-06-14
 

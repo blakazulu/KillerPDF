@@ -8,7 +8,7 @@
     <meta name="color-scheme" content="light dark" />
 
     <title>Scalpel - Local-only Windows PDF editor (free, portable, GPLv3)</title>
-    <meta name="description" content="Scalpel is a free, portable, local-only Windows PDF editor. View, annotate, edit text, merge, split, sign, fill forms, OCR, redact, compress and password-protect PDFs. One 6 MB EXE. No account, no subscription, no telemetry. Open source (GPLv3)." />
+    <meta name="description" content="Scalpel is a free, portable, local-only Windows PDF editor. View, annotate, edit text, merge, split, sign (drawn or with a certificate), watermark, transform pages, fill forms, OCR, redact, compress and password-protect PDFs. One 6 MB EXE. No account, no subscription, no telemetry. Open source (GPLv3)." />
     <meta name="keywords" content="PDF editor, free PDF editor, local PDF editor, offline PDF editor, portable PDF editor, Windows PDF editor, edit PDF, annotate PDF, sign PDF, OCR PDF, redact PDF, merge PDF, split PDF, no telemetry, open source PDF editor, Adobe Acrobat alternative" />
     <meta name="author" content="Liraz Amir" />
     <meta name="application-name" content="Scalpel" />
@@ -33,7 +33,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://scalpel-pdf.netlify.app/" />
     <meta property="og:title" content="Scalpel - Local-only Windows PDF editor" />
-    <meta property="og:description" content="Precise PDF editing. Nothing leaves your machine. A free, portable 6 MB Windows PDF editor - view, annotate, edit, sign, OCR, redact. No account, no telemetry, GPLv3." />
+    <meta property="og:description" content="Precise PDF editing. Nothing leaves your machine. A free, portable 6 MB Windows PDF editor - view, annotate, edit, digitally sign, watermark, transform, OCR, redact. No account, no telemetry, GPLv3." />
     <meta property="og:image" content="https://scalpel-pdf.netlify.app/og-image.png" />
     <meta property="og:image:secure_url" content="https://scalpel-pdf.netlify.app/og-image.png" />
     <meta property="og:image:type" content="image/png" />
@@ -46,7 +46,7 @@
     <!-- Twitter / X card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Scalpel - Local-only Windows PDF editor" />
-    <meta name="twitter:description" content="A free, portable 6 MB Windows PDF editor. View, annotate, edit, sign, OCR, redact - nothing leaves your machine. No account, no telemetry, GPLv3." />
+    <meta name="twitter:description" content="A free, portable 6 MB Windows PDF editor. View, annotate, edit, digitally sign, watermark, transform, OCR, redact - nothing leaves your machine. No account, no telemetry, GPLv3." />
     <meta name="twitter:image" content="https://scalpel-pdf.netlify.app/og-image.png" />
     <meta name="twitter:image:alt" content="Scalpel - a local-only Windows PDF editor. Precise PDF editing, nothing leaves your machine." />
 
@@ -60,7 +60,7 @@
           "@id": "https://scalpel-pdf.netlify.app/#app",
           "name": "Scalpel",
           "alternateName": "ScalpelPDF",
-          "description": "Scalpel is a free, portable, local-only Windows PDF editor. View, annotate, edit text, merge, split, sign, fill forms, OCR, redact, compress and password-protect PDFs - entirely on-device, with no account and no telemetry.",
+          "description": "Scalpel is a free, portable, local-only Windows PDF editor. View, annotate, edit text, merge, split, sign (drawn or with a certificate), watermark, transform pages, fill forms, OCR, redact, compress and password-protect PDFs - entirely on-device, with no account and no telemetry.",
           "url": "https://scalpel-pdf.netlify.app/",
           "image": "https://scalpel-pdf.netlify.app/og-image.png",
           "applicationCategory": "BusinessApplication",
@@ -78,7 +78,10 @@
             "Annotate: text, highlight, freehand ink, image stamps",
             "Edit existing PDF text in place",
             "Merge, split, extract, reorder and rotate pages",
-            "Sign documents and fill interactive form fields",
+            "Transform pages: rotate, deskew, scale and flip",
+            "Sign documents (drawn or with a cryptographic certificate) and fill interactive form fields",
+            "Add text watermarks and image/logo stamps",
+            "Open multiple PDFs in tabs and reopen recent files",
             "OCR scanned documents offline (bundled Tesseract)",
             "Redact content permanently",
             "Compress PDFs by down-sampling images",
@@ -144,7 +147,7 @@
               "name": "What can Scalpel do?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Scalpel can view, annotate, edit existing text, merge, split, reorder and rotate pages, sign, fill forms, OCR scans, redact, compress, password-protect, add page and Bates numbers, remove metadata, print and flatten PDFs - all in one window."
+                "text": "Scalpel can view, annotate, edit existing text, merge, split, reorder, rotate and transform pages (deskew, scale, flip), sign (drawn or with your own certificate), watermark and stamp, fill forms, OCR scans, redact, compress, password-protect, add page and Bates numbers, remove metadata, print and flatten PDFs - all in one window, with document tabs and recent files."
               }
             },
             {
@@ -176,7 +179,7 @@
               "name": "Is Scalpel a good free alternative to Adobe Acrobat?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "For local PDF editing it is a strong free alternative: Scalpel edits text, annotates, signs, fills forms, OCRs, redacts, merges and protects PDFs with no subscription and no account. Unlike cloud editors, your documents never leave your machine."
+                "text": "For local PDF editing it is a strong free alternative: Scalpel edits text, annotates, signs (drawn or with a real certificate), watermarks, transforms, fills forms, OCRs, redacts, merges and protects PDFs with no subscription and no account. Unlike cloud editors, your documents never leave your machine."
               }
             },
             {
@@ -330,6 +333,8 @@
           <span class="marquee__item"><span data-icon="feather"></span><span data-i18n="marquee.editText">Edit text</span></span>
           <span class="marquee__item"><span data-icon="layers"></span><span data-i18n="marquee.merge">Merge &amp; split</span></span>
           <span class="marquee__item"><span data-icon="signature"></span><span data-i18n="marquee.sign">Sign</span></span>
+          <span class="marquee__item"><span data-icon="flatten"></span><span data-i18n="marquee.watermark">Watermark</span></span>
+          <span class="marquee__item"><span data-icon="feathers"></span><span data-i18n="marquee.transform">Transform</span></span>
           <span class="marquee__item"><span data-icon="form"></span><span data-i18n="marquee.forms">Fill forms</span></span>
           <span class="marquee__item"><span data-icon="ocr"></span><span data-i18n="marquee.ocr">OCR</span></span>
           <span class="marquee__item"><span data-icon="redact"></span><span data-i18n="marquee.redact">Redact</span></span>
@@ -425,6 +430,18 @@
             <div class="tool">
               <span class="tool__num">06</span><span class="tool__icon" data-icon="eraser" aria-hidden="true"></span>
               <div><h4 data-i18n="tool.sanitize.title">Metadata removal</h4><p data-i18n="tool.sanitize.desc"></p></div>
+            </div>
+            <div class="tool">
+              <span class="tool__num">07</span><span class="tool__icon" data-icon="shield" aria-hidden="true"></span>
+              <div><h4 data-i18n="tool.sign.title">Digital signature</h4><p data-i18n="tool.sign.desc"></p></div>
+            </div>
+            <div class="tool">
+              <span class="tool__num">08</span><span class="tool__icon" data-icon="flatten" aria-hidden="true"></span>
+              <div><h4 data-i18n="tool.watermark.title">Watermark &amp; stamp</h4><p data-i18n="tool.watermark.desc"></p></div>
+            </div>
+            <div class="tool">
+              <span class="tool__num">09</span><span class="tool__icon" data-icon="feathers" aria-hidden="true"></span>
+              <div><h4 data-i18n="tool.transform.title">Transform pages</h4><p data-i18n="tool.transform.desc"></p></div>
             </div>
           </div>
         </div>

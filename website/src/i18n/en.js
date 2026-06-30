@@ -1,7 +1,7 @@
 // English (en-US) - source copy. Keys map to data-i18n attributes in index.html.
 export default {
   'meta.title': 'Scalpel - Local-only Windows PDF editor',
-  'meta.desc': 'Scalpel is a portable, local-only Windows PDF editor. View, annotate, edit, sign, OCR, redact. One 6 MB EXE. No account, no subscription, no telemetry. GPLv3.',
+  'meta.desc': 'Scalpel is a portable, local-only Windows PDF editor. View, annotate, edit, digitally sign, watermark, transform pages, OCR, redact. One 6 MB EXE. No account, no subscription, no telemetry. GPLv3.',
 
   'nav.features': 'Features',
   'nav.tools': 'Tools',
@@ -15,7 +15,7 @@ export default {
   'hero.eyebrow': 'Local-only · Windows · GPLv3',
   'hero.title_a': 'Precise PDF editing.',
   'hero.title_cut': 'Nothing leaves your machine.',
-  'hero.lead': 'Scalpel is a <strong>portable</strong> Windows PDF editor - view, annotate, edit text, merge, sign, OCR and redact. One self-contained <strong>~6 MB EXE</strong>. No account, no subscription, no phone-home.',
+  'hero.lead': 'Scalpel is a <strong>portable</strong> Windows PDF editor - view, annotate, edit text, merge, sign (drawn or with a real certificate), watermark, transform pages, OCR and redact. One self-contained <strong>~6 MB EXE</strong>. No account, no subscription, no phone-home.',
 
   'dl.portable.title': 'Portable',
   'dl.portable.desc': 'Run the EXE anywhere - USB stick, desktop, network share. Zero install.',
@@ -51,6 +51,8 @@ export default {
   'marquee.print': 'Print',
   'marquee.flatten': 'Flatten',
   'marquee.bates': 'Bates numbering',
+  'marquee.watermark': 'Watermark',
+  'marquee.transform': 'Transform',
 
   'features.eyebrow': 'The editor',
   'features.title': 'A full surgical kit, in one window.',
@@ -58,11 +60,11 @@ export default {
 
   'group.view.cap': 'View',
   'group.view.title': 'Read & navigate',
-  'group.view.desc': 'Single, continuous, two-page and grid layouts. Fast pdfium rendering, even on damaged files.',
+  'group.view.desc': 'Single, continuous, two-page and grid layouts. Open several PDFs in tabs, reopen recent files, and get fast pdfium rendering even on damaged files.',
 
   'group.annotate.cap': 'Annotate',
   'group.annotate.title': 'Mark it up',
-  'group.annotate.desc': 'Text, highlight, freehand ink and image stamps - burned cleanly into the PDF on save.',
+  'group.annotate.desc': 'Text, highlight, freehand ink and image stamps - in any color you pick or sample from the screen with the eyedropper, burned cleanly into the PDF on save.',
 
   'group.edit.cap': 'Edit',
   'group.edit.title': 'Change the text',
@@ -74,7 +76,7 @@ export default {
 
   'group.sign.cap': 'Sign',
   'group.sign.title': 'Sign & fill',
-  'group.sign.desc': 'Draw or place a saved signature, and fill interactive form fields directly.',
+  'group.sign.desc': 'Draw or place a saved signature, add a real cryptographic signature from your own certificate, and fill interactive form fields directly.',
 
   'group.print.cap': 'Output',
   'group.print.title': 'Print & flatten',
@@ -89,7 +91,13 @@ export default {
   'tool.compress.title': 'Compression',
   'tool.compress.desc': 'Down-sample images at Low / Medium / High to shrink file size.',
   'tool.ocr.title': 'OCR',
-  'tool.ocr.desc': 'Make scans searchable with a bundled, offline Tesseract engine.',
+  'tool.ocr.desc': 'Make scans searchable with a bundled, offline Tesseract engine - live per-page progress you can cancel, a language picker and a high-quality mode.',
+  'tool.watermark.title': 'Watermark & stamp',
+  'tool.watermark.desc': 'Add a tiled, rotated text watermark or an image / logo stamp to every page.',
+  'tool.transform.title': 'Transform pages',
+  'tool.transform.desc': 'Rotate (with fine deskew), scale and flip pages exactly how you need them.',
+  'tool.sign.title': 'Digital signature',
+  'tool.sign.desc': 'Sign with your own .pfx / .p12 certificate (PAdES / PKCS#7) - cryptographic, and entirely local.',
   'tool.redact.title': 'Redaction',
   'tool.redact.desc': 'Permanently remove content - pixels gone, not just hidden.',
   'tool.protect.title': 'Password protection',
@@ -119,7 +127,7 @@ export default {
   'faq.q2': 'Does Scalpel upload my PDFs to the cloud?',
   'faq.a2': 'No. Scalpel is local-only: every operation, including OCR, runs on your own Windows PC. Nothing is uploaded, there are no servers, and the app has zero telemetry - no analytics, crash beacons or usage tracking.',
   'faq.q3': 'What can Scalpel do?',
-  'faq.a3': 'View, annotate, edit existing text, merge, split, reorder and rotate pages, sign, fill forms, OCR scans, redact, compress, password-protect, add page and Bates numbers, remove metadata, print and flatten - all in one window.',
+  'faq.a3': 'View, annotate, edit existing text, merge, split, reorder, rotate and transform pages (deskew, scale, flip), sign (drawn or with your own certificate), watermark and stamp, fill forms, OCR scans, redact, compress, password-protect, add page and Bates numbers, remove metadata, print and flatten - all in one window, with document tabs and recent files.',
   'faq.q4': 'Which Windows versions are supported?',
   'faq.a4': 'Scalpel runs on 64-bit Windows 10 and Windows 11. No runtime install is required - it\'s a single self-contained EXE.',
   'faq.q5': 'Is Scalpel portable?',
@@ -127,7 +135,7 @@ export default {
   'faq.q6': 'Does OCR work offline?',
   'faq.a6': 'Yes. OCR uses a bundled Tesseract engine that runs entirely offline on your CPU, so scanned documents become searchable without any upload.',
   'faq.q7': 'Is Scalpel a good free alternative to Adobe Acrobat?',
-  'faq.a7': 'For local PDF editing it\'s a strong free alternative: Scalpel edits text, annotates, signs, fills forms, OCRs, redacts, merges and protects PDFs with no subscription and no account. Unlike cloud editors, your documents never leave your machine.',
+  'faq.a7': 'For local PDF editing it\'s a strong free alternative: Scalpel edits text, annotates, signs (drawn or with a real certificate), watermarks, transforms, fills forms, OCRs, redacts, merges and protects PDFs with no subscription and no account. Unlike cloud editors, your documents never leave your machine.',
   'faq.q8': 'How do I install Scalpel?',
   'faq.a8': 'Three ways, all the same signed build: download the portable EXE and run it, use the one-click installer (Start-menu shortcut and optional .pdf default), or get it from the Microsoft Store for sandboxed automatic updates.',
 
