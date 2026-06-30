@@ -191,6 +191,16 @@ Bu işlem uygulamayı %LocalAppData%\Scalpel konumuna kopyalar ve bir Başlat Me
     <sys:String x:Key="Str_Tool_Ocr">Aranabilir Yap (OCR)…</sys:String>
     <sys:String x:Key="Str_Tool_Redact">İşaretli Alanları Karart…</sys:String>
     <sys:String x:Key="Str_Tool_Protect">Parola Koruması…</sys:String>
+    <sys:String x:Key="Str_Tool_Sign">Dijital Olarak İmzala…</sys:String>
+    <sys:String x:Key="Str_Sign_PickCert">İmzalama sertifikanızı seçin (.pfx / .p12)</sys:String>
+    <sys:String x:Key="Str_Sign_Password">Sertifika parolası</sys:String>
+    <sys:String x:Key="Str_Sign_Apply">İmzala</sys:String>
+    <sys:String x:Key="Str_Sign_Note">Sertifikanızı kullanarak görünmez bir kriptografik imza ekler. İmzalı kopya yeni bir dosyaya yazılır ve sonradan değiştirilmez, böylece imza geçerli kalır.</sys:String>
+    <sys:String x:Key="Str_Sign_SaveAs">İmzalı PDF'i farklı kaydet</sys:String>
+    <sys:String x:Key="Str_Sign_Working">İmzalanıyor…</sys:String>
+    <sys:String x:Key="Str_Sign_Done">Dijital olarak imzalanmış bir kopya {0} konumuna kaydedildi</sys:String>
+    <sys:String x:Key="Str_Sign_DoneMsg">Dijital olarak imzalanmış bir kopya kaydedildi. İmza tüm dosyayı kapsar — sonraki herhangi bir değişiklik onu geçersiz kılar.</sys:String>
+    <sys:String x:Key="Str_Sign_Failed">İmzalama başarısız oldu</sys:String>
     <sys:String x:Key="Str_Tool_Sanitize">Meta Verileri Kaldır</sys:String>
     <sys:String x:Key="Str_Tool_DocInfo">Belge Bilgisi</sys:String>
     <sys:String x:Key="Str_DocInfo_FldTitle">Başlık</sys:String>

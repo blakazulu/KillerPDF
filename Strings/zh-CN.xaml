@@ -191,6 +191,16 @@
     <sys:String x:Key="Str_Tool_Ocr">生成可搜索文本 (OCR)…</sys:String>
     <sys:String x:Key="Str_Tool_Redact">遮蔽标记区域…</sys:String>
     <sys:String x:Key="Str_Tool_Protect">密码保护…</sys:String>
+    <sys:String x:Key="Str_Tool_Sign">数字签名…</sys:String>
+    <sys:String x:Key="Str_Sign_PickCert">选择您的签名证书（.pfx / .p12）</sys:String>
+    <sys:String x:Key="Str_Sign_Password">证书密码</sys:String>
+    <sys:String x:Key="Str_Sign_Apply">签名</sys:String>
+    <sys:String x:Key="Str_Sign_Note">使用您的证书添加一个隐形的加密签名。已签名的副本会写入新文件，之后不会被更改，因此签名保持有效。</sys:String>
+    <sys:String x:Key="Str_Sign_SaveAs">将已签名的 PDF 另存为</sys:String>
+    <sys:String x:Key="Str_Sign_Working">签名中…</sys:String>
+    <sys:String x:Key="Str_Sign_Done">已将数字签名的副本保存到 {0}</sys:String>
+    <sys:String x:Key="Str_Sign_DoneMsg">已保存数字签名的副本。签名涵盖整个文件——之后任何更改都会使其失效。</sys:String>
+    <sys:String x:Key="Str_Sign_Failed">签名失败</sys:String>
     <sys:String x:Key="Str_Tool_Sanitize">移除元数据</sys:String>
     <sys:String x:Key="Str_Tool_DocInfo">文档信息</sys:String>
     <sys:String x:Key="Str_DocInfo_FldTitle">标题</sys:String>

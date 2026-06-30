@@ -201,6 +201,16 @@ You can uninstall via Add/Remove Programs at any time.</sys:String>
     <sys:String x:Key="Str_Tool_Ocr">Make Searchable (OCR)…</sys:String>
     <sys:String x:Key="Str_Tool_Redact">Redact Marked Areas…</sys:String>
     <sys:String x:Key="Str_Tool_Protect">Password Protect…</sys:String>
+    <sys:String x:Key="Str_Tool_Sign">Digitally Sign…</sys:String>
+    <sys:String x:Key="Str_Sign_PickCert">Choose your signing certificate (.pfx / .p12)</sys:String>
+    <sys:String x:Key="Str_Sign_Password">Certificate password</sys:String>
+    <sys:String x:Key="Str_Sign_Apply">Sign</sys:String>
+    <sys:String x:Key="Str_Sign_Note">Adds an invisible cryptographic signature using your certificate. The signed copy is written to a new file and is not changed afterwards, so the signature stays valid.</sys:String>
+    <sys:String x:Key="Str_Sign_SaveAs">Save signed PDF as</sys:String>
+    <sys:String x:Key="Str_Sign_Working">Signing…</sys:String>
+    <sys:String x:Key="Str_Sign_Done">Saved a digitally signed copy to {0}</sys:String>
+    <sys:String x:Key="Str_Sign_DoneMsg">Saved a digitally signed copy. The signature covers the whole file — any later change will invalidate it.</sys:String>
+    <sys:String x:Key="Str_Sign_Failed">Signing failed</sys:String>
     <sys:String x:Key="Str_Tool_Sanitize">Remove Metadata</sys:String>
     <sys:String x:Key="Str_Tool_DocInfo">Document Info</sys:String>
     <sys:String x:Key="Str_DocInfo_FldTitle">Title</sys:String>

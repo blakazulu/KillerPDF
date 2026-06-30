@@ -201,6 +201,16 @@
     <sys:String x:Key="Str_Tool_Ocr">جعله قابلاً للبحث (OCR)…</sys:String>
     <sys:String x:Key="Str_Tool_Redact">حجب المناطق المحددة…</sys:String>
     <sys:String x:Key="Str_Tool_Protect">الحماية بكلمة مرور…</sys:String>
+    <sys:String x:Key="Str_Tool_Sign">توقيع رقمي…</sys:String>
+    <sys:String x:Key="Str_Sign_PickCert">اختر شهادة التوقيع الخاصة بك (‎.pfx / .p12‎)</sys:String>
+    <sys:String x:Key="Str_Sign_Password">كلمة مرور الشهادة</sys:String>
+    <sys:String x:Key="Str_Sign_Apply">توقيع</sys:String>
+    <sys:String x:Key="Str_Sign_Note">يضيف توقيعًا تشفيريًا غير مرئي باستخدام شهادتك. تُكتب النسخة الموقّعة إلى ملف جديد ولا تتغير بعد ذلك، لذا يبقى التوقيع صالحًا.</sys:String>
+    <sys:String x:Key="Str_Sign_SaveAs">حفظ ملف PDF الموقّع باسم</sys:String>
+    <sys:String x:Key="Str_Sign_Working">جارٍ التوقيع…</sys:String>
+    <sys:String x:Key="Str_Sign_Done">تم حفظ نسخة موقّعة رقميًا في {0}</sys:String>
+    <sys:String x:Key="Str_Sign_DoneMsg">تم حفظ نسخة موقّعة رقميًا. يغطي التوقيع الملف بأكمله — أي تغيير لاحق سيبطله.</sys:String>
+    <sys:String x:Key="Str_Sign_Failed">فشل التوقيع</sys:String>
     <sys:String x:Key="Str_Tool_Sanitize">إزالة البيانات الوصفية</sys:String>
     <sys:String x:Key="Str_Tool_DocInfo">معلومات المستند</sys:String>
     <sys:String x:Key="Str_DocInfo_FldTitle">العنوان</sys:String>

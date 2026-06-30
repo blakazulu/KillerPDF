@@ -522,6 +522,7 @@
                             <Separator/>
                             <MenuItem Header="{DynamicResource Str_Tool_Redact}" Click="ToolsRedact_Click"/>
                             <MenuItem Header="{DynamicResource Str_Tool_Protect}" Click="ToolsProtect_Click"/>
+                            <MenuItem Header="{DynamicResource Str_Tool_Sign}" Click="ToolsSign_Click"/>
                             <MenuItem Header="{DynamicResource Str_Tool_Sanitize}" Click="ToolsSanitize_Click"/>
                         </ContextMenu>
                     </Button.ContextMenu>

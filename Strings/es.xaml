@@ -191,6 +191,16 @@ Puede desinstalarla en cualquier momento desde Agregar o quitar programas.</sys:
     <sys:String x:Key="Str_Tool_Ocr">Hacer buscable (OCR)…</sys:String>
     <sys:String x:Key="Str_Tool_Redact">Censurar áreas marcadas…</sys:String>
     <sys:String x:Key="Str_Tool_Protect">Proteger con contraseña…</sys:String>
+    <sys:String x:Key="Str_Tool_Sign">Firmar digitalmente…</sys:String>
+    <sys:String x:Key="Str_Sign_PickCert">Elige tu certificado de firma (.pfx / .p12)</sys:String>
+    <sys:String x:Key="Str_Sign_Password">Contraseña del certificado</sys:String>
+    <sys:String x:Key="Str_Sign_Apply">Firmar</sys:String>
+    <sys:String x:Key="Str_Sign_Note">Añade una firma criptográfica invisible con tu certificado. La copia firmada se guarda en un archivo nuevo y no se modifica después, por lo que la firma sigue siendo válida.</sys:String>
+    <sys:String x:Key="Str_Sign_SaveAs">Guardar PDF firmado como</sys:String>
+    <sys:String x:Key="Str_Sign_Working">Firmando…</sys:String>
+    <sys:String x:Key="Str_Sign_Done">Se guardó una copia firmada digitalmente en {0}</sys:String>
+    <sys:String x:Key="Str_Sign_DoneMsg">Se guardó una copia firmada digitalmente. La firma cubre todo el archivo: cualquier cambio posterior la invalidará.</sys:String>
+    <sys:String x:Key="Str_Sign_Failed">Error al firmar</sys:String>
     <sys:String x:Key="Str_Tool_Sanitize">Eliminar metadatos</sys:String>
     <sys:String x:Key="Str_Tool_DocInfo">Información del documento</sys:String>
     <sys:String x:Key="Str_DocInfo_FldTitle">Título</sys:String>

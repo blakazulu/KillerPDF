@@ -479,6 +479,54 @@ namespace Scalpel
             }
         }
 
+        private void ToolsSign_Click(object sender, RoutedEventArgs e)
+        {
+            if (!RequireOpenDoc()) return;
+
+            // 1) Pick the signer's certificate (.pfx / .p12).
+            var ofd = new OpenFileDialog
+            {
+                Filter = "Certificate files|*.pfx;*.p12|All files|*.*",
+                Title = Loc("Str_Sign_PickCert"),
+            };
+            if (ofd.ShowDialog(this) != true) return;
+
+            // 2) Prompt for the certificate password.
+            var pw = new ToolField(Loc("Str_Sign_Password"), ToolFieldKind.Password);
+            if (!ShowToolForm(Loc("Str_Tool_Sign"), new[] { pw }, Loc("Str_Sign_Apply"),
+                    note: Loc("Str_Sign_Note")))
+                return;
+
+            // 3) Choose where to write the signed copy.
+            var dlg = new SaveFileDialog
+            {
+                Filter = "PDF files|*.pdf", Title = Loc("Str_Sign_SaveAs"),
+                CheckFileExists = false, CheckPathExists = true,
+            };
+            if (!string.IsNullOrEmpty(_originalFile))
+                dlg.FileName = System.IO.Path.GetFileNameWithoutExtension(_originalFile) + "-signed.pdf";
+            if (dlg.ShowDialog(this) != true) return;
+
+            // Sign the already-saved bytes by appending an incremental update — the document is
+            // NOT re-serialized, so the signed /ByteRange stays valid. Written straight to the
+            // user's chosen path (never adopted as the working copy, which would re-save it).
+            try
+            {
+                SetStatus(Loc("Str_Sign_Working"));
+                string src = BuildWorkingSourceFile();
+                PdfSigningService.SignFile(src, dlg.FileName, ofd.FileName, pw.Value);
+                SetStatus(string.Format(Loc("Str_Sign_Done"), System.IO.Path.GetFileName(dlg.FileName)));
+                ScalpelDialog.Show(this, Loc("Str_Sign_DoneMsg"));
+            }
+            catch (Exception ex)
+            {
+                Scalpel.Services.Logger.Error("Tools", "sign.fail", ex.Message, ex);
+                SetStatus(Loc("Str_Sign_Failed"));
+                ScalpelDialog.Show(this, $"{Loc("Str_Sign_Failed")}:\n{ex.Message}", "Scalpel",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private void ToolsSanitize_Click(object sender, RoutedEventArgs e)
         {
             if (!RequireOpenDoc()) return;

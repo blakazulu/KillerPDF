@@ -201,6 +201,16 @@
     <sys:String x:Key="Str_Tool_Ocr">הפיכה לניתן לחיפוש (OCR)…</sys:String>
     <sys:String x:Key="Str_Tool_Redact">צנזור אזורים מסומנים…</sys:String>
     <sys:String x:Key="Str_Tool_Protect">הגנה בסיסמה…</sys:String>
+    <sys:String x:Key="Str_Tool_Sign">חתימה דיגיטלית…</sys:String>
+    <sys:String x:Key="Str_Sign_PickCert">בחר את אישור החתימה שלך (‎.pfx / .p12‎)</sys:String>
+    <sys:String x:Key="Str_Sign_Password">סיסמת האישור</sys:String>
+    <sys:String x:Key="Str_Sign_Apply">חתום</sys:String>
+    <sys:String x:Key="Str_Sign_Note">מוסיף חתימה קריפטוגרפית בלתי נראית באמצעות האישור שלך. העותק החתום נכתב לקובץ חדש ואינו משתנה לאחר מכן, כך שהחתימה נשארת תקפה.</sys:String>
+    <sys:String x:Key="Str_Sign_SaveAs">שמור PDF חתום בשם</sys:String>
+    <sys:String x:Key="Str_Sign_Working">חותם…</sys:String>
+    <sys:String x:Key="Str_Sign_Done">עותק חתום דיגיטלית נשמר אל {0}</sys:String>
+    <sys:String x:Key="Str_Sign_DoneMsg">עותק חתום דיגיטלית נשמר. החתימה מכסה את כל הקובץ — כל שינוי לאחר מכן יבטל אותה.</sys:String>
+    <sys:String x:Key="Str_Sign_Failed">החתימה נכשלה</sys:String>
     <sys:String x:Key="Str_Tool_Sanitize">הסרת מטא-נתונים</sys:String>
     <sys:String x:Key="Str_Tool_DocInfo">פרטי מסמך</sys:String>
     <sys:String x:Key="Str_DocInfo_FldTitle">כותרת</sys:String>

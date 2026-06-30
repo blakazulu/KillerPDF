@@ -191,6 +191,16 @@
     <sys:String x:Key="Str_Tool_Ocr">অনুসন্ধানযোগ্য করুন (OCR)…</sys:String>
     <sys:String x:Key="Str_Tool_Redact">চিহ্নিত এলাকা রিড্যাক্ট করুন…</sys:String>
     <sys:String x:Key="Str_Tool_Protect">পাসওয়ার্ড সুরক্ষা…</sys:String>
+    <sys:String x:Key="Str_Tool_Sign">ডিজিটাল স্বাক্ষর…</sys:String>
+    <sys:String x:Key="Str_Sign_PickCert">আপনার স্বাক্ষর সার্টিফিকেট নির্বাচন করুন (.pfx / .p12)</sys:String>
+    <sys:String x:Key="Str_Sign_Password">সার্টিফিকেট পাসওয়ার্ড</sys:String>
+    <sys:String x:Key="Str_Sign_Apply">স্বাক্ষর করুন</sys:String>
+    <sys:String x:Key="Str_Sign_Note">আপনার সার্টিফিকেট ব্যবহার করে একটি অদৃশ্য ক্রিপ্টোগ্রাফিক স্বাক্ষর যোগ করে। স্বাক্ষরিত অনুলিপি একটি নতুন ফাইলে লেখা হয় এবং পরে পরিবর্তিত হয় না, তাই স্বাক্ষর বৈধ থাকে।</sys:String>
+    <sys:String x:Key="Str_Sign_SaveAs">স্বাক্ষরিত PDF এভাবে সংরক্ষণ করুন</sys:String>
+    <sys:String x:Key="Str_Sign_Working">স্বাক্ষর করা হচ্ছে…</sys:String>
+    <sys:String x:Key="Str_Sign_Done">{0}-এ একটি ডিজিটাল স্বাক্ষরিত অনুলিপি সংরক্ষণ করা হয়েছে</sys:String>
+    <sys:String x:Key="Str_Sign_DoneMsg">একটি ডিজিটাল স্বাক্ষরিত অনুলিপি সংরক্ষণ করা হয়েছে। স্বাক্ষরটি সম্পূর্ণ ফাইল জুড়ে রয়েছে — পরবর্তী যেকোনো পরিবর্তন এটিকে অবৈধ করে দেবে।</sys:String>
+    <sys:String x:Key="Str_Sign_Failed">স্বাক্ষর ব্যর্থ হয়েছে</sys:String>
     <sys:String x:Key="Str_Tool_Sanitize">মেটাডেটা সরান</sys:String>
     <sys:String x:Key="Str_Tool_DocInfo">ডকুমেন্ট তথ্য</sys:String>
     <sys:String x:Key="Str_DocInfo_FldTitle">শিরোনাম</sys:String>
