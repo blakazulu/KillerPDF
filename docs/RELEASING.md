@@ -192,6 +192,15 @@ upload is rejected. `packaging\build-msix.ps1 -Store` hard-codes these:
 | `Package/Properties/PublisherDisplayName` | `Liraz Shaka Amir` | **changes if you rename your publisher display name** |
 | `DisplayName` | `Scalpel PDF` | the app's Store name |
 
+**Microsoft Entra tenant ID (for the `msstore` CLI):** `b4ae6828-e087-4c5b-9c32-84984c567fae`
+
+The Partner Center account had no auto-discoverable Entra tenant association, so `msstore reconfigure`
+hangs on "Retrieving Organization Id..." unless the tenant is passed explicitly:
+
+```powershell
+msstore reconfigure --tenantId b4ae6828-e087-4c5b-9c32-84984c567fae
+```
+
 **Where to verify (do this if anything about your account/publisher changed):**
 Partner Center → Apps and games → **Scalpel PDF** → Product management → **Product identity**
 (`https://partner.microsoft.com/dashboard/products/9N9HN8XW4LF3/identity`). It lists all three
