@@ -29,7 +29,12 @@ public sealed class AppDriver : IDisposable
     [DllImport("user32.dll")] private static extern bool SetCursorPos(int x, int y);
     [DllImport("user32.dll")] private static extern bool GetCursorPos(out POINT lpPoint);
     [DllImport("user32.dll")] private static extern int GetSystemMetrics(int nIndex);
+    [DllImport("user32.dll")] private static extern bool SetWindowPos(
+        IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
     [DllImport("kernel32.dll")] private static extern uint GetCurrentThreadId();
+    private const uint SWP_NOZORDER = 0x0004;
+    private const uint SWP_NOACTIVATE = 0x0010;
+    private const uint SWP_NOSIZE = 0x0001;
     private const int SW_RESTORE = 9;
     private const uint WM_LBUTTONDOWN = 0x0201;
     private const uint WM_LBUTTONUP   = 0x0202;
@@ -81,6 +86,16 @@ public sealed class AppDriver : IDisposable
     private Application _app;
     private readonly string _exePath;
     private readonly string? _logDir;
+
+    /// <summary>
+    /// The Windows Display Settings monitor number ("Identify" numbering) every launched/relaunched
+    /// Scalpel window is moved onto right after it appears — keeps the app off the developer's
+    /// primary display, so it isn't fighting foreground with whatever else is being worked on there
+    /// (physical clicks require the app window to be foregrounded; losing it mid-run is a source of
+    /// flakiness). Set from <c>--monitor</c> in Program.cs; defaults to 1. 0 or a monitor that can't
+    /// be resolved leaves the window wherever WPF's CenterScreen startup location put it.
+    /// </summary>
+    public static int TargetMonitor { get; set; } = 1;
 
     private AppDriver(string exePath, Application app, UIA3Automation automation, string? logDir)
     {
@@ -148,6 +163,37 @@ public sealed class AppDriver : IDisposable
         finally { ForegroundGate.Release(); }
     }
 
+    /// <summary>Current screen bounds of the main window (Win32 GetWindowRect), for diagnostics.</summary>
+    public RectangleDiag? CurrentWindowBounds
+    {
+        get
+        {
+            try
+            {
+                IntPtr hwnd = MainWindow.Properties.NativeWindowHandle.ValueOrDefault;
+                if (hwnd == IntPtr.Zero || !GetWindowRect(hwnd, out RECT r)) return null;
+                return new RectangleDiag(r.Left, r.Top, r.Right - r.Left, r.Bottom - r.Top);
+            }
+            catch { return null; }
+        }
+    }
+
+    public readonly struct RectangleDiag
+    {
+        public RectangleDiag(int x, int y, int w, int h) { X = x; Y = y; Width = w; Height = h; }
+        public int X { get; } public int Y { get; } public int Width { get; } public int Height { get; }
+    }
+
+    /// <summary>Lists every attached monitor for the <c>--monitors</c> diagnostic.</summary>
+    public static IReadOnlyList<(int index, string deviceName, bool primary, System.Drawing.Rectangle bounds)> ListMonitors()
+    {
+        var result = new List<(int, string, bool, System.Drawing.Rectangle)>();
+        var screens = System.Windows.Forms.Screen.AllScreens;
+        for (int i = 0; i < screens.Length; i++)
+            result.Add((i + 1, screens[i].DeviceName, screens[i].Primary, screens[i].Bounds));
+        return result;
+    }
+
     /// <summary>
     /// Bring the Scalpel window to the foreground. Physical clicks (the only way to
     /// raise WPF Click on ToggleButton/RadioButton/CheckBox) land on the foreground
@@ -198,12 +244,60 @@ public sealed class AppDriver : IDisposable
             try
             {
                 var w = _app.GetMainWindow(_automation, TimeSpan.FromMilliseconds(500));
-                if (w != null) return;
+                if (w != null) { PositionOnTargetMonitor(); return; }
             }
             catch { }
             System.Threading.Thread.Sleep(250);
         }
         throw new InvalidOperationException("Scalpel main window did not appear.");
+    }
+
+    // Moves the just-launched window (centered, same size) onto TargetMonitor. WPF's
+    // WindowStartupLocation="CenterScreen" always centers on the PRIMARY monitor regardless of
+    // where the process was started from, so this is the only way to land it elsewhere. Best-effort:
+    // a monitor that can't be resolved (bad number, single-monitor machine) leaves the window as-is.
+    private void PositionOnTargetMonitor()
+    {
+        if (TargetMonitor <= 0) return;
+        try
+        {
+            IntPtr hwnd = MainWindow.Properties.NativeWindowHandle.ValueOrDefault;
+            if (hwnd == IntPtr.Zero) return;
+            var bounds = ResolveMonitorBounds(TargetMonitor);
+            if (bounds == null) return;
+            if (!GetWindowRect(hwnd, out RECT r)) return;
+            int w = r.Right - r.Left, h = r.Bottom - r.Top;
+            int x = bounds.Value.X + Math.Max(0, (bounds.Value.Width - w) / 2);
+            int y = bounds.Value.Y + Math.Max(0, (bounds.Value.Height - h) / 2);
+            SetWindowPos(hwnd, IntPtr.Zero, x, y, 0, 0, SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOSIZE);
+        }
+        catch { }
+    }
+
+    // Resolves a Windows Display Settings monitor number to its screen bounds. Screen.AllScreens
+    // doesn't expose that "Identify" number directly, so this matches the trailing digits of each
+    // screen's DeviceName ("\\.\DISPLAY1" -> 1) — the convention Display Settings numbering follows
+    // on a standard single-adapter multi-monitor setup. Falls back to a 1-based index into
+    // AllScreens (in enumeration order) if no DeviceName matches, so an unusual naming scheme still
+    // resolves to *some* monitor rather than silently doing nothing.
+    private static System.Drawing.Rectangle? ResolveMonitorBounds(int displayNumber)
+    {
+        try
+        {
+            var screens = System.Windows.Forms.Screen.AllScreens;
+            foreach (var s in screens)
+            {
+                string name = s.DeviceName ?? "";
+                int i = name.Length;
+                while (i > 0 && char.IsDigit(name[i - 1])) i--;
+                if (i < name.Length && int.TryParse(name.Substring(i), out int n) && n == displayNumber)
+                    return s.Bounds;
+            }
+            if (displayNumber >= 1 && displayNumber <= screens.Length)
+                return screens[displayNumber - 1].Bounds;
+        }
+        catch { }
+        return null;
     }
 
     private Window? _mainWindowCache;
@@ -329,6 +423,17 @@ public sealed class AppDriver : IDisposable
             else if (el.Patterns.SelectionItem.IsSupported)
             {
                 el.Patterns.SelectionItem.Pattern.Select();
+            }
+            else if (el.Patterns.Toggle.IsSupported)
+            {
+                //   * Toggle-only control → TogglePattern.Toggle (background-safe, no foreground race).
+                //     The view-mode radios (ViewSingle/Continuous/TwoPage/GridBtn) expose TogglePattern
+                //     (not SelectionItem/Invoke) and act on their *Checked* handler (ViewContinuous_Checked
+                //     …), which Toggle() raises — so it runs the real handler AND logs the click, unlike a
+                //     physical click which needs the foreground. Only drive Off→On (selecting the mode); a
+                //     control already On is in the desired state and the verifier falls back to that state.
+                if (el.Patterns.Toggle.Pattern.ToggleState.Value == FlaUI.Core.Definitions.ToggleState.Off)
+                    el.Patterns.Toggle.Pattern.Toggle();
             }
             else
             {

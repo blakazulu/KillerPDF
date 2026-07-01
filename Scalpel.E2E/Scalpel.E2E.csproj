@@ -20,4 +20,10 @@
     <PackageReference Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Screen.AllScreens, used to place the launched app window on a specific monitor
+         (so it doesn't fight the developer's primary display for foreground). -->
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+
 </Project>

@@ -30,6 +30,16 @@ public sealed class ActionRunner
         int snap = _log.Snapshot();
 
         bool clicked = _driver.Click(spec.AutomationId);
+        // A transient UIA-tree rebuild — e.g. a live theme restyle swapping DynamicResources
+        // across every control (Theme/Accent radios trigger exactly this) — can make a control
+        // momentarily unfindable even though it is about to reappear. Retry the whole Click once
+        // after a short beat before treating it as genuinely missing; symmetric with the
+        // "found but click didn't log" retry below, which only covers the found-but-silent case.
+        if (!clicked)
+        {
+            System.Threading.Thread.Sleep(200);
+            clicked = _driver.Click(spec.AutomationId);
+        }
         System.Threading.Thread.Sleep(120);
         var newLogs = _log.NewSince(snap);
 
